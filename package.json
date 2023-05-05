@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "Monorepo for project bootstrapping CLIs",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "suspenders": "node ./index.js",
+    "suspenders": "node -r ts-node/register ./index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stephen Hanson",
@@ -14,5 +13,9 @@
     "commander": "^10.0.1",
     "inquirer": "^9.2.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^18.16.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
 }
