@@ -1,4 +1,4 @@
-import { Option, program } from "commander";
+import { program } from "commander";
 
 program
   .name("suspenders")
@@ -8,7 +8,7 @@ program
   .command(
     "react-native <subcommand> [options]",
     "Perform a React Native task",
-    { executableFile: "react-native/react-native.js" }
+    { executableFile: "react-native/react-native.ts" }
   )
   .alias("rn")
   .alias("expo")
