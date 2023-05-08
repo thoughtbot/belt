@@ -1,4 +1,4 @@
-# Suspenders CLI
+# thoughtbelt CLI
 
 Perform project setup and redundant tasks without your pants falling down!
 
@@ -6,17 +6,19 @@ This project is still in very early stages. Track this project [in Trello](https
 
 ## Usage
 
+This package is not yet available on NPM. For now, you can run the CLI locally Only the scaffolding is in place right now.
+
 Ensure you have a recent version of Node.js installed, then install dependencies:
 
 ```
 yarn install
 ```
 
-Only the scaffolding is in place right now. Some example commands:
+Then, run some commands, eg.:
 
 ```
-> yarn suspenders react-native eslint
-> yarn suspenders react-native prettier
+> bin/belt eslint
+> bin/belt prettier
 ```
 
 ## Contributing
@@ -25,15 +27,14 @@ See the [CONTRIBUTING](./CONTRIBUTING.md) document. Thank you, [contributors](ht
 
 ## License
 
-Suspenders CLI is Copyright © 2023 Stephen Hanson and thoughtbot. It is free
-software, and may be redistributed under the terms specified in the
-[LICENSE](/LICENSE) file.
+thoughtbelt is Copyright © 2023 thoughtbot. It is free software, and may be
+redistributed under the terms specified in the [LICENSE](/LICENSE) file.
 
 ### About thoughtbot
 
 <img src="https://thoughtbot.com/thoughtbot-logo-for-readmes.svg" width="375" />
 
-Suspenders CLI is maintained and funded by thoughtbot, inc.
+thoughtbelt is maintained and funded by thoughtbot, inc.
 The names and logos for thoughtbot are trademarks of thoughtbot, inc.
 
 We love open source software! See [our other projects][community] or
