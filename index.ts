@@ -1,7 +1,7 @@
 import { program } from "commander";
 
 program
-  .name("suspenders")
+  .name("thoughtbelt")
   .description(
     "Perform project setup and redundant tasks without your pants falling down!"
   )

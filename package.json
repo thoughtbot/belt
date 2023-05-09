@@ -1,10 +1,10 @@
 {
-  "name": "suspenders-cli",
+  "name": "thoughtbelt",
   "version": "1.0.0",
   "description": "Monorepo for project bootstrapping CLIs",
   "main": "index.js",
   "scripts": {
-    "suspenders": "node -r ts-node/register ./index.ts",
+    "belt": "bin/belt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stephen Hanson",
