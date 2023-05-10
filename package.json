@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Monorepo for project bootstrapping CLIs",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "belt": "bin/belt",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,10 +11,15 @@
   "author": "Stephen Hanson",
   "license": "MIT",
   "dependencies": {
+    "@inquirer/prompts": "^1.0.3",
+    "chalk": "^4.1.2",
     "commander": "^10.0.1",
-    "inquirer": "^9.2.0"
+    "fs-extra": "^11.1.1",
+    "prettier": "^2.8.8"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.1",
+    "@types/inquirer": "^9.0.3",
     "@types/node": "^18.16.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
