@@ -7,7 +7,13 @@ program
   .description(
     "Perform React Native and Expo setup and redundant tasks without your pants falling down!"
   )
-  .command("eslint", "Configure ESLint", { executableFile: "eslint.ts" })
-  .command("prettier", "Configure Prettier", { executableFile: "prettier.ts" })
+
+  .command("eslint")
+  .description("Configure ESLint")
+  .action(async () => await import("./eslint"))
+
+  .command("prettier")
+  .description("Configure Prettier")
+  .action(() => import("./prettier"))
   .showHelpAfterError()
   .parse();

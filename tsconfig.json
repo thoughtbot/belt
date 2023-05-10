@@ -1,17 +1,14 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "lib": ["es2019"],
     "target": "es2019",
     "module": "commonjs",
-    "strict": true,
     "moduleResolution": "node",
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
+    "strict": true,
     "sourceMap": true,
     "outDir": "./build",
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["./**/*"],
+  "include": ["./**/*"]
 }
