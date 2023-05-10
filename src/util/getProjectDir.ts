@@ -1,5 +1,5 @@
-import * as fs from "fs/promises";
-import * as path from "path";
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 export default async function getProjectDir(base: string = process.cwd()): Promise<string> {
   let previous = null;
@@ -8,7 +8,7 @@ export default async function getProjectDir(base: string = process.cwd()): Promi
   do {
     try {
       // This will throw if there is no package.json in the directory
-      await fs.readFile(path.join(dir, "package.json"));
+      await fs.readFile(path.join(dir, 'package.json'));
 
       // if didn't throw, package.json exists, return dir
       return dir;
@@ -21,6 +21,6 @@ export default async function getProjectDir(base: string = process.cwd()): Promi
   } while (dir !== previous);
 
   throw new Error(
-    "No project found. Ensure you are inside of a project directory with a package.json file."
+    'No project found. Ensure you are inside of a project directory with a package.json file.'
   );
 }

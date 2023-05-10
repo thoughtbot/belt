@@ -1,3 +1,3 @@
 export default function runEslint() {
-  console.log("ESLint!");
+  console.log('ESLint!');
 }
