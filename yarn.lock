@@ -301,6 +301,11 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==
 
+eta@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/eta/-/eta-2.1.1.tgz#dfc1ced5e5515211cb9c6c9fac3eed86f4cce3e1"
+  integrity sha512-daWDLvwOCghtrXRVI4LEt57/R3hFwCidxRlczeYUGBWZ/8MuyZiusOFiCAXkVziuBMdku/lKQk2BgH1hsmijbA==
+
 external-editor@^3.0.3:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-3.1.0.tgz#cb03f740befae03ea4d283caed2741a83f335495"
