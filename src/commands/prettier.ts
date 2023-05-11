@@ -1,8 +1,8 @@
 import { log } from 'console';
-import * as fsExtra from 'fs-extra';
-import * as fs from 'fs';
+import fsExtra from 'fs-extra';
+import fs from 'fs';
 import getProjectDir from '../util/getProjectDir';
-import * as path from 'path';
+import path from 'path';
 import chalk from 'chalk';
 import { exec } from 'child_process';
 import { input, select } from '@inquirer/prompts';
