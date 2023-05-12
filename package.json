@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Monorepo for project bootstrapping CLIs",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "belt": "bin/belt",
     "test": "echo \"Error: no test specified\" && exit 1"
