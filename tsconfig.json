@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "lib": ["es2019"],
     "target": "es2019",
-    "module": "commonjs",
-    "strict": true,
+    "module": "ES2020",
     "moduleResolution": "node",
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
+    "strict": true,
     "sourceMap": true,
     "outDir": "./build",
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["./**/*"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": ["./**/*"]
 }
