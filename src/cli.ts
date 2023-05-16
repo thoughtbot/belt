@@ -1,8 +1,6 @@
 import { program } from "commander";
 import buildAction from "./util/buildAction";
 
-console.log("React Native 🎉");
-
 export default function runCli() {
   program
     .name("thoughtbelt")
@@ -18,6 +16,11 @@ export default function runCli() {
     .command("prettier")
     .description("Configure Prettier")
     .action(buildAction(import("./commands/prettier")));
+
+  program
+    .command("typescript")
+    .description("Install and configure TypeScript")
+    .action(buildAction(import("./commands/typescript")));
 
   program.showHelpAfterError().parse();
 }
