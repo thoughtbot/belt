@@ -12,7 +12,7 @@ export default async function writeFile(
   { format = false }: Options = {}
 ) {
   console.log(chalk.bold(`🔨 Creating ${filePath}`));
-  fs.writeFile(filePath, contents);
+  await fs.writeFile(filePath, contents);
 
   if (format) {
     await formatFile(filePath);

@@ -1,7 +1,7 @@
-import * as fs from "fs-extra";
-import getProjectDir from "./getProjectDir";
-import * as path from "path";
 import { exec } from "child_process";
+import * as fs from "fs-extra";
+import * as path from "path";
+import getProjectDir from "./getProjectDir";
 
 export default async function addDependency(deps: string, { dev = false }) {
   const isYarn = await fs.exists(path.join(await getProjectDir(), "yarn.lock"));

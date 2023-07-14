@@ -4,8 +4,9 @@ type ProjectType = "expo-bare" | "expo-managed" | "react-native";
 
 export default async function getProjectType(): Promise<ProjectType> {
   const packageJson = await readPackageJson();
-  const hasExpo = packageJson.dependencies?.hasOwnProperty("expo");
-  const hasReactNativeUnimodules = packageJson.dependencies?.hasOwnProperty(
+  const hasExpo = hasProperty(packageJson.dependencies, "expo");
+  const hasReactNativeUnimodules = hasProperty(
+    packageJson.dependencies,
     "react-native-unimodules"
   );
   if (hasExpo) {
@@ -13,4 +14,11 @@ export default async function getProjectType(): Promise<ProjectType> {
   }
 
   return "react-native";
+}
+
+function hasProperty(
+  object: Record<string, unknown> | undefined,
+  property: string
+) {
+  return Object.prototype.hasOwnProperty.call(object, property);
 }
