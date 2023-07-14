@@ -21,7 +21,7 @@
       "assets/*": ["assets/*"]
     }
   },
-  "include": ["src/**/*", "*.js", ".*.js"],
+  "include": ["src/**/*", "*.js", ".*.js", "*.ts", "*.tsx"],
   "exclude": ["node_modules"],
   <% if(it.expo) { %>
     "extends":  "expo/tsconfig.base"
