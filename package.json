@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "belt": "bin/belt.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint --max-warnings=0 --ext js,jsx,ts,tsx .",
+    "test": "echo \"testing not yet configured\""
   },
   "bin": {
     "thoughtbelt": "./bin/belt.js"
@@ -14,8 +15,10 @@
   "author": "thoughtbot, Inc.",
   "license": "MIT",
   "dependencies": {
+    "@thoughtbot/eslint-config": "thoughtbot/eslint-config#eslint-configs",
     "chalk": "^5.2.0",
     "commander": "^10.0.1",
+    "eslint": "^8.45.0",
     "eta": "^2.1.1",
     "fs-extra": "^11.1.1",
     "inquirer": "^9.2.0",
@@ -28,5 +31,15 @@
     "@types/node": "^18.16.3",
     "@types/react": "^18.2.6",
     "typescript": "^5.0.4"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@thoughtbot/eslint-config/base",
+      "@thoughtbot/eslint-config/prettier",
+      "@thoughtbot/eslint-config/typescript"
+    ],
+    "rules": {
+      "no-console": "off"
+    }
   }
 }

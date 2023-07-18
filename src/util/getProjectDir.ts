@@ -10,6 +10,7 @@ export default async function getProjectDir(
   do {
     try {
       // This will throw if there is no package.json in the directory
+      // eslint-disable-next-line no-await-in-loop
       await fs.readFile(path.join(dir, "package.json"));
 
       // if didn't throw, package.json exists, return dir
