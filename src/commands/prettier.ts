@@ -12,9 +12,18 @@ export default async function runPrettier() {
   log('Create your Prettier config!');
 
   const projectDir = await getProjectDir();
+  const eslintJsFile = path.join(projectDir, '.eslintrc.js');
+  const eslintJSONFile = path.join(projectDir, '.eslintrc.json');
 
   if (await isPrettierConfigured()) {
     log('prettier config file already exists');
+  } else if (
+    (await fsExtra.exists(eslintJsFile)) ||
+    (await fsExtra.exists(eslintJSONFile))
+  ) {
+    log(
+      'We noticed ESLint is already set up, you might consider adding the Prettier ESLint plugin or regenerating with suspenders eslint.'
+    );
   } else {
     if (await fsExtra.exists(path.join(projectDir, '.prettierignore'))) {
       log('.prettierignore config file already exists');
