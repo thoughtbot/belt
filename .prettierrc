@@ -1,9 +1,3 @@
 {
-    "tabWidth": 2,
-    "printWidth": 100,
-    "semicolons": true,
-    "singleQuote": false,
-    "bracketSpacing": true,
-    "trailingCommas": "es5",
-    "bracketLine": "none"
+	"singleQuote": true
 }
