@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
+import fs from 'fs-extra';
 import * as path from 'path';
-import * as fs from 'fs-extra';
 import getProjectDir from './getProjectDir';
 
 export default async function addDependency(deps: string, { dev = false }) {

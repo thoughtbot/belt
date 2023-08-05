@@ -1,6 +1,7 @@
-import chalk from "chalk";
-import fs from "fs-extra";
-import formatFile from "./formatFile";
+import chalk from 'chalk';
+import fs from 'fs-extra';
+import formatFile from './formatFile';
+import print from './print';
 
 type Options = {
   format?: boolean;
@@ -9,9 +10,9 @@ type Options = {
 export default async function writeFile(
   filePath: string,
   contents: string,
-  { format = false }: Options = {}
+  { format = false }: Options = {},
 ) {
-  console.log(chalk.bold(`🔨 Creating ${filePath}`));
+  print(chalk.bold(`🔨 Creating ${filePath}`));
   await fs.writeFile(filePath, contents);
 
   if (format) {

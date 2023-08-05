@@ -21,7 +21,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      - name: Run linter
+      - name: Run ESLint, Prettier, tsc
         run: yarn lint
       - name: Run tests
-        run: yarn test
+        run: yarn test:run
