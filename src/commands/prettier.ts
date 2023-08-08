@@ -1,12 +1,15 @@
 import { log } from 'console';
-import fsExtra from 'fs-extra';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
-import formatFile from '../util/formatFile';
+import { fileURLToPath, URL } from 'url';
+import * as eta from 'eta';
 import isPrettierConfigured from '../util/isPrettierConfigured';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
+import writeFile from '../util/writeFile';
+
+const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default async function runPrettier() {
   log('Create your Prettier config!');
@@ -18,38 +21,38 @@ export default async function runPrettier() {
   if (await isPrettierConfigured()) {
     log('prettier config file already exists');
   } else if (
-    (await fsExtra.exists(eslintJsFile)) ||
-    (await fsExtra.exists(eslintJSONFile))
+    (await fs.exists(eslintJsFile)) ||
+    (await fs.exists(eslintJSONFile))
   ) {
     log(
-      'We noticed ESLint is already set up, you might consider adding the Prettier ESLint plugin or regenerating with suspenders eslint.'
+      'We noticed ESLint is already set up, you might consider adding the Prettier ESLint plugin or regenerating with suspenders eslint.',
     );
   } else {
-    if (await fsExtra.exists(path.join(projectDir, '.prettierignore'))) {
+    if (await fs.exists(path.join(projectDir, '.prettierignore'))) {
       log('.prettierignore config file already exists');
     } else {
-      const prettierIgnoreTemplate = await fs.readFileSync(
-        path.join(projectDir, 'src', 'templates', '.prettierignore.template'),
-        { encoding: 'utf8' }
+      const prettierIgnoreTemplate = await fs.readFile(
+        path.join(dirname, 'templates', 'prettierignore.eta'),
       );
+      const fileContents = eta.render(prettierIgnoreTemplate.toString(), {});
 
-      await fs.writeFileSync(
-        path.join(projectDir, '.prettierignore'),
-        prettierIgnoreTemplate
-      );
+      await writeFile(path.join(projectDir, '.prettierignore'), fileContents, {
+        format: true,
+      });
     }
 
-    addDependency('prettier', { dev: true });
+    await addDependency('prettier', { dev: true });
 
-    await fs.writeFileSync(
+    await writeFile(
       path.join(projectDir, '.prettierrc'),
       JSON.stringify({
         singleQuote: true,
-      })
+      }),
+      {
+        format: true,
+      },
     );
 
-    await formatFile(path.join(projectDir, '.prettierrc'));
-    await formatFile(path.join(projectDir, '.prettierignore'));
     log(chalk.green('🎉 Prettier successfully configured'));
   }
 }
