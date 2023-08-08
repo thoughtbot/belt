@@ -1,7 +1,7 @@
-import fsExtra from "fs-extra";
-import path from "path";
-import getProjectDir from "./getProjectDir";
-import readPackageJson from "./readPackageJson";
+import path from 'path';
+import fsExtra from 'fs-extra';
+import getProjectDir from './getProjectDir';
+import readPackageJson from './readPackageJson';
 
 export default async function isPrettierConfigured() {
   const packageJson = await readPackageJson();
@@ -10,19 +10,19 @@ export default async function isPrettierConfigured() {
 
   const hasPrettierConfigInPackageJson = Object.prototype.hasOwnProperty.call(
     packageJson,
-    "prettier"
+    'prettier',
   );
   const hasPrettierrcJsFile = await fsExtra.exists(
-    path.join(projectDir, "prettierrc.js")
+    path.join(projectDir, 'prettierrc.js'),
   );
   const hasPrettierrcFile = await fsExtra.exists(
-    path.join(projectDir, ".prettierrc")
+    path.join(projectDir, '.prettierrc'),
   );
   const hasPrettierrcJsonFile = await fsExtra.exists(
-    path.join(projectDir, ".prettierrc.json")
+    path.join(projectDir, '.prettierrc.json'),
   );
   const hasPrettierConfigFile = await fsExtra.exists(
-    path.join(projectDir, ".prettier.config.js")
+    path.join(projectDir, '.prettier.config.js'),
   );
 
   return (

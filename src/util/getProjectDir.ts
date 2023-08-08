@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
 import path from 'path';
+import fs from 'fs-extra';
 
 export default async function getProjectDir(
   base: string = process.cwd(),

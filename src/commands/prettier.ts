@@ -1,12 +1,12 @@
 import { log } from 'console';
-import fs from 'fs-extra';
 import path from 'path';
-import chalk from 'chalk';
 import { fileURLToPath, URL } from 'url';
+import chalk from 'chalk';
 import * as eta from 'eta';
-import isPrettierConfigured from '../util/isPrettierConfigured';
+import fs from 'fs-extra';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
+import isPrettierConfigured from '../util/isPrettierConfigured';
 import writeFile from '../util/writeFile';
 
 const dirname = fileURLToPath(new URL('.', import.meta.url));
