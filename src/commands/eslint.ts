@@ -5,7 +5,6 @@ import chalk from 'chalk';
 import * as eta from 'eta';
 import fs from 'fs-extra';
 import addDependency from '../util/addDependency';
-import formatFile from '../util/formatFile';
 import getProjectDir from '../util/getProjectDir';
 import isEslintConfigured from '../util/isEslintConfigured';
 import isPackageInstalled from '../util/isPackageInstalled';
@@ -41,7 +40,6 @@ export default async function runEslint() {
 
     await addDependency(deps, { dev: true });
 
-    await formatFile(path.join(projectDir, '.eslintrc.js'));
     log(chalk.green('🎉 ESLint successfully configured'));
   }
 }
