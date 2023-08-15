@@ -1,14 +1,14 @@
 import { log } from 'console';
-import fs from 'fs-extra';
 import path from 'path';
+import { fileURLToPath, URL } from 'url';
 import chalk from 'chalk';
 import * as eta from 'eta';
-import { fileURLToPath, URL } from 'url';
-import getProjectDir from '../util/getProjectDir';
-import formatFile from '../util/formatFile';
+import fs from 'fs-extra';
 import addDependency from '../util/addDependency';
-import isPackageInstalled from '../util/isPackageInstalled';
+import formatFile from '../util/formatFile';
+import getProjectDir from '../util/getProjectDir';
 import isEslintConfigured from '../util/isEslintConfigured';
+import isPackageInstalled from '../util/isPackageInstalled';
 import writeFile from '../util/writeFile';
 
 const dirname = fileURLToPath(new URL('.', import.meta.url));
