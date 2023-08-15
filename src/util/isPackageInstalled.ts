@@ -3,7 +3,13 @@ import readPackageJson from './readPackageJson';
 export default async function isPackageInstalled(packageName: string) {
   const packageJson = await readPackageJson();
 
-  const isPackageInDevdependencies = packageJson.devDependencies?.hasOwnProperty(packageName);
-  const isPackageInDependencies = packageJson.dependencies?.hasOwnProperty(packageName);
+  const isPackageInDevdependencies = Object.prototype.hasOwnProperty.call(
+    packageJson.dependencies,
+    packageName,
+  );
+  const isPackageInDependencies = Object.prototype.hasOwnProperty.call(
+    packageJson.devDependencies,
+    packageName,
+  );
   return isPackageInDevdependencies || isPackageInDependencies;
 }

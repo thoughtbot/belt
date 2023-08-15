@@ -1,0 +1,21 @@
+module.exports = {
+  extends: ['universe/native',
+  <% if(it.typescript) { %>
+    'universe/shared/typescript-analysis',
+  <% } %>
+  ],
+ <% if(it.typescript) { %>
+  overrides: [
+    {
+      files: [
+        '*.ts',
+        '*.tsx',
+        '*.d.ts'
+      ],
+      parserOptions: {
+        project: './tsconfig.json'
+      },
+    },
+  ],
+  <% } %> 
+};
