@@ -1,8 +1,8 @@
 import { log } from 'console';
-import fs from 'fs-extra';
 import path from 'path';
-import chalk from 'chalk';
 import { fileURLToPath, URL } from 'url';
+import fs from 'fs-extra';
+import chalk from 'chalk';
 import * as eta from 'eta';
 import isPrettierConfigured from '../util/isPrettierConfigured';
 import addDependency from '../util/addDependency';
@@ -12,8 +12,6 @@ import writeFile from '../util/writeFile';
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default async function runPrettier() {
-  log('Create your Prettier config!');
-
   const projectDir = await getProjectDir();
   const eslintJsFile = path.join(projectDir, '.eslintrc.js');
   const eslintJSONFile = path.join(projectDir, '.eslintrc.json');
