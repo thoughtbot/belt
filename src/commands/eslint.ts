@@ -14,8 +14,6 @@ import writeFile from '../util/writeFile';
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default async function runEslint() {
-  log('Setup your EsLint config!');
-
   const projectDir = await getProjectDir();
 
   if (await isEslintConfigured()) {
