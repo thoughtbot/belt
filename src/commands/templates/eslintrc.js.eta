@@ -1,10 +1,11 @@
 module.exports = {
-  extends: ['universe/native',
+  "extends": [
+    "@thoughtbot/eslint-config/native",
+    <% if(it.typescript) { %>
+      "@thoughtbot/eslint-config/typescript"
+    <% } %>
+    ],
   <% if(it.typescript) { %>
-    'universe/shared/typescript-analysis',
-  <% } %>
-  ],
- <% if(it.typescript) { %>
   overrides: [
     {
       files: [

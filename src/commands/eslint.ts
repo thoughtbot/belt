@@ -18,8 +18,6 @@ export default async function runEslint() {
   if (await isEslintConfigured()) {
     log('eslint config already exists');
   } else {
-    const hasPrettier = await isPackageInstalled('prettier');
-    const hasEslint = await isPackageInstalled('eslint');
     const hasTypeScript = await isPackageInstalled('typescript');
 
     const eslintConfigTemplate = await fs.readFile(
@@ -34,11 +32,7 @@ export default async function runEslint() {
       format: true,
     });
 
-    const deps = `${hasPrettier ? '' : 'prettier'} ${
-      hasEslint ? '' : 'eslint'
-    } @typescript-eslint/eslint-plugin @typescript-eslint/parser`;
-
-    await addDependency(deps, { dev: true });
+    await addDependency('@thoughtbot/eslint-config', { dev: true });
 
     log(chalk.green('🎉 ESLint successfully configured'));
   }
