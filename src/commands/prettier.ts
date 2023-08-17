@@ -4,7 +4,6 @@ import { fileURLToPath, URL } from 'url';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import * as eta from 'eta';
-import fs from 'fs-extra';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
 import isPrettierConfigured from '../util/isPrettierConfigured';
