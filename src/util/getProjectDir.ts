@@ -1,7 +1,9 @@
-import fs from "fs-extra";
-import path from "path";
+import path from 'path';
+import fs from 'fs-extra';
 
-export default async function getProjectDir(base: string = process.cwd()): Promise<string> {
+export default async function getProjectDir(
+  base: string = process.cwd(),
+): Promise<string> {
   let previous = null;
   let dir = base;
 
@@ -9,7 +11,7 @@ export default async function getProjectDir(base: string = process.cwd()): Promi
     try {
       // This will throw if there is no package.json in the directory
       // eslint-disable-next-line no-await-in-loop
-      await fs.readFile(path.join(dir, "package.json"));
+      await fs.readFile(path.join(dir, 'package.json'));
 
       // if didn't throw, package.json exists, return dir
       return dir;
@@ -22,6 +24,6 @@ export default async function getProjectDir(base: string = process.cwd()): Promi
   } while (dir !== previous);
 
   throw new Error(
-    "No project found. Ensure you are inside of a project directory with a package.json file."
+    'No project found. Ensure you are inside of a project directory with a package.json file.',
   );
 }
