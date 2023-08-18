@@ -4,19 +4,5 @@ module.exports = {
     <% if(it.typescript) { %>
       "@thoughtbot/eslint-config/typescript"
     <% } %>
-    ],
-  <% if(it.typescript) { %>
-  overrides: [
-    {
-      files: [
-        '*.ts',
-        '*.tsx',
-        '*.d.ts'
-      ],
-      parserOptions: {
-        project: './tsconfig.json'
-      },
-    },
   ],
-  <% } %> 
 };
