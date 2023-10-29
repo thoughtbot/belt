@@ -14,5 +14,5 @@
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["./**/*"]
+  "include": ["./**/*.ts"]
 }

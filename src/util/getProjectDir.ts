@@ -1,10 +1,10 @@
-import path from 'path';
 import fs from 'fs-extra';
+import path from 'path';
 
 export default async function getProjectDir(
   base: string = process.cwd(),
 ): Promise<string> {
-  let previous = null;
+  let previous: string | null = null;
   let dir = base;
 
   do {

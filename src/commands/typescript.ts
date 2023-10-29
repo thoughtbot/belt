@@ -1,12 +1,12 @@
-import { log } from 'console';
-import path from 'path';
-import { fileURLToPath, URL } from 'url';
 import chalk from 'chalk';
 import * as eta from 'eta';
 import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath, URL } from 'url';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
 import getProjectType from '../util/getProjectType';
+import print from '../util/print';
 import writeFile from '../util/writeFile';
 
 // for manual testing, change this to another name so doesn't conflict
@@ -18,7 +18,7 @@ export default async function addTypescript() {
   const projectDir = await getProjectDir();
 
   if (await fs.exists(path.join(projectDir, tsConfig))) {
-    log(
+    print(
       chalk.yellow(
         'tsconfig.json already exists, exiting.\nIf you would like to perform a fresh TypeScript install, delete this file and rerun the script.\n',
       ),
@@ -40,7 +40,7 @@ export default async function addTypescript() {
     format: true,
   });
 
-  log(
+  print(
     chalk.green(
       '\n🎉 TypeScript successfully configured\nConsider renaming your existing JS files as .ts or .tsx.\n',
     ),
