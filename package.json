@@ -11,8 +11,8 @@
     "lint:prettier": "prettier --check '**/*' --ignore-unknown",
     "lint:types": "tsc",
     "fix:prettier": "prettier --write '**/*' --ignore-unknown",
-    "test": "vitest watch",
-    "test:run": "test run",
+    "test": "vitest",
+    "test:run": "vitest run",
     "test:all": "yarn lint && yarn test:run"
   },
   "bin": {
@@ -51,7 +51,8 @@
       "src/commands/templates",
       "__mocks__/**/*.js",
       "bin/belt.js",
-      "/build"
+      "/build",
+      "vitest.setup.js"
     ],
     "rules": {
       "no-console": "off",

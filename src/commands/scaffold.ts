@@ -1,14 +1,14 @@
 import chalk from 'chalk';
-import { log } from 'console';
 import fs from 'fs-extra';
 import path from 'path';
 import { URL, fileURLToPath } from 'url';
+import print from '../util/print';
 
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default async function createScaffold() {
-  console.log(chalk.bold('👖 Creating directory structure'));
-  console.log(`
+  print(chalk.bold('👖 Creating directory structure'));
+  print(`
     src/
       components/
       util/
@@ -16,5 +16,5 @@ export default async function createScaffold() {
       test/
   `);
   fs.copySync(path.join(dirname, 'templates', 'scaffold', 'src'), './src');
-  log('✅ Created directories');
+  print('✅ Created directories');
 }
