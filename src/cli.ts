@@ -18,6 +18,12 @@ export default function runCli() {
       'The name of the app and directory it will be created in',
       '',
     )
+    // todo: remove this option, since we will always end up installing during creation
+    .option(
+      '--no-test',
+      'Pass true to skip installing React Native Testing Library',
+      false,
+    )
     .action(buildAction(import('./commands/createApp')));
 
   program
@@ -34,6 +40,11 @@ export default function runCli() {
     .command('typescript')
     .description('Install and configure TypeScript')
     .action(buildAction(import('./commands/typescript')));
+
+  program
+    .command('testing')
+    .description('Install and configure Jest and Testing Library')
+    .action(buildAction(import('./commands/testingLibrary')));
 
   printWelcome();
   program.parse();

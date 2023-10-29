@@ -3,9 +3,17 @@ import { execSync, spawnSync } from 'child_process';
 import print from '../util/print';
 import addEslint from './eslint';
 import createScaffold from './scaffold';
+import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
 
-export async function createApp(name: string | undefined) {
+type Options = {
+  testing: boolean;
+};
+
+export async function createApp(
+  name: string | undefined,
+  { testing }: Options,
+) {
   const appName = name || (await getAppName());
   await printIntro();
 
@@ -26,6 +34,12 @@ export async function createApp(name: string | undefined) {
   await createScaffold();
   execSync('git add .');
   execSync('git commit -m "Add app scaffold"');
+
+  if (testing) {
+    await addTestingLibrary();
+    execSync('git add .');
+    execSync('git commit -m "Add jest, Testing Library"');
+  }
 }
 
 async function getAppName() {
@@ -41,7 +55,8 @@ async function getAppName() {
 export default function createAppAction(...args: unknown[]) {
   // if argument ommitted, args[0] is options
   const appNameArg = (args[0] as string[])[0];
-  return createApp(appNameArg);
+  const options = (args[0] as unknown[])[1] as Options;
+  return createApp(appNameArg, options);
 }
 
 async function printIntro() {
