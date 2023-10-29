@@ -21,13 +21,13 @@
   "author": "thoughtbot, Inc.",
   "license": "MIT",
   "dependencies": {
+    "@inquirer/prompts": "^3.2.0",
     "@thoughtbot/eslint-config": "^1.0.2",
     "chalk": "^5.2.0",
     "commander": "^10.0.1",
     "eslint": "^8.45.0",
     "eta": "^2.1.1",
     "fs-extra": "^11.1.1",
-    "inquirer": "^9.2.0",
     "ora": "^6.3.0",
     "prettier": "^3.0.1",
     "ts-node": "^10.9.1"
@@ -47,14 +47,15 @@
       "@thoughtbot/eslint-config/prettier",
       "@thoughtbot/eslint-config/typescript"
     ],
-    "rules": {
-      "no-console": "off",
-      "import/order": "off"
-    },
     "ignorePatterns": [
+      "src/commands/templates",
       "__mocks__/**/*.js",
       "bin/belt.js",
       "/build"
-    ]
+    ],
+    "rules": {
+      "no-console": "off",
+      "import/order": "off"
+    }
   }
 }

@@ -1,9 +1,9 @@
-import { log } from 'console';
-import path from 'path';
-import { fileURLToPath, URL } from 'url';
 import chalk from 'chalk';
+import { log } from 'console';
 import * as eta from 'eta';
 import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath, URL } from 'url';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
 import isEslintConfigured from '../util/isEslintConfigured';
@@ -12,7 +12,7 @@ import writeFile from '../util/writeFile';
 
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 
-export default async function runEslint() {
+export default async function addEslint() {
   const projectDir = await getProjectDir();
 
   if (await isEslintConfigured()) {
