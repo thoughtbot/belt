@@ -1,10 +1,13 @@
 import actualfs from 'fs-extra';
 import { fs } from 'memfs';
+import { vi } from 'vitest';
 
 const DONT_MOCK_PATTERNS = ['templates/'];
 
 export default {
   ...fs.promises,
+  // todo: build actual mock
+  copySync: vi.fn(),
   exists(path) {
     return new Promise((resolve) => {
       fs.exists(path, (exists) => resolve(exists));

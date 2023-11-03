@@ -1,22 +1,22 @@
-import { log } from 'console';
-import path from 'path';
-import { fileURLToPath, URL } from 'url';
 import chalk from 'chalk';
 import * as eta from 'eta';
 import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath, URL } from 'url';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
 import isEslintConfigured from '../util/isEslintConfigured';
 import isPackageInstalled from '../util/isPackageInstalled';
+import print from '../util/print';
 import writeFile from '../util/writeFile';
 
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 
-export default async function runEslint() {
+export default async function addEslint() {
   const projectDir = await getProjectDir();
 
   if (await isEslintConfigured()) {
-    log('eslint config already exists');
+    print('eslint config already exists');
   } else {
     const hasTypeScript = await isPackageInstalled('typescript');
 
@@ -34,6 +34,6 @@ export default async function runEslint() {
 
     await addDependency('@thoughtbot/eslint-config', { dev: true });
 
-    log(chalk.green('🎉 ESLint successfully configured'));
+    print(chalk.green('🎉 ESLint successfully configured'));
   }
 }

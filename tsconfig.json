@@ -14,5 +14,6 @@
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts"],
+  "exclude": ["./src/commands/templates/**/*"]
 }

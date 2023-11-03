@@ -4,12 +4,8 @@ import addDependency from '../../util/addDependency';
 import print from '../../util/print';
 import addTypescript from '../typescript';
 
-vi.mock('fs-extra');
 vi.mock('../../util/addDependency');
-vi.mock('../../util/print', () => ({
-  // __esModule: true,
-  default: vi.fn(),
-}));
+vi.mock('../../util/print', () => ({ default: vi.fn() }));
 
 afterEach(() => {
   vol.reset();
