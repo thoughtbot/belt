@@ -8,7 +8,8 @@ export default defineConfig({
   clean: true,
   entry: ['src/index.ts'],
   format: ['esm'],
-  minify: !isDev,
+  minify: false,
   target: 'esnext',
   outDir: 'dist',
+  splitting: true,
 });
