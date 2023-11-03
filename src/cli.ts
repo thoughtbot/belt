@@ -38,5 +38,3 @@ export default function runCli() {
   printWelcome();
   program.parse();
 }
-
-runCli();
