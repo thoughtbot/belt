@@ -12,6 +12,7 @@
   },
   "files": [
     "dist",
+    "templates",
     "README.md",
     "LICENSE",
     "CONTRIBUTING.md",
@@ -62,7 +63,7 @@
       "@thoughtbot/eslint-config/typescript"
     ],
     "ignorePatterns": [
-      "src/commands/templates",
+      "templates",
       "__mocks__/**/*.js",
       "bin/belt.js",
       "/dist",
