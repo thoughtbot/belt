@@ -1,11 +1,28 @@
 {
   "name": "thoughtbelt",
-  "version": "0.1.4",
-  "description": "Monorepo for project bootstrapping CLIs",
-  "main": "bin/belt.js",
+  "author": "thoughtbot, Inc.",
+  "license": "MIT",
+  "version": "0.1.7-0",
+  "description": "React Native project starter and generator CLI",
   "type": "module",
+  "exports": "./dist/index.js",
+  "bin": {
+    "thoughtbelt": "./dist/index.js",
+    "belt": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "package.json"
+  ],
   "scripts": {
-    "belt": "bin/belt.js",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist node_modules",
+    "start": "node dist/index.js",
     "lint": "run-p lint:eslint lint:types lint:prettier",
     "lint:eslint": "eslint --max-warnings=0 --ext js,jsx,ts,tsx .",
     "lint:prettier": "prettier --check '**/*' --ignore-unknown",
@@ -13,13 +30,10 @@
     "fix:prettier": "prettier --write '**/*' --ignore-unknown",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:all": "yarn lint && yarn test:run"
+    "test:all": "yarn lint && yarn test:run",
+    "pub:beta": "yarn build && npm publish --tag beta",
+    "pub:release": "yarn build && npm publish"
   },
-  "bin": {
-    "thoughtbelt": "./bin/belt.js"
-  },
-  "author": "thoughtbot, Inc.",
-  "license": "MIT",
   "dependencies": {
     "@inquirer/prompts": "^3.2.0",
     "@thoughtbot/eslint-config": "^1.0.2",
@@ -38,6 +52,7 @@
     "@types/react": "^18.2.6",
     "memfs": "^4.2.0",
     "npm-run-all": "^4.1.5",
+    "tsup": "^7.2.0",
     "typescript": "^5.0.4",
     "vitest": "^0.34.1"
   },
@@ -48,10 +63,10 @@
       "@thoughtbot/eslint-config/typescript"
     ],
     "ignorePatterns": [
-      "src/commands/templates",
+      "templates",
       "__mocks__/**/*.js",
       "bin/belt.js",
-      "/build",
+      "/dist",
       "vitest.setup.js"
     ],
     "rules": {

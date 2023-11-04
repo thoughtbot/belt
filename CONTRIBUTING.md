@@ -16,6 +16,32 @@ Install dependencies:
 yarn install
 ```
 
+Run the dev server during development:
+
+```bash
+yarn dev
+```
+
+## Test changes locally
+
+In thoughtbelt directory:
+
+```bash
+yarn link
+```
+
+In some other directory:
+
+```bash
+yarn add thoughtbelt
+yarn link thoughtbelt
+
+# or whatever command
+yarn thoughtbelt NewApp
+```
+
+## Creating a pull request
+
 Make sure the tests pass:
 
 ```bash

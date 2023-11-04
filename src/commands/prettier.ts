@@ -1,15 +1,13 @@
-import { log } from 'console';
-import path from 'path';
-import { fileURLToPath, URL } from 'url';
-import fs from 'fs-extra';
 import chalk from 'chalk';
+import { log } from 'console';
 import * as eta from 'eta';
-import isPrettierConfigured from '../util/isPrettierConfigured';
+import fs from 'fs-extra';
+import path from 'path';
+import { PACKAGE_ROOT } from '../constants';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
+import isPrettierConfigured from '../util/isPrettierConfigured';
 import writeFile from '../util/writeFile';
-
-const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default async function runPrettier() {
   const projectDir = await getProjectDir();
@@ -30,7 +28,7 @@ export default async function runPrettier() {
       log('.prettierignore config file already exists');
     } else {
       const prettierIgnoreTemplate = await fs.readFile(
-        path.join(dirname, 'templates', 'prettierignore.eta'),
+        path.join(PACKAGE_ROOT, 'templates/prettierignore.eta'),
       );
       const fileContents = eta.render(prettierIgnoreTemplate.toString(), {});
 

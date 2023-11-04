@@ -2,15 +2,13 @@ import chalk from 'chalk';
 import * as eta from 'eta';
 import fs from 'fs-extra';
 import path from 'path';
-import { fileURLToPath, URL } from 'url';
+import { PACKAGE_ROOT } from '../constants';
 import addDependency from '../util/addDependency';
 import getProjectDir from '../util/getProjectDir';
 import isEslintConfigured from '../util/isEslintConfigured';
 import isPackageInstalled from '../util/isPackageInstalled';
 import print from '../util/print';
 import writeFile from '../util/writeFile';
-
-const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default async function addEslint() {
   const projectDir = await getProjectDir();
@@ -21,7 +19,7 @@ export default async function addEslint() {
     const hasTypeScript = await isPackageInstalled('typescript');
 
     const eslintConfigTemplate = await fs.readFile(
-      path.join(dirname, 'templates', 'eslintrc.js.eta'),
+      path.join(PACKAGE_ROOT, 'templates/eslintrc.js.eta'),
     );
 
     const fileContents = eta.render(eslintConfigTemplate.toString(), {

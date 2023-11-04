@@ -15,5 +15,5 @@
     "experimentalSpecifierResolution": "node"
   },
   "include": ["./**/*.ts"],
-  "exclude": ["./src/commands/templates/**/*"]
+  "exclude": ["templates/**/*"]
 }
