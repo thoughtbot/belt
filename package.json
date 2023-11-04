@@ -2,7 +2,7 @@
   "name": "thoughtbelt",
   "author": "thoughtbot, Inc.",
   "license": "MIT",
-  "version": "0.1.7-0",
+  "version": "0.1.7",
   "description": "React Native project starter and generator CLI",
   "type": "module",
   "exports": "./dist/index.js",
