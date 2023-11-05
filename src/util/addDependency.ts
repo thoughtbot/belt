@@ -3,7 +3,10 @@ import fs from 'fs-extra';
 import * as path from 'path';
 import getProjectDir from './getProjectDir';
 
-export default async function addDependency(deps: string, { dev = false }) {
+export default async function addDependency(
+  deps: string,
+  { dev = false } = {},
+) {
   const isYarn = await fs.exists(path.join(await getProjectDir(), 'yarn.lock'));
 
   if (isYarn) {

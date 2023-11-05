@@ -19,9 +19,14 @@ test("doesn't error", async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
   vi.spyOn(process, 'chdir').mockImplementation(() => {
     const json = {
-      'package.json': '{ "dependencies": {}, "devDependencies": {} }',
+      'package.json': JSON.stringify({
+        scripts: {},
+        dependencies: {},
+        devDependencies: {},
+      }),
+      'yarn.lock': '',
     };
     vol.fromJSON(json, './');
   });
-  await createApp('MyApp');
+  await createApp('MyApp', { testing: true });
 });

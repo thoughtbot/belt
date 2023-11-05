@@ -20,9 +20,8 @@ export default function runCli() {
     )
     // todo: remove this option, since we will always end up installing during creation
     .option(
-      '--no-test',
-      'Pass true to skip installing React Native Testing Library',
-      false,
+      '--no-testing',
+      'Pass true to skip installing Jest and React Native Testing Library',
     )
     .action(buildAction(import('./commands/createApp')));
 

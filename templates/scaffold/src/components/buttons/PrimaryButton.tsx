@@ -6,13 +6,7 @@ import {
 
 type ButtonProps = TouchableOpacityProps;
 
-export default function PrimaryButton({
-  style,
-  text,
-  textStyle,
-  children,
-  ...props
-}: ButtonProps) {
+export default function PrimaryButton({ style, ...props }: ButtonProps) {
   return (
     <TouchableOpacity
       activeOpacity={0.6}

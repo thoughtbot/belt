@@ -1,49 +1,46 @@
 import * as eta from 'eta';
 import fs from 'fs-extra';
 import path from 'path';
-import { fileURLToPath, URL } from 'url';
+import { PACKAGE_ROOT } from '../constants';
 import getProjectDir from './getProjectDir';
 import writeFile from './writeFile';
-
-// for manual testing, change this to another name so doesn't conflict
-// with project's tsconfig.json
-const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 type Params = {
   templateDir: string;
   templateFile: string;
-  /** relative to project root, with leading './' */
-  destination: string;
+  /** relative to project root */
+  destination?: string;
   variables?: object;
+  format?: boolean;
 };
 
 export default async function copyTemplate({
   templateDir,
   templateFile,
-  destination,
   variables,
+  destination = '.',
+  format = false,
 }: Params) {
   const projectDir = await getProjectDir();
-  let template: string | Buffer = await fs.readFile(
-    path.join(
-      dirname,
-      '..',
-      'commands',
-      'templates',
-      templateDir,
-      templateFile,
-    ),
-  );
+  let template: string = (
+    await fs.readFile(
+      path.join(PACKAGE_ROOT, 'templates', templateDir, templateFile),
+    )
+  ).toString();
 
   if (templateFile.endsWith('eta')) {
     template = eta.render(template.toString(), variables ?? {});
   }
 
   const fullDestination = destination.endsWith('/')
-    ? `${destination}${templateFile.replace('.eta', '')}`
+    ? `${destination}${templateFile}`
+    : destination === '.'
+    ? templateFile
     : destination;
 
-  await writeFile(path.join(projectDir, fullDestination), template.toString(), {
-    format: true,
+  const fullDestinationFilename = fullDestination.replace(/\.eta$/, '');
+
+  await writeFile(path.join(projectDir, fullDestinationFilename), template, {
+    format,
   });
 }

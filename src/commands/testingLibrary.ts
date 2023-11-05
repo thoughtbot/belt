@@ -1,9 +1,15 @@
+import chalk from 'chalk';
 import { execSync } from 'child_process';
 import addDependency from '../util/addDependency';
-import copyTemplate from '../util/copyTemplate';
+import addPackageJsonScripts from '../util/addPackageJsonScripts';
+import addToGitignore from '../util/addToGitignore';
+import copyTemplateDirectory from '../util/copyTemplateDirectory';
+import getPackageManager from '../util/getPackageManager';
 import isExpo from '../util/isExpo';
+import print from '../util/print';
 
 export default async function addTestingLibrary() {
+  print(chalk.bold('👖 Installing Jest and Testing Library'));
   const expo = await isExpo();
 
   if (expo) {
@@ -11,26 +17,33 @@ export default async function addTestingLibrary() {
   }
 
   await addDependency(
-    'jest @testing-library/react-native @testing-library/jest-native @types/jest babel-jest',
+    `${
+      expo ? '' : 'jest'
+    } @testing-library/react-native @testing-library/jest-native @types/jest babel-jest`,
     { dev: true },
   );
 
-  await copyTemplate({
+  await copyTemplateDirectory({
     templateDir: 'testingLibrary',
-    templateFile: 'jest.config.js.eta',
-    destination: 'jest.config.js',
     variables: { expo },
   });
 
-  await copyTemplate({
-    templateDir: 'testingLibrary',
-    templateFile: 'jest.setup.js',
-    destination: './',
-  });
+  const mgr = await getPackageManager();
+  await addPackageJsonScripts(
+    {
+      test: 'jest',
+      'test:ci': `${mgr} test --maxWorkers=2 --silent --ci`,
+      'test:cov': `${mgr} test --coverage --coverageDirectory ./.cache/coverage`,
+      'test:all': `${mgr} lint && ${mgr} test:cov`,
+    },
+    { overwrite: true },
+  );
 
-  await copyTemplate({
-    templateDir: 'testingLibrary',
-    templateFile: 'fileMock.js',
-    destination: './src/test/',
-  });
+  await addToGitignore('/.cache');
+
+  print(
+    chalk.green(
+      '\n🎉 Successfully installed and configured Jest and Testing Library\n',
+    ),
+  );
 }

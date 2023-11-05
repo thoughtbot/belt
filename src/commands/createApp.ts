@@ -1,7 +1,10 @@
 import { confirm, input } from '@inquirer/prompts';
 import { execSync, spawnSync } from 'child_process';
+import addDependency from '../util/addDependency';
+import addPackageJsonScripts from '../util/addPackageJsonScripts';
 import print from '../util/print';
 import addEslint from './eslint';
+import addPrettier from './prettier';
 import createScaffold from './scaffold';
 import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
@@ -23,22 +26,41 @@ export async function createApp(
 
   process.chdir(`./${appName}`);
 
+  // add dependencies that every project will use
+  await addDependency(
+    [
+      'react-native-keyboard-aware-scrollview',
+      'react-native-safe-area-context',
+      '@react-native-async-storage/async-storage',
+    ].join(' '),
+  );
+  commit('Add dependencies');
+
+  // must add TS before ESLint
   await addTypescript();
   execSync('git add .');
-  execSync('git commit -m "Add TypeScript"');
+  commit('Add TypeScript');
 
   await addEslint();
-  execSync('git add .');
-  execSync('git commit -m "Configure ESLint"');
+  commit('Add and configure ESLint');
+
+  await addPrettier();
+  commit('Add and configure Prettier');
+
+  execSync('yarn fix:prettier');
+  commit('Run Prettier on project');
+
+  await addDependency('npm-run-all', { dev: true });
+  await addPackageJsonScripts({
+    lint: 'run-p lint:eslint lint:types lint:prettier',
+  });
 
   await createScaffold();
-  execSync('git add .');
-  execSync('git commit -m "Add app scaffold"');
+  commit('Add app scaffold');
 
   if (testing) {
     await addTestingLibrary();
-    execSync('git add .');
-    execSync('git commit -m "Add jest, Testing Library"');
+    commit('Add jest, Testing Library');
   }
 }
 
@@ -67,9 +89,15 @@ async function printIntro() {
   - Add and configure ESLint
   - Add and configure Prettier
   - Create the project directory structure
+  - Install and configure Jest and Testing Library
   `);
 
   if (!(await confirm({ message: 'Ready to proceed?' }))) {
     process.exit(0);
   }
+}
+
+function commit(message: string) {
+  execSync('git add .');
+  execSync(`git commit -m "${message}"`);
 }

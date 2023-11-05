@@ -1,5 +1,5 @@
 module.exports = {
-  "extends": [
+  extends: [
     "@thoughtbot/eslint-config/native",
     <% if(it.typescript) { %>
       "@thoughtbot/eslint-config/typescript"

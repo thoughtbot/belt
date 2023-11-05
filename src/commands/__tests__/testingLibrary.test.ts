@@ -5,18 +5,19 @@ import addTestingLibrary from '../testingLibrary';
 
 vi.mock('../../util/addDependency');
 vi.mock('../../util/print', () => ({
-  // __esModule: true,
   default: vi.fn(),
 }));
 
 test('installs Testing Library', async () => {
   vol.fromJSON({
     'package.json': JSON.stringify({
+      scripts: {},
       dependencies: {
         expo: '1.0.0',
       },
       devDependencies: {},
     }),
+    'yarn.lock': '',
   });
 
   await addTestingLibrary();
