@@ -67,6 +67,7 @@
       "__mocks__/**/*.js",
       "bin/belt.js",
       "/dist",
+      "/builds",
       "vitest.setup.js"
     ],
     "rules": {

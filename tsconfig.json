@@ -16,5 +16,5 @@
     "experimentalSpecifierResolution": "node"
   },
   "include": ["./**/*.ts"],
-  "exclude": ["templates/**/*", "./dist"]
+  "exclude": ["templates", "dist", "builds"]
 }

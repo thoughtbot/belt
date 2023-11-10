@@ -1,5 +1,6 @@
 import { confirm, input } from '@inquirer/prompts';
 import { execSync, spawnSync } from 'child_process';
+import { globals } from '../constants';
 import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
 import print from '../util/print';
@@ -10,13 +11,18 @@ import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
 
 type Options = {
-  testing: boolean;
+  testing?: boolean;
+  interactive?: boolean;
+  isTest?: boolean;
 };
 
 export async function createApp(
   name: string | undefined,
-  { testing }: Options,
+  { interactive = true, isTest = false, testing = false }: Options,
 ) {
+  globals.interactive = interactive;
+  globals.isTest = isTest;
+
   const appName = name || (await getAppName());
   await printIntro();
 
@@ -26,6 +32,11 @@ export async function createApp(
 
   process.chdir(`./${appName}`);
 
+  if (isTest) {
+    // since is inside our git repo, the project git repo is not initialized
+    execSync('git init');
+    commit('Initial commit');
+  }
   // add dependencies that every project will use
   await addDependency(
     [
@@ -65,6 +76,12 @@ export async function createApp(
 }
 
 async function getAppName() {
+  if (!globals.interactive) {
+    throw new Error(
+      'App name not provided and running in non-interactive mode, aborting..',
+    );
+  }
+
   return input({ message: 'What is the name of your app?' });
 }
 
@@ -92,7 +109,10 @@ async function printIntro() {
   - Install and configure Jest and Testing Library
   `);
 
-  if (!(await confirm({ message: 'Ready to proceed?' }))) {
+  if (
+    globals.interactive &&
+    !(await confirm({ message: 'Ready to proceed?' }))
+  ) {
     process.exit(0);
   }
 }

@@ -23,6 +23,8 @@ export default function runCli() {
       '--no-testing',
       'Pass true to skip installing Jest and React Native Testing Library',
     )
+    .option('--is-test', 'Used only by test suite')
+    .option('--no-interactive', 'Pass true to skip all prompts')
     .action(buildAction(import('./commands/createApp')));
 
   program
