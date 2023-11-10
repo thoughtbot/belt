@@ -14,7 +14,10 @@ afterEach(() => {
 
 test('exits with message if tsconfig.json already exists', async () => {
   const json = {
-    'package.json': '{}',
+    'package.json': JSON.stringify({
+      scripts: {},
+      dependencies: {},
+    }),
     'tsconfig.json': '1',
   };
   vol.fromJSON(json, './');
@@ -31,6 +34,7 @@ test('exits with message if tsconfig.json already exists', async () => {
 test('writes new tsconfig.json, adds dependencies', async () => {
   vol.fromJSON({
     'package.json': JSON.stringify({
+      scripts: {},
       dependencies: {
         expo: '1.0.0',
       },
@@ -44,7 +48,7 @@ test('writes new tsconfig.json, adds dependencies', async () => {
   });
 
   expect(fs.readFileSync('tsconfig.json', 'utf8')).toMatch(
-    '"extends": "expo/tsconfig.base"',
+    '"compilerOptions": {',
   );
 
   expect(print).not.toHaveBeenCalledWith(
@@ -55,6 +59,7 @@ test('writes new tsconfig.json, adds dependencies', async () => {
 test("doesn't extend expo/tsconfig.base if not an Expo project", async () => {
   vol.fromJSON({
     'package.json': JSON.stringify({
+      scripts: {},
       dependencies: {},
     }),
   });

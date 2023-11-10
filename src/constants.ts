@@ -11,4 +11,3 @@ const filename = fileURLToPath(import.meta.url);
 const distPath = path.dirname(filename);
 // eslint-disable-next-line import/prefer-default-export
 export const PACKAGE_ROOT = path.join(distPath, '../');
-console.log('PACKAGE_ROOT', filename, distPath, PACKAGE_ROOT);

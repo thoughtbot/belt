@@ -1,11 +1,22 @@
 import { confirm, input } from '@inquirer/prompts';
 import { execSync, spawnSync } from 'child_process';
+import addDependency from '../util/addDependency';
+import addPackageJsonScripts from '../util/addPackageJsonScripts';
 import print from '../util/print';
 import addEslint from './eslint';
+import addPrettier from './prettier';
 import createScaffold from './scaffold';
+import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
 
-export async function createApp(name: string | undefined) {
+type Options = {
+  testing: boolean;
+};
+
+export async function createApp(
+  name: string | undefined,
+  { testing }: Options,
+) {
   const appName = name || (await getAppName());
   await printIntro();
 
@@ -15,17 +26,42 @@ export async function createApp(name: string | undefined) {
 
   process.chdir(`./${appName}`);
 
+  // add dependencies that every project will use
+  await addDependency(
+    [
+      'react-native-keyboard-aware-scrollview',
+      'react-native-safe-area-context',
+      '@react-native-async-storage/async-storage',
+    ].join(' '),
+  );
+  commit('Add dependencies');
+
+  // must add TS before ESLint
   await addTypescript();
   execSync('git add .');
-  execSync('git commit -m "Add TypeScript"');
+  commit('Add TypeScript');
 
   await addEslint();
-  execSync('git add .');
-  execSync('git commit -m "Configure ESLint"');
+  commit('Add and configure ESLint');
+
+  await addPrettier();
+  commit('Add and configure Prettier');
+
+  execSync('yarn fix:prettier');
+  commit('Run Prettier on project');
+
+  await addDependency('npm-run-all', { dev: true });
+  await addPackageJsonScripts({
+    lint: 'run-p lint:eslint lint:types lint:prettier',
+  });
 
   await createScaffold();
-  execSync('git add .');
-  execSync('git commit -m "Add app scaffold"');
+  commit('Add app scaffold');
+
+  if (testing) {
+    await addTestingLibrary();
+    commit('Add jest, Testing Library');
+  }
 }
 
 async function getAppName() {
@@ -41,7 +77,8 @@ async function getAppName() {
 export default function createAppAction(...args: unknown[]) {
   // if argument ommitted, args[0] is options
   const appNameArg = (args[0] as string[])[0];
-  return createApp(appNameArg);
+  const options = (args[0] as unknown[])[1] as Options;
+  return createApp(appNameArg, options);
 }
 
 async function printIntro() {
@@ -52,9 +89,15 @@ async function printIntro() {
   - Add and configure ESLint
   - Add and configure Prettier
   - Create the project directory structure
+  - Install and configure Jest and Testing Library
   `);
 
   if (!(await confirm({ message: 'Ready to proceed?' }))) {
     process.exit(0);
   }
+}
+
+function commit(message: string) {
+  execSync('git add .');
+  execSync(`git commit -m "${message}"`);
 }

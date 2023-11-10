@@ -1,7 +1,5 @@
 import chalk from 'chalk';
-import fs from 'fs-extra';
-import path from 'path';
-import { PACKAGE_ROOT } from '../constants';
+import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import print from '../util/print';
 
 export default async function createScaffold() {
@@ -13,6 +11,9 @@ export default async function createScaffold() {
         hooks/
       test/
   `);
-  fs.copySync(path.join(PACKAGE_ROOT, 'templates/scaffold/src'), './src');
+
+  await copyTemplateDirectory({
+    templateDir: 'scaffold',
+  });
   print('✅ Created directories');
 }

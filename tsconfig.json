@@ -5,6 +5,7 @@
     "module": "ES2020",
     "moduleResolution": "node",
     "strict": true,
+    "noEmit": true,
     "sourceMap": true,
     "outDir": "./build",
     "skipLibCheck": true,
@@ -15,5 +16,5 @@
     "experimentalSpecifierResolution": "node"
   },
   "include": ["./**/*.ts"],
-  "exclude": ["templates/**/*"]
+  "exclude": ["templates/**/*", "./dist"]
 }
