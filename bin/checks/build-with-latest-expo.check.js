@@ -5,6 +5,13 @@ import fs from 'fs-extra';
 async function runCheck() {
   const dir = './builds';
 
+  if (process.env.CI) {
+    execSync('git config --global user.email "ci@example.com"', {
+      stdio: 'inherit',
+    });
+    execSync('git config --global user.name "CI User"', { stdio: 'inherit' });
+  }
+
   // build to /dist
   execSync('yarn build', { stdio: 'inherit' });
 
