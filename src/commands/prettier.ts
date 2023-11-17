@@ -1,5 +1,5 @@
-import chalk from 'chalk';
 import fs from 'fs-extra';
+import ora from 'ora';
 import path from 'path';
 import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
@@ -9,13 +9,14 @@ import isPrettierConfigured from '../util/isPrettierConfigured';
 import print from '../util/print';
 
 export default async function addPrettier() {
+  const spinner = ora().start('Installing and configuring Prettier');
   const projectDir = await getProjectDir();
   const eslintJsFile = path.join(projectDir, '.eslintrc.js');
   const eslintJSONFile = path.join(projectDir, '.eslintrc.json');
   let hasEslint = false;
 
   if (await isPrettierConfigured()) {
-    print('prettier config file already exists, exiting');
+    spinner.warn('prettier config file already exists, exiting');
     return;
   }
 
@@ -50,5 +51,5 @@ export default async function addPrettier() {
     );
   }
 
-  print(chalk.green('🎉 Prettier successfully configured'));
+  spinner.succeed('Prettier successfully configured');
 }

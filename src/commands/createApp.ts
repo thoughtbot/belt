@@ -1,8 +1,10 @@
 import { confirm, input } from '@inquirer/prompts';
-import { execSync, spawnSync } from 'child_process';
+import chalk from 'chalk';
+import ora from 'ora';
 import { globals } from '../constants';
 import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
+import exec from '../util/exec';
 import print from '../util/print';
 import addEslint from './eslint';
 import addPrettier from './prettier';
@@ -26,17 +28,18 @@ export async function createApp(
   const appName = name || (await getAppName());
   await printIntro();
 
-  spawnSync('npx', ['--yes', 'create-expo-app@latest', appName], {
-    stdio: 'inherit',
-  });
+  const spinner = ora('Creating new app with create-expo-app').start();
+  await exec(`npx --yes create-expo-app@latest ${appName}`);
+  spinner.succeed('Created new app with Expo');
 
   process.chdir(`./${appName}`);
 
   if (isTest) {
     // since is inside our git repo, the project git repo is not initialized
-    execSync('git init');
-    commit('Initial commit');
+    await exec('git init');
+    await commit('Initial commit');
   }
+  spinner.start('Adding dependencies');
   // add dependencies that every project will use
   await addDependency(
     [
@@ -45,21 +48,21 @@ export async function createApp(
       '@react-native-async-storage/async-storage',
     ].join(' '),
   );
-  commit('Add dependencies');
+  await commit('Add dependencies');
+  spinner.succeed('Added dependencies');
 
   // must add TS before ESLint
   await addTypescript();
-  execSync('git add .');
-  commit('Add TypeScript');
-
-  await addEslint();
-  commit('Add and configure ESLint');
+  await commit('Add and configure TypeScript');
 
   await addPrettier();
-  commit('Add and configure Prettier');
+  await commit('Add and configure Prettier');
 
-  execSync('yarn fix:prettier');
-  commit('Run Prettier on project');
+  await addEslint();
+  await commit('Add and configure ESLint');
+
+  await exec('yarn fix:prettier');
+  await commit('Run Prettier on project');
 
   await addDependency('npm-run-all', { dev: true });
   await addPackageJsonScripts({
@@ -67,12 +70,20 @@ export async function createApp(
   });
 
   await createScaffold();
-  commit('Add app scaffold');
+  await commit('Add app scaffold');
 
   if (testing) {
     await addTestingLibrary();
-    commit('Add jest, Testing Library');
+    await commit('Add jest, Testing Library');
   }
+
+  print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
+
+  print(`
+Your pants are now secure! Each tool was configured as an individual commit.
+Take a look at the commits to understand what all was done. For more information
+about thoughtbelt, visit https://github.com/thoughtbot/thoughtbelt.
+`);
 }
 
 async function getAppName() {
@@ -99,25 +110,29 @@ export default function createAppAction(...args: unknown[]) {
 }
 
 async function printIntro() {
-  print('👖 Let’s get started!');
+  print('Let’s get started!');
   print(`\nWe will now perform the following tasks:
   - Create a new app using the latest create-expo-app
   - Add and configure TypeScript
-  - Add and configure ESLint
   - Add and configure Prettier
+  - Add and configure ESLint
   - Create the project directory structure
   - Install and configure Jest and Testing Library
   `);
 
-  if (
-    globals.interactive &&
-    !(await confirm({ message: 'Ready to proceed?' }))
-  ) {
+  if (!globals.interactive) {
+    return;
+  }
+
+  const proceed = await confirm({ message: 'Ready to proceed?' });
+  if (!proceed) {
     process.exit(0);
   }
+
+  print(''); // add new line
 }
 
-function commit(message: string) {
-  execSync('git add .');
-  execSync(`git commit -m "${message}"`);
+async function commit(message: string) {
+  await exec('git add .');
+  await exec(`git commit -m "${message}"`);
 }

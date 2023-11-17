@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import ora from 'ora';
 import path from 'path';
 import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
@@ -20,6 +21,7 @@ export default async function addTypescript() {
     return;
   }
 
+  const spinner = ora().start('Installing and configuring TypeScript');
   await addDependency('typescript @types/react', { dev: true });
 
   await copyTemplateDirectory({
@@ -29,8 +31,8 @@ export default async function addTypescript() {
     },
   });
 
-  if (fs.existsSync(path.join(projectDir, 'App.js'))) {
-    fs.moveSync(
+  if (await fs.exists(path.join(projectDir, 'App.js'))) {
+    await fs.move(
       path.join(projectDir, 'App.js'),
       path.join(projectDir, 'App.tsx'),
     );
@@ -38,9 +40,5 @@ export default async function addTypescript() {
 
   await addPackageJsonScripts({ 'lint:types': 'tsc' });
 
-  print(
-    chalk.green(
-      '\n🎉 TypeScript successfully configured\nConsider renaming your existing JS files as .ts or .tsx.\n',
-    ),
-  );
+  spinner.succeed('TypeScript successfully configured');
 }

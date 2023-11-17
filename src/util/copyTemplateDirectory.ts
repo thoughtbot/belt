@@ -22,7 +22,7 @@ export default async function copyTemplateDirectory({
   variables = {},
 }: Params) {
   const srcDir = path.join(PACKAGE_ROOT, `templates`, templateDir);
-  fs.copySync(srcDir, destinationDir);
+  await fs.copy(srcDir, destinationDir);
 
   await renderTemplates(srcDir, destinationDir, variables);
   await removeKeepFilesIfNotNeeded(destinationDir);
@@ -46,7 +46,7 @@ async function renderTemplates(
     );
 
     const rendered = eta.render(
-      fs.readFileSync(filename).toString(),
+      (await fs.readFile(filename)).toString(),
       variables ?? {},
     );
 
@@ -60,24 +60,27 @@ async function renderTemplates(
     );
 
     // remove .eta file
-    fs.rmSync(destinationFilename);
+    await fs.rm(destinationFilename);
   }
 }
 
 async function removeKeepFilesIfNotNeeded(destinationDir: string) {
   const filenames = await getFiles(destinationDir);
-  filenames.forEach((filename) => {
+  const promises = filenames.map((filename) => {
     if (filename.endsWith('/.keep')) {
-      fs.rmSync(filename);
+      return fs.rm(filename);
     }
+    return Promise.resolve();
   });
+
+  return Promise.all(promises);
 }
 
 /**
  * returns array of all filenames within 'dir', recursively
  */
 async function getFiles(dir: string): Promise<string[]> {
-  const dirents = fs.readdirSync(dir, { withFileTypes: true });
+  const dirents = await fs.readdir(dir, { withFileTypes: true });
   const files = await Promise.all(
     dirents.map((dirent) => {
       const res = path.resolve(dir, dirent.name);

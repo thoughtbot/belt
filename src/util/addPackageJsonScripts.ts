@@ -13,10 +13,6 @@ export default async function addPackageJsonScripts(
   values: Record<string, string>,
   { overwrite = false }: Params = {},
 ) {
-  const names = Object.keys(values);
-  const scriptText = names.length > 1 ? 'scripts' : 'script';
-  print(`Adding package.json ${scriptText}: ${names.join(', ')}`);
-
   const packageJson = await readPackageJson();
 
   Object.entries(values).forEach(([name, command]) => {

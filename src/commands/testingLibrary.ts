@@ -1,19 +1,18 @@
-import chalk from 'chalk';
-import { execSync } from 'child_process';
+import ora from 'ora';
 import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
 import addToGitignore from '../util/addToGitignore';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
+import exec from '../util/exec';
 import getPackageManager from '../util/getPackageManager';
 import isExpo from '../util/isExpo';
-import print from '../util/print';
 
 export default async function addTestingLibrary() {
-  print(chalk.bold('👖 Installing Jest and Testing Library'));
+  const spinner = ora().start('Installing Jest and Testing Library');
   const expo = await isExpo();
 
   if (expo) {
-    execSync('npx expo install jest jest-expo');
+    await exec('npx expo install jest jest-expo');
   }
 
   await addDependency(
@@ -42,9 +41,7 @@ export default async function addTestingLibrary() {
 
   await addToGitignore('/.cache');
 
-  print(
-    chalk.green(
-      '\n🎉 Successfully installed and configured Jest and Testing Library\n',
-    ),
+  spinner.succeed(
+    'Successfully installed and configured Jest and Testing Library',
   );
 }
