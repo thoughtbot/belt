@@ -18,7 +18,7 @@ Or, if you already have an app and want to configure ESLint, Prettier, TypeScrip
 yarn install --dev thoughtbelt
 ```
 
-or 
+or
 
 ```
 npm install --save-dev thoughtbelt
