@@ -6,15 +6,15 @@ export type PackageManager = 'yarn' | 'npm' | 'pnpm';
 export default async function getPackageManager(): Promise<PackageManager> {
   const projectDir = await getProjectDir();
 
-  function fileExists(name: string) {
-    return fs.existsSync(path.join(projectDir, name));
+  async function fileExists(name: string) {
+    return fs.exists(path.join(projectDir, name));
   }
 
-  return fileExists('yarn.lock')
+  return (await fileExists('yarn.lock'))
     ? 'yarn'
-    : fileExists('package-lock.json')
+    : (await fileExists('package-lock.json'))
     ? 'npm'
-    : fileExists('pnpm-lock.yaml')
+    : (await fileExists('pnpm-lock.yaml'))
     ? 'pnpm'
     : throwError('Unable to determine package manager.');
 }

@@ -48,7 +48,7 @@ test('writes new tsconfig.json, adds dependencies', async () => {
   });
 
   expect(fs.readFileSync('tsconfig.json', 'utf8')).toMatch(
-    '"compilerOptions": {',
+    '"extends": "expo/tsconfig.base"',
   );
 
   expect(print).not.toHaveBeenCalledWith(

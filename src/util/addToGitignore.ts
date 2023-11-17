@@ -5,7 +5,7 @@ import getProjectDir from './getProjectDir';
  * lines should be separated by newlines
  */
 export default async function addToGitignore(lines: string) {
-  fs.appendFileSync(
+  return fs.appendFile(
     path.join(await getProjectDir(), '.gitignore'),
     `\n${lines}`,
   );

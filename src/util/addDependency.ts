@@ -1,17 +1,15 @@
-import { execSync } from 'child_process';
-import fs from 'fs-extra';
-import * as path from 'path';
-import getProjectDir from './getProjectDir';
+import exec from './exec';
+import getPackageManager from './getPackageManager';
 
 export default async function addDependency(
   deps: string,
   { dev = false } = {},
 ) {
-  const isYarn = await fs.exists(path.join(await getProjectDir(), 'yarn.lock'));
+  const mgr = await getPackageManager();
 
-  if (isYarn) {
-    execSync(`yarn add ${dev ? '--dev' : ''} ${deps}`);
+  if (mgr === 'yarn') {
+    await exec(`yarn add ${dev ? '--dev' : ''} ${deps}`);
   } else {
-    execSync(`npm install ${dev ? '--save-dev' : '--save'} ${deps}`);
+    await exec(`${mgr} install ${dev ? '--save-dev' : '--save'} ${deps}`);
   }
 }

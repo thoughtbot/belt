@@ -22,6 +22,7 @@ export default {
   isDirectory(src) {
     return fs.statSync(src).isDirectory(src);
   },
+  appendFile: fs.promises.appendFile,
   // currently having to manually copy the sync methods over, there's prob a better way
   rmSync: fs.rmSync,
   readFileSync(file, options) {
@@ -34,12 +35,18 @@ export default {
   writeFileSync: fs.writeFileSync,
   existsSync: fs.existsSync,
   appendFileSync: fs.appendFileSync,
+  readdir(path, options) {
+    return Promise.resolve(this.readdirSync(path, options));
+  },
   readdirSync(path, options) {
     if (dontMock(path)) {
       return actualfs.readdirSync(path, options);
     }
 
     return fs.readdirSync(path, options);
+  },
+  copy(src, dest) {
+    return Promise.resolve(this.copySync(src, dest));
   },
   copySync(src, dest) {
     const sourceFS = dontMock(src) ? actualfs : fs;

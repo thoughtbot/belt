@@ -10,18 +10,24 @@ async function runCheck() {
       stdio: 'inherit',
     });
     execSync('git config --global user.name "CI User"', { stdio: 'inherit' });
-  }
 
-  // build to /dist
-  execSync('yarn build', { stdio: 'inherit' });
+    // build to /dist
+    execSync('yarn build', { stdio: 'inherit' });
+  } else {
+    console.log(
+      "Ensure you've built the app with 'yarn dev' or 'yarn build' first",
+    );
+  }
 
   // clean /builds, cd into it
   fs.rmSync(dir, { recursive: true, force: true });
   fs.mkdirSync(dir, { recursive: true });
   process.chdir(dir);
 
+  const opts = process.env.CI ? '--no-interactive --is-test' : '';
+
   // run CLI
-  execSync('node ../dist/index.js ExpoSample --no-interactive --is-test', {
+  execSync(`node ../dist/index.js ExpoSample --is-test ${opts}`, {
     stdio: 'inherit',
   });
 

@@ -1,5 +1,5 @@
-import { execSync } from 'child_process';
+import exec from './exec';
 
 export default async function formatFile(filePath: string) {
-  execSync(`npx prettier --write '${filePath}'`);
+  return exec(`npx prettier --write '${filePath}'`);
 }

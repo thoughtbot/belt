@@ -1,19 +1,12 @@
-import chalk from 'chalk';
+import ora from 'ora';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
-import print from '../util/print';
 
 export default async function createScaffold() {
-  print(chalk.bold('👖 Creating directory structure'));
-  print(`
-    src/
-      components/
-      util/
-        hooks/
-      test/
-  `);
+  const spinner = ora().start('Creating directory structure');
 
   await copyTemplateDirectory({
     templateDir: 'scaffold',
   });
-  print('✅ Created directories');
+
+  spinner.succeed('Created directories');
 }

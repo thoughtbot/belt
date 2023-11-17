@@ -27,5 +27,8 @@
     "babel.config.js",
     "metro.config.js",
     "jest.config.js"
-  ]
+  ],
+  <% if(it.expo) { %>
+  "extends": "expo/tsconfig.base"
+  <% } %>
 }
