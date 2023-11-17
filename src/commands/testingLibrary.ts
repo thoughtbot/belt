@@ -29,12 +29,13 @@ export default async function addTestingLibrary() {
   });
 
   const mgr = await getPackageManager();
+  const cmd = mgr === 'npm' ? 'npm run' : mgr;
   await addPackageJsonScripts(
     {
       test: 'jest',
-      'test:ci': `${mgr} test --maxWorkers=2 --silent --ci`,
-      'test:cov': `${mgr} test --coverage --coverageDirectory ./.cache/coverage`,
-      'test:all': `${mgr} lint && ${mgr} test:cov`,
+      'test:ci': `jest --maxWorkers=2 --silent --ci`,
+      'test:cov': `jest --coverage --coverageDirectory ./.cache/coverage`,
+      'test:all': `${cmd} lint && ${cmd} test:cov`,
     },
     { overwrite: true },
   );

@@ -65,8 +65,9 @@
     "ignorePatterns": [
       "templates",
       "__mocks__/**/*.js",
-      "bin/belt.js",
+      "/bin",
       "/dist",
+      "/builds",
       "vitest.setup.js"
     ],
     "rules": {

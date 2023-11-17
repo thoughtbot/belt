@@ -1,6 +1,11 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+export const globals = {
+  interactive: true,
+  isTest: false,
+};
+
 // TSUP builds files without hierarchy to dist/, so the path is ultimately
 // in relation to the dist/ directory. NPM package structure is:
 // <root>
