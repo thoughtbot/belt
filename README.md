@@ -6,19 +6,34 @@ This project is still in very early stages. Track this project [in Trello](https
 
 ## Usage
 
-This package is not yet available on NPM. For now, you can run the CLI locally Only the scaffolding is in place right now.
-
-Ensure you have a recent version of Node.js installed, then install dependencies:
+Create a new Expo app with:
 
 ```
-yarn install
+npx thoughtbelt MyApp
 ```
 
-Then, run some commands, eg.:
+Or, if you already have an app and want to configure ESLint, Prettier, TypeScript, React Native Testing Library, etc, run:
 
 ```
-> bin/belt eslint
-> bin/belt prettier
+yarn install --dev thoughtbelt
+```
+
+or 
+
+```
+npm install --save-dev thoughtbelt
+```
+
+then run the command you'd like to perform:
+
+```
+yarn thoughtbelt typescript
+```
+
+or
+
+```
+npm thoughtbelt typescript
 ```
 
 ## Contributing
