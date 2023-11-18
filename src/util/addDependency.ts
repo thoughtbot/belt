@@ -7,8 +7,8 @@ export default async function addDependency(
 ) {
   const mgr = await getPackageManager();
 
-  if (mgr === 'yarn') {
-    await exec(`yarn add ${dev ? '--dev' : ''} ${deps}`);
+  if (['yarn', 'bun'].includes(mgr)) {
+    await exec(`${mgr} add ${dev ? '--dev' : ''} ${deps}`);
   } else {
     await exec(`${mgr} install ${dev ? '--save-dev' : '--save'} ${deps}`);
   }
