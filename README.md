@@ -2,7 +2,7 @@
 
 Perform project setup and redundant tasks without your pants falling down!
 
-This project is still in very early stages. Track this project [in Trello](https://trello.com/b/AGqz2thm/react-native-cli) or in Slack (`#proj-react-native-cli`).
+This project is still in very early stages. Track this project [in Trello](https://trello.com/b/AGqz2thm/react-native-cli) or in Slack ([`#proj-thoughtbelt`](https://thoughtbot.slack.com/archives/C050UJTCWPR)).
 
 ## Usage
 
