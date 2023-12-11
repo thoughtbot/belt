@@ -1,12 +1,34 @@
 #!/usr/bin/env node
+import { execSync } from 'child_process';
+import fs from 'fs-extra';
 
-import { spawn } from 'node:child_process';
-import path from 'node:path';
-import { URL, fileURLToPath } from 'node:url';
+// executes the CLI locally from the `builds` directory
+// this can be useful for troubleshooting
+// eg. node bin/belt.js MyApp, or bun bin/belt.js
+async function run() {
+  const dir = './builds';
 
-const dirname = fileURLToPath(new URL('.', import.meta.url));
-const args = process.argv.slice(2);
+  console.log(
+    "Ensure you've built the app with 'yarn dev' or 'yarn build' first",
+  );
 
-spawn('ts-node', [path.join(dirname, '../src/cli.ts'), ...args], {
-  stdio: 'inherit',
-});
+  // clean /builds, cd into it
+  fs.mkdirSync(dir, { recursive: true });
+  process.chdir(dir);
+
+  // run CLI
+  execSync(
+    `${getNodeRunner()} ../dist/index.js ${process.argv
+      .slice(2)
+      .join(' ')} --is-test`,
+    {
+      stdio: 'inherit',
+    },
+  );
+}
+
+function getNodeRunner() {
+  return Bun && Bun.env ? 'bun' : 'node';
+}
+
+void run();

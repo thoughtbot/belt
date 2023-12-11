@@ -5,6 +5,7 @@ import { globals } from '../constants';
 import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
 import exec from '../util/exec';
+import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
 import addEslint from './eslint';
 import addPrettier from './prettier';
@@ -12,16 +13,21 @@ import createScaffold from './scaffold';
 import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
 
+type PackageManagerOptions = {
+  bun?: boolean;
+  npm?: boolean;
+  yarn?: boolean;
+  pnpm?: boolean;
+};
 type Options = {
   testing?: boolean;
   interactive?: boolean;
   isTest?: boolean;
-};
+} & PackageManagerOptions;
 
-export async function createApp(
-  name: string | undefined,
-  { interactive = true, isTest = false, testing = false }: Options,
-) {
+export async function createApp(name: string | undefined, options: Options) {
+  const { interactive = true, isTest = false, testing = false } = options;
+
   globals.interactive = interactive;
   globals.isTest = isTest;
 
@@ -29,7 +35,7 @@ export async function createApp(
   await printIntro();
 
   const spinner = ora('Creating new app with create-expo-app').start();
-  await exec(`npx --yes create-expo-app@latest ${appName}`);
+  await createExpoApp(appName, options);
   spinner.succeed('Created new app with Expo');
 
   process.chdir(`./${appName}`);
@@ -135,4 +141,32 @@ async function printIntro() {
 async function commit(message: string) {
   await exec('git add .');
   await exec(`git commit -m "${message}"`);
+}
+// Installs Expo using the specified package manager, or if no package manager
+// option specified, try to determine based on which packager is running
+// thoughtbelt eg. `npx thoughtbelt` vs. `bunx thoughtbelt`
+async function createExpoApp(appName: string, options: Options) {
+  const mgr = options.bun
+    ? 'bun'
+    : options.yarn
+    ? 'yarn'
+    : options.pnpm
+    ? 'pnpm'
+    : options.npm
+    ? 'npm'
+    : getUserPackageManager();
+
+  // running with the right command will result in Expo creating the app
+  // using the same package manager
+  const command =
+    mgr === 'yarn'
+      ? 'yarn create expo'
+      : mgr === 'pnpm'
+      ? 'pnpm create expo'
+      : mgr === 'bun'
+      ? 'bunx create-expo'
+      : 'npx --yes create-expo';
+
+  const fullCommand = `${command}@latest ${appName}`;
+  await exec(fullCommand);
 }
