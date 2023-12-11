@@ -13,6 +13,7 @@ import addPrettier from './prettier';
 import createScaffold from './scaffold';
 import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
+import addNavigation from './navigation';
 
 type PackageManagerOptions = {
   bun?: boolean;
@@ -85,6 +86,9 @@ export async function createApp(name: string | undefined, options: Options) {
     await commit('Add jest, Testing Library');
   }
 
+  await addNavigation();
+  await commit('Add navigation');
+
   await copyTemplateDirectory({ templateDir: 'createApp' });
 
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
@@ -128,6 +132,7 @@ async function printIntro() {
   - Add and configure ESLint
   - Create the project directory structure
   - Install and configure Jest and Testing Library
+  - Install and configure React Navigation
   `);
 
   if (!globals.interactive) {
