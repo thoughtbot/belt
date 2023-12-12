@@ -64,6 +64,10 @@ export async function createApp(
   await commit('Initial commit');
   spinner.succeed('Installed dependencies');
 
+  spinner.start('Formatting codebase');
+  await exec('npm run fix:prettier');
+  spinner.succeed('Formatted codebase');
+
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
   print(`

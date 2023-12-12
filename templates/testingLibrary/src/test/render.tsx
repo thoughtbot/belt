@@ -9,7 +9,5 @@ import { ReactElement } from 'react';
 // TODO: this will become customized as the codebase progresses, so our
 // tests can be wrapped with appropriate providers, mocks can be supplied, etc
 export default function render(element: ReactElement): RenderAPI {
-  return TestingLibraryRender(
-    <NavigationContainer>{element}</NavigationContainer>,
-  );
+  return TestingLibraryRender(element);
 }

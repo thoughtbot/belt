@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import ExampleCoffees from 'src/components/ExampleCoffees';
 import { HomeScreenProp } from 'src/navigators/navigatorTypes';
 
 export default function HomeScreen() {
@@ -14,6 +15,7 @@ export default function HomeScreen() {
         onPress={() => navigation.navigate('Information', { owner: 'Will' })}
       />
       <StatusBar style="auto" />
+      <ExampleCoffees />
     </View>
   );
 }

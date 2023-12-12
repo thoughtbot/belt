@@ -60,7 +60,11 @@ export default function runCli() {
       '--no-interactive',
       'Pass true to skip all prompts and use default values',
     )
-    .action(buildAction(import('./commands/notifications')));
+    .action(buildAction(import('./commands/notifications')))
+
+    .command('react-query')
+    .description('Add React Query')
+    .action(buildAction(import('./commands/reactQuery')));
 
   printWelcome();
   program.parse();
