@@ -9,11 +9,11 @@ import exec from '../util/exec';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
 import addEslint from './eslint';
+import addNavigation from './navigation';
 import addPrettier from './prettier';
 import createScaffold from './scaffold';
 import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
-import addNavigation from './navigation';
 
 type PackageManagerOptions = {
   bun?: boolean;
@@ -90,6 +90,7 @@ export async function createApp(name: string | undefined, options: Options) {
   await commit('Add navigation');
 
   await copyTemplateDirectory({ templateDir: 'createApp' });
+  await commit('Add scaffold');
 
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
