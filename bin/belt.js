@@ -28,7 +28,7 @@ async function run() {
 }
 
 function getNodeRunner() {
-  return Bun && Bun.env ? 'bun' : 'node';
+  return typeof Bun !== 'undefined' && Bun.env ? 'bun' : 'node';
 }
 
 void run();

@@ -9,6 +9,7 @@ import exec from '../util/exec';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
 import addEslint from './eslint';
+import addNavigation from './navigation';
 import addPrettier from './prettier';
 import createScaffold from './scaffold';
 import addTestingLibrary from './testingLibrary';
@@ -85,7 +86,11 @@ export async function createApp(name: string | undefined, options: Options) {
     await commit('Add jest, Testing Library');
   }
 
+  await addNavigation();
+  await commit('Add navigation');
+
   await copyTemplateDirectory({ templateDir: 'createApp' });
+  await commit('Add scaffold');
 
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
@@ -128,6 +133,7 @@ async function printIntro() {
   - Add and configure ESLint
   - Create the project directory structure
   - Install and configure Jest and Testing Library
+  - Install and configure React Navigation
   `);
 
   if (!globals.interactive) {

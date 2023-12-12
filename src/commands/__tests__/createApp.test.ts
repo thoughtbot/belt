@@ -30,5 +30,12 @@ test('creates app', async () => {
   });
   await createApp('MyApp', { testing: true });
 
-  expect(fs.readFileSync('App.tsx', 'utf8')).toMatch('expo-status-bar');
+  const app = fs.readFileSync('App.tsx', 'utf8');
+  expect(app).toMatch('<NavigationContainer>');
+  const homeScreen = fs.readFileSync(
+    'src/screens/HomeScreen/HomeScreen.tsx',
+    'utf8',
+  );
+
+  expect(homeScreen).toMatch('expo-status-bar');
 });

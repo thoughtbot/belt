@@ -51,6 +51,11 @@ export default function runCli() {
     .description('Install and configure Jest and Testing Library')
     .action(buildAction(import('./commands/testingLibrary')));
 
+  program
+    .command('navigation')
+    .description('Install and configure React Navigation')
+    .action(buildAction(import('./commands/navigation')));
+
   printWelcome();
   program.parse();
 }
