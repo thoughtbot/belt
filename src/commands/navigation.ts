@@ -12,8 +12,9 @@ export default async function addNavigation() {
     await exec(
       'npx expo install react-native-screens react-native-safe-area-context',
     );
+  } else {
+    await addDependency('react-native-screens react-native-safe-area-context');
   }
-  // what if it is not expo?
 
   await addDependency(
     '@react-navigation/native @react-navigation/native-stack',
