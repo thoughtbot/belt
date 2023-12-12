@@ -4,6 +4,7 @@ import ora from 'ora';
 import { globals } from '../constants';
 import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
+import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
@@ -30,6 +31,7 @@ export async function createApp(name: string | undefined, options: Options) {
 
   globals.interactive = interactive;
   globals.isTest = isTest;
+  globals.isCreateApp = true;
 
   const appName = name || (await getAppName());
   await printIntro();
@@ -82,6 +84,8 @@ export async function createApp(name: string | undefined, options: Options) {
     await addTestingLibrary();
     await commit('Add jest, Testing Library');
   }
+
+  await copyTemplateDirectory({ templateDir: 'createApp' });
 
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
