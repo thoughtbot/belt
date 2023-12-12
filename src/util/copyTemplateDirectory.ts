@@ -53,10 +53,6 @@ async function renderTemplates(
     await writeFile(
       path.join(destinationFilename.replace(/\.eta$/, '')),
       rendered,
-      {
-        // don't try to format if unsupported file type (Prettier will error)
-        format: /\.(js|ts|jsx|tsx|json|md)\.eta$/.test(destinationFilename),
-      },
     );
 
     // remove .eta file

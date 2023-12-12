@@ -38,4 +38,12 @@ test('creates app', async () => {
   );
 
   expect(homeScreen).toMatch('expo-status-bar');
+
+  // from React Query sub-command
+  expect(homeScreen).toMatch('<ExampleCoffees />');
+
+  expect(fs.readFileSync('App.tsx', 'utf8')).toMatch('<QueryClientProvider>');
+  expect(fs.readFileSync('src/test/render.tsx', 'utf8')).toMatch(
+    '<QueryClientProvider',
+  );
 });

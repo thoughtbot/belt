@@ -4,12 +4,9 @@ import {
   render as TestingLibraryRender,
 } from '@testing-library/react-native';
 import { ReactElement } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 
 // TODO: this will become customized as the codebase progresses, so our
 // tests can be wrapped with appropriate providers, mocks can be supplied, etc
 export default function render(element: ReactElement): RenderAPI {
-  return TestingLibraryRender(
-    <NavigationContainer>{element}</NavigationContainer>,
-  );
+  return TestingLibraryRender(element);
 }

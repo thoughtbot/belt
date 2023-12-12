@@ -1,8 +1,7 @@
 import { fs, vol } from 'memfs';
 import { Mock, afterEach, expect, test, vi } from 'vitest';
-import addDependency from '../../util/addDependency';
 import print from '../../util/print';
-import addTypescript from '../typescript';
+import addReactQuery from '../reactQuery';
 
 vi.mock('../../util/addDependency');
 vi.mock('../../util/print', () => ({ default: vi.fn() }));
@@ -12,65 +11,52 @@ afterEach(() => {
   (print as Mock).mockReset();
 });
 
-test('exits with message if tsconfig.json already exists', async () => {
+test('installs React Query and copies templates', async () => {
   const json = {
     'package.json': JSON.stringify({
       scripts: {},
       dependencies: {},
     }),
     'tsconfig.json': '1',
+    'jest.setup.js': 'import React from "react";\n\n// stuff',
   };
+
   vol.fromJSON(json, './');
 
-  await addTypescript();
-  expect(print).toHaveBeenCalledWith(
-    expect.stringMatching(/tsconfig\.json already exists/),
-  );
+  await addReactQuery();
 
-  // doesn't modify
-  expect(fs.readFileSync('tsconfig.json', 'utf8')).toEqual('1');
+  expect(fs.existsSync('src/util/api/api.ts')).toBe(true);
+
+  expect(fs.readFileSync('jest.setup.js', 'utf8')).toMatchInlineSnapshot(`
+    "import server from 'src/test/server';
+    import React from \\"react\\";
+
+    // stuff
+
+    // listen with MSW server. Individual tests can pass mocks to 'render' function
+    beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+    afterAll(() => server.close());
+
+    beforeEach(() => {
+      server.resetHandlers()
+    });
+    "
+  `);
 });
 
-test('writes new tsconfig.json, adds dependencies', async () => {
-  vol.fromJSON({
-    'package.json': JSON.stringify({
-      scripts: {},
-      dependencies: {
-        expo: '1.0.0',
-      },
-    }),
-  });
-
-  await addTypescript();
-
-  expect(addDependency).toHaveBeenCalledWith('typescript @types/react', {
-    dev: true,
-  });
-
-  expect(fs.readFileSync('tsconfig.json', 'utf8')).toMatch(
-    '"extends": "expo/tsconfig.base"',
-  );
-
-  expect(print).not.toHaveBeenCalledWith(
-    expect.stringMatching(/already exists/),
-  );
-});
-
-test("doesn't extend expo/tsconfig.base if not an Expo project", async () => {
-  vol.fromJSON({
+test('creates jest.setup.js if doesnt exist', async () => {
+  const json = {
     'package.json': JSON.stringify({
       scripts: {},
       dependencies: {},
     }),
-  });
+    'tsconfig.json': '1',
+    'jest.setup.js': 'import React from "react";\n\n// stuff',
+  };
 
-  await addTypescript();
+  vol.fromJSON(json, './');
 
-  expect(addDependency).toHaveBeenCalledWith('typescript @types/react', {
-    dev: true,
-  });
+  await addReactQuery();
 
-  expect(fs.readFileSync('tsconfig.json', 'utf8')).not.toMatch(
-    'expo/tsconfig.base',
-  );
+  expect(fs.existsSync('jest.setup.js')).toBe(true);
 });

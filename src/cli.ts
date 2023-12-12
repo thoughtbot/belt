@@ -52,6 +52,11 @@ export default function runCli() {
     .action(buildAction(import('./commands/testingLibrary')));
 
   program
+    .command('react-query')
+    .description('Add React Query')
+    .action(buildAction(import('./commands/reactQuery')));
+
+  program
     .command('navigation')
     .description('Install and configure React Navigation')
     .action(buildAction(import('./commands/navigation')));

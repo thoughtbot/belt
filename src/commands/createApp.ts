@@ -11,6 +11,7 @@ import print from '../util/print';
 import addEslint from './eslint';
 import addNavigation from './navigation';
 import addPrettier from './prettier';
+import addReactQuery from './reactQuery';
 import createScaffold from './scaffold';
 import addTestingLibrary from './testingLibrary';
 import addTypescript from './typescript';
@@ -89,8 +90,15 @@ export async function createApp(name: string | undefined, options: Options) {
   await addNavigation();
   await commit('Add navigation');
 
+  await addReactQuery();
+  await commit('Add React Query');
+
   await copyTemplateDirectory({ templateDir: 'createApp' });
   await commit('Add scaffold');
+
+  spinner.start('Formatting codebase');
+  await exec('npm run fix:prettier');
+  spinner.succeed('Formatted codebase');
 
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
@@ -134,6 +142,7 @@ async function printIntro() {
   - Create the project directory structure
   - Install and configure Jest and Testing Library
   - Install and configure React Navigation
+  - Install and configure React Query
   `);
 
   if (!globals.interactive) {
