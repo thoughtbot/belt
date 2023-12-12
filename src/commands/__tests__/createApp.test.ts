@@ -30,5 +30,11 @@ test('creates app', async () => {
   });
   await createApp('MyApp', { testing: true });
 
-  expect(fs.readFileSync('App.tsx', 'utf8')).toMatch('expo-status-bar');
+  const homeScreen = fs.readFileSync(
+    'src/screens/HomeScreen/HomeScreen.tsx',
+    'utf8',
+  );
+
+  // currently uses an Expo component
+  expect(homeScreen).toMatch('expo-status-bar');
 });
