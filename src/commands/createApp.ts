@@ -25,10 +25,16 @@ type Options = {
   testing?: boolean;
   interactive?: boolean;
   isTest?: boolean;
+  bottomTabs?: boolean;
 } & PackageManagerOptions;
 
 export async function createApp(name: string | undefined, options: Options) {
-  const { interactive = true, isTest = false, testing = false } = options;
+  const {
+    interactive = true,
+    isTest = false,
+    testing = false,
+    bottomTabs,
+  } = options;
 
   globals.interactive = interactive;
   globals.isTest = isTest;
@@ -86,7 +92,7 @@ export async function createApp(name: string | undefined, options: Options) {
     await commit('Add jest, Testing Library');
   }
 
-  await addNavigation();
+  await addNavigation({ bottomTabs });
   await commit('Add navigation');
 
   await copyTemplateDirectory({ templateDir: 'createApp' });
