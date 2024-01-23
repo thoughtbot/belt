@@ -5,10 +5,10 @@
   "version": "0.1.9",
   "description": "React Native project starter and generator CLI",
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": "./dist/index.cjs",
   "bin": {
-    "thoughtbelt": "./dist/index.js",
-    "belt": "./dist/index.js"
+    "thoughtbelt": "./dist/index.cjs",
+    "belt": "./dist/index.cjs"
   },
   "files": [
     "dist",
