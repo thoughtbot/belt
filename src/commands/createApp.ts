@@ -172,11 +172,11 @@ async function createExpoApp(appName: string, options: Options) {
     mgr === 'yarn'
       ? 'yarn create expo'
       : mgr === 'pnpm'
-      ? 'pnpm create expo'
+      ? 'pnpm create expo@latest'
       : mgr === 'bun'
-      ? 'bunx create-expo'
-      : 'npx --yes create-expo';
+      ? 'bunx create-expo@latest'
+      : 'npx --yes create-expo@latest';
 
-  const fullCommand = `${command}@latest ${appName}`;
+  const fullCommand = `${command} ${appName}`;
   await exec(fullCommand);
 }
