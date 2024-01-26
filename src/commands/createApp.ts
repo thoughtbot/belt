@@ -48,15 +48,14 @@ export async function createApp(name: string | undefined, options: Options) {
     await exec('git init');
     await commit('Initial commit');
   }
-  spinner.start('Adding dependencies');
+
   // add dependencies that every project will use
-  await addDependency(
-    [
-      'react-native-keyboard-aware-scrollview',
-      'react-native-safe-area-context',
-      '@react-native-async-storage/async-storage',
-    ].join(' '),
+  spinner.start('Adding dependencies');
+  await exec(
+    'npx expo install @react-native-async-storage/async-storage react-native-safe-area-context',
   );
+  await addDependency('react-native-keyboard-aware-scrollview');
+  await addDependency('thoughtbelt', { dev: true });
   await commit('Add dependencies');
   spinner.succeed('Added dependencies');
 
