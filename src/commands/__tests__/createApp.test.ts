@@ -1,6 +1,7 @@
 import { confirm } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
 import { Mock, afterEach, expect, test, vi } from 'vitest';
+import exec from '../../util/exec';
 import print from '../../util/print';
 import { createApp } from '../createApp';
 
@@ -38,4 +39,23 @@ test('creates app', async () => {
   );
 
   expect(homeScreen).toMatch('expo-status-bar');
+  expect(exec).toHaveBeenCalledWith('yarn create expo MyApp');
+});
+
+test('creates Expo app with npx if npm option passed', async () => {
+  (confirm as Mock).mockResolvedValueOnce(true);
+  vi.spyOn(process, 'chdir').mockImplementation(() => {
+    const json = {
+      'package.json': JSON.stringify({
+        scripts: {},
+        dependencies: {},
+        devDependencies: {},
+      }),
+      'package-lock.json': '',
+    };
+    vol.fromJSON(json, './');
+  });
+  await createApp('MyApp', { testing: true, npm: true });
+
+  expect(exec).toHaveBeenCalledWith('npx --yes create-expo@latest MyApp');
 });
