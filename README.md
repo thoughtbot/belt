@@ -61,14 +61,14 @@ See the [CONTRIBUTING](./CONTRIBUTING.md) document. Thank you, [contributors](ht
 
 ## License
 
-thoughtbelt is Copyright © 2024 thoughtbot. It is free software, and may be
+Belt is Copyright © 2024 thoughtbot. It is free software, and may be
 redistributed under the terms specified in the [LICENSE](/LICENSE) file.
 
 ### About thoughtbot
 
 <img src="https://thoughtbot.com/thoughtbot-logo-for-readmes.svg" width="375" />
 
-thoughtbelt is maintained and funded by thoughtbot, inc.
+Belt is maintained and funded by thoughtbot, inc.
 The names and logos for thoughtbot are trademarks of thoughtbot, inc.
 
 We love open source software! See [our other projects][community] or

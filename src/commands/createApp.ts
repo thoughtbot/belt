@@ -55,7 +55,7 @@ export async function createApp(name: string | undefined, options: Options) {
     'npx expo install @react-native-async-storage/async-storage react-native-safe-area-context',
   );
   await addDependency('react-native-keyboard-aware-scrollview');
-  await addDependency('thoughtbelt', { dev: true });
+  await addDependency('create-belt-app', { dev: true });
   await commit('Add dependencies');
   spinner.succeed('Added dependencies');
 
@@ -96,7 +96,7 @@ export async function createApp(name: string | undefined, options: Options) {
   print(`
 Your pants are now secure! Each tool was configured as an individual commit.
 Take a look at the commits to understand what all was done. For more information
-about thoughtbelt, visit https://github.com/thoughtbot/thoughtbelt.
+about Belt, visit https://github.com/thoughtbot/belt.
 `);
 }
 
@@ -153,7 +153,7 @@ async function commit(message: string) {
 }
 // Installs Expo using the specified package manager, or if no package manager
 // option specified, try to determine based on which packager is running
-// thoughtbelt eg. `npx thoughtbelt` vs. `bunx thoughtbelt`
+// create-belt-app eg. `npx create-belt-app` vs. `bunx create-belt-app`
 async function createExpoApp(appName: string, options: Options) {
   const mgr = options.bun
     ? 'bun'

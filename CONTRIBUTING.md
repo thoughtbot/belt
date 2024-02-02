@@ -24,7 +24,7 @@ yarn dev
 
 ## Test changes locally
 
-In thoughtbelt directory:
+In Belt project directory:
 
 ```bash
 yarn link
@@ -33,11 +33,11 @@ yarn link
 In some other directory:
 
 ```bash
-yarn add thoughtbelt
-yarn link thoughtbelt
+yarn add create-belt-app
+yarn link create-belt-app
 
 # or whatever command
-yarn thoughtbelt NewApp
+yarn belt NewApp
 ```
 
 ## Creating a pull request
@@ -65,11 +65,3 @@ Push to your fork. Write a [good commit message][commit]. Submit a pull request.
 Others will give constructive feedback. This is a time for discussion and
 improvements, and making the necessary changes will be required before we can
 merge the contribution.
-
-## Running the project locally
-
-To run a local version of the codebase locally against a project, follow these steps:
-
-- [in thoughtbelt directory] `yarn link`
-- [in project directory] `yarn link thoughtbelt`
-- Run CLI, eg; `yarn thoughtbelt`
