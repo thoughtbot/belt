@@ -14,45 +14,52 @@ Here are some of what gets configured when you start a new Belt app:
 - Custom test "render" function to facilitate testing
 - MSW for mocking
 - Directory structure
-- Tanstack Query (for REST APIs) or Apollo Client (for GraphQL)
+- React Navigation
+- Tanstack Query (for REST APIs) or Apollo Client (for GraphQL) (coming soon!)
 - Redux for global state (coming soon!)
 
 ## Usage
 
-Create a new React Native, Expo app using Belt with:
+Create a new React Native Expo app using Belt with:
 
-```
+```sh
 # With NPM
 npx create-belt-app
 
 # With Yarn
-yarn create belt-app
+npx create-belt-app --yarn
 
 # With pnpm (experimental)
-pnpm create belt-app
+npx create-belt-app --pnpm
 
 # With Bun (experimental)
-bunx create-belt-app
+npx create-belt-app --bun
 ```
 
-Or, if you already have an app and want to configure ESLint, Prettier, TypeScript, React Native Testing Library, etc, run:
+Or, if you already have an app and want to use Belt, run:
 
-```
+```sh
 # with NPM
 npm install --save-dev create-belt-app
 
 # with Yarn
-yarn install --dev create-belt-app
+yarn add --dev create-belt-app
+
+# with PNPM
+pnpm install --save-dev create-belt-app
 ```
 
 then run the command you'd like to perform:
 
-```
+```sh
 # eg. add TypeScript to the project
 yarn belt typescript
 
 # or, with NPM
-npm belt typescript
+npx belt typescript
+
+# or, with PNPM
+pnpm belt typescript
 ```
 
 ## Contributing
