@@ -6,16 +6,16 @@ Belts are not inherently innovative—they've been around even longer than pants
 
 Here are some of what gets configured when you start a new Belt app:
 
-* ESLint
-* Prettier
-* TypeScript
-* Jest
-* React Native Testing Library
-* Custom test "render" function to facilitate testing
-* MSW for mocking
-* Directory structure
-* Tanstack Query (for REST APIs) or Apollo Client (for GraphQL)
-* Redux for global state (coming soon!)
+- ESLint
+- Prettier
+- TypeScript
+- Jest
+- React Native Testing Library
+- Custom test "render" function to facilitate testing
+- MSW for mocking
+- Directory structure
+- Tanstack Query (for REST APIs) or Apollo Client (for GraphQL)
+- Redux for global state (coming soon!)
 
 ## Usage
 
