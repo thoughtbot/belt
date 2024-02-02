@@ -1,48 +1,56 @@
-# thoughtbelt CLI
+# Belt
 
-Perform project setup and redundant tasks without your pants falling down!
+Belt is a CLI tool for starting a new React Native Expo app and will keep your pants secure as you continue development.
 
-This project is still in very early stages. Track this project [in Trello](https://trello.com/b/AGqz2thm/react-native-cli) or in Slack ([`#proj-thoughtbelt`](https://thoughtbot.slack.com/archives/C050UJTCWPR)).
+Belts are not inherently innovative -- they've been around even longer than pants -- and neither is this tool! Belt creates your app using the absolute latest version [create-expo](https://github.com/expo/expo/tree/main/packages/create-expo). It then layers on the missing pieces, based on the conventions we have found to consistently work for us at thoughtbot, so your pants will be secured tightly from the very beginning.
+
+
 
 ## Usage
 
-Create a new Expo app with:
+Create a new React Native, Expo app using Belt with:
 
 ```
-npx thoughtbelt MyApp
+# With NPM
+npx create-belt-app
+
+# With Yarn
+yarn create belt-app
+
+# With pnpm (experimental)
+pnpm create belt-app
+
+# With Bun (experimental)
+bunx create-belt-app
 ```
 
 Or, if you already have an app and want to configure ESLint, Prettier, TypeScript, React Native Testing Library, etc, run:
 
 ```
-yarn install --dev thoughtbelt
-```
+# with NPM
+npm install --save-dev create-belt-app
 
-or
-
-```
-npm install --save-dev thoughtbelt
+# with Yarn
+yarn install --dev create-belt-app
 ```
 
 then run the command you'd like to perform:
 
 ```
-yarn thoughtbelt typescript
-```
+# eg. add TypeScript to the project
+yarn belt typescript
 
-or
-
-```
-npm thoughtbelt typescript
+# or, with NPM
+npm belt typescript
 ```
 
 ## Contributing
 
-See the [CONTRIBUTING](./CONTRIBUTING.md) document. Thank you, [contributors](https://github.com/thoughtbot/fishery/graphs/contributors)!
+See the [CONTRIBUTING](./CONTRIBUTING.md) document. Thank you, [contributors](https://github.com/thoughtbot/belt/graphs/contributors)!
 
 ## License
 
-thoughtbelt is Copyright © 2023 thoughtbot. It is free software, and may be
+thoughtbelt is Copyright © 2024 thoughtbot. It is free software, and may be
 redistributed under the terms specified in the [LICENSE](/LICENSE) file.
 
 ### About thoughtbot
