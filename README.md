@@ -2,9 +2,20 @@
 
 Belt is a CLI tool for starting a new React Native Expo app and will keep your pants secure as you continue development.
 
-Belts are not inherently innovative -- they've been around even longer than pants -- and neither is this tool! Belt creates your app using the absolute latest version [create-expo](https://github.com/expo/expo/tree/main/packages/create-expo). It then layers on the missing pieces, based on the conventions we have found to consistently work for us at thoughtbot, so your pants will be secured tightly from the very beginning.
+Belts are not inherently innovative—they've been around even longer than pants—and neither is this tool! Belt creates your app using the absolute latest version of [create-expo](https://github.com/expo/expo/tree/main/packages/create-expo). It then layers on the missing pieces, based on the conventions we have found to consistently work for us at thoughtbot, so your pants will be secured tightly from the very beginning.
 
+Here are some of what gets configured when you start a new Belt app:
 
+* ESLint
+* Prettier
+* TypeScript
+* Jest
+* React Native Testing Library
+* Custom test "render" function to facilitate testing
+* MSW for mocking
+* Directory structure
+* Tanstack Query (for REST APIs) or Apollo Client (for GraphQL)
+* Redux for global state (coming soon!)
 
 ## Usage
 
