@@ -1,5 +1,6 @@
 import { confirm, input } from '@inquirer/prompts';
 import chalk from 'chalk';
+import fs from 'fs-extra';
 import ora from 'ora';
 import { globals } from '../constants';
 import addDependency from '../util/addDependency';
@@ -35,9 +36,10 @@ export async function createApp(name: string | undefined, options: Options) {
   globals.isCreateApp = true;
 
   const appName = name || (await getAppName());
-  await printIntro();
 
-  const spinner = ora('Creating new app with create-expo-app').start();
+  await ensureDirectoryDoesNotExist(appName);
+  await printIntro();
+  const spinner = ora('Creating new app with create-expo').start();
   await createExpoApp(appName, options);
   spinner.succeed('Created new app with Expo');
 
@@ -69,7 +71,7 @@ export async function createApp(name: string | undefined, options: Options) {
   await addEslint();
   await commit('Add and configure ESLint');
 
-  await exec('yarn fix:prettier');
+  await exec('npm run fix:prettier');
   await commit('Run Prettier on project');
 
   await addDependency('npm-run-all', { dev: true });
@@ -178,4 +180,15 @@ async function createExpoApp(appName: string, options: Options) {
 
   const fullCommand = `${command} ${appName}`;
   await exec(fullCommand);
+}
+
+async function ensureDirectoryDoesNotExist(appName: string) {
+  if (await fs.exists(appName)) {
+    print(
+      chalk.yellow(
+        `Whoopsy. The directory ${process.cwd()}/${appName} already exists. Please choose a different name or delete the existing directory.\n`,
+      ),
+    );
+    process.exit(0);
+  }
 }
