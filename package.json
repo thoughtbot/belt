@@ -1,13 +1,13 @@
 {
-  "name": "thoughtbelt",
+  "name": "create-belt-app",
   "author": "thoughtbot, Inc.",
   "license": "MIT",
-  "version": "0.1.9",
-  "description": "React Native project starter and generator CLI",
+  "version": "0.2.1",
+  "description": "React Native Expo project starter and generator CLI",
   "type": "module",
   "exports": "./dist/index.js",
   "bin": {
-    "thoughtbelt": "./dist/index.js",
+    "create-belt-app": "./dist/index.js",
     "belt": "./dist/index.js"
   },
   "files": [

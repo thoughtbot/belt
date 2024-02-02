@@ -1,5 +1,6 @@
 import { confirm, input } from '@inquirer/prompts';
 import chalk from 'chalk';
+import fs from 'fs-extra';
 import ora from 'ora';
 import { globals } from '../constants';
 import addDependency from '../util/addDependency';
@@ -35,9 +36,10 @@ export async function createApp(name: string | undefined, options: Options) {
   globals.isCreateApp = true;
 
   const appName = name || (await getAppName());
-  await printIntro();
 
-  const spinner = ora('Creating new app with create-expo-app').start();
+  await ensureDirectoryDoesNotExist(appName);
+  await printIntro();
+  const spinner = ora('Creating new app with create-expo').start();
   await createExpoApp(appName, options);
   spinner.succeed('Created new app with Expo');
 
@@ -55,7 +57,7 @@ export async function createApp(name: string | undefined, options: Options) {
     'npx expo install @react-native-async-storage/async-storage react-native-safe-area-context',
   );
   await addDependency('react-native-keyboard-aware-scrollview');
-  await addDependency('thoughtbelt', { dev: true });
+  await addDependency('create-belt-app', { dev: true });
   await commit('Add dependencies');
   spinner.succeed('Added dependencies');
 
@@ -69,7 +71,7 @@ export async function createApp(name: string | undefined, options: Options) {
   await addEslint();
   await commit('Add and configure ESLint');
 
-  await exec('yarn fix:prettier');
+  await exec('npm run fix:prettier');
   await commit('Run Prettier on project');
 
   await addDependency('npm-run-all', { dev: true });
@@ -96,7 +98,7 @@ export async function createApp(name: string | undefined, options: Options) {
   print(`
 Your pants are now secure! Each tool was configured as an individual commit.
 Take a look at the commits to understand what all was done. For more information
-about thoughtbelt, visit https://github.com/thoughtbot/thoughtbelt.
+about Belt, visit https://github.com/thoughtbot/belt.
 `);
 }
 
@@ -153,7 +155,7 @@ async function commit(message: string) {
 }
 // Installs Expo using the specified package manager, or if no package manager
 // option specified, try to determine based on which packager is running
-// thoughtbelt eg. `npx thoughtbelt` vs. `bunx thoughtbelt`
+// create-belt-app eg. `npx create-belt-app` vs. `bunx create-belt-app`
 async function createExpoApp(appName: string, options: Options) {
   const mgr = options.bun
     ? 'bun'
@@ -178,4 +180,15 @@ async function createExpoApp(appName: string, options: Options) {
 
   const fullCommand = `${command} ${appName}`;
   await exec(fullCommand);
+}
+
+async function ensureDirectoryDoesNotExist(appName: string) {
+  if (await fs.exists(appName)) {
+    print(
+      chalk.yellow(
+        `Whoopsy. The directory ${process.cwd()}/${appName} already exists. Please choose a different name or delete the existing directory.\n`,
+      ),
+    );
+    process.exit(0);
+  }
 }

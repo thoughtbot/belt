@@ -1,4 +1,4 @@
-name: thoughtbelt CI
+name: Belt CI
 
 on:
   push:

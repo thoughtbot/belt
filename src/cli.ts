@@ -4,7 +4,7 @@ import printWelcome from './util/print/printWelcome';
 
 export default function runCli() {
   program
-    .name('thoughtbelt')
+    .name('Belt')
     .description(
       'Perform React Native and Expo setup and redundant tasks without your pants falling down!',
     )
