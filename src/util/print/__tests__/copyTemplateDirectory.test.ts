@@ -45,19 +45,20 @@ test('compiles files with .eta file extensions', async () => {
   expect(fs.existsSync('./src/test/render.ts.eta')).toBe(false);
 });
 
-test('deletes .keep files if they are no longer necessary', async () => {
+test('performs string substitutions', async () => {
   fse.mockTemplates();
   const json = {
-    'src/test/.keep': '',
-    'templates/sample/src/test/file.txt': '1',
+    'package.json': '{}',
+    'templates/boilerplate/app.json': '{ "appName": "BELT_APP_NAME" }',
   };
   vol.fromJSON(json, './');
 
   await copyTemplateDirectory({
-    templateDir: 'sample',
+    templateDir: 'boilerplate',
     destinationDir: '.',
+    variables: { expo: true },
+    stringSubstitutions: { BELT_APP_NAME: 'MyApp' },
   });
 
-  expect(fs.readFileSync('./src/test/file.txt', 'utf8')).toEqual('1');
-  expect(fs.existsSync('./src/test/.keep')).toBe(false);
+  expect(fs.readFileSync('app.json', 'utf8')).toEqual('{ "appName": "MyApp" }');
 });

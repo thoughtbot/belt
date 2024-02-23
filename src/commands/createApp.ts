@@ -3,18 +3,10 @@ import chalk from 'chalk';
 import fs from 'fs-extra';
 import ora from 'ora';
 import { globals } from '../constants';
-import addDependency from '../util/addDependency';
-import addPackageJsonScripts from '../util/addPackageJsonScripts';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
-import addEslint from './eslint';
-import addNavigation from './navigation';
-import addPrettier from './prettier';
-import createScaffold from './scaffold';
-import addTestingLibrary from './testingLibrary';
-import addTypescript from './typescript';
 
 type PackageManagerOptions = {
   bun?: boolean;
@@ -23,75 +15,45 @@ type PackageManagerOptions = {
   pnpm?: boolean;
 };
 type Options = {
-  testing?: boolean;
   interactive?: boolean;
-  isTest?: boolean;
 } & PackageManagerOptions;
 
-export async function createApp(name: string | undefined, options: Options) {
-  const { interactive = true, isTest = false, testing = false } = options;
+export async function createApp(
+  name: string | undefined,
+  options: Options = {},
+) {
+  const { interactive = true } = options;
 
   globals.interactive = interactive;
-  globals.isTest = isTest;
-  globals.isCreateApp = true;
 
   const appName = name || (await getAppName());
 
   await ensureDirectoryDoesNotExist(appName);
   await printIntro();
-  const spinner = ora('Creating new app with create-expo').start();
-  await createExpoApp(appName, options);
-  spinner.succeed('Created new app with Expo');
+
+  const spinner = ora('Creating app with Belt').start();
+
+  await exec(`mkdir ${appName}`);
+  await copyTemplateDirectory({
+    templateDir: 'boilerplate',
+    destinationDir: appName,
+    stringSubstitutions: {
+      BELT_APP_NAME: appName,
+      belt_app_name: appName.toLowerCase(),
+    },
+  });
+
+  spinner.succeed('Created new Belt app with Expo');
 
   process.chdir(`./${appName}`);
 
-  if (isTest) {
-    // since is inside our git repo, the project git repo is not initialized
-    await exec('git init');
-    await commit('Initial commit');
-  }
+  spinner.start('Installing dependencies');
+  const packageManager = getPackageManager(options);
+  await exec(`${packageManager} install`);
 
-  // add dependencies that every project will use
-  spinner.start('Adding dependencies');
-  await exec(
-    'npx expo install @react-native-async-storage/async-storage react-native-safe-area-context',
-  );
-  await addDependency('react-native-keyboard-aware-scrollview');
-  await addDependency('create-belt-app', { dev: true });
-  await commit('Add dependencies');
-  spinner.succeed('Added dependencies');
-
-  // must add TS before ESLint
-  await addTypescript();
-  await commit('Add and configure TypeScript');
-
-  await addPrettier();
-  await commit('Add and configure Prettier');
-
-  await addEslint();
-  await commit('Add and configure ESLint');
-
-  await exec('npm run fix:prettier');
-  await commit('Run Prettier on project');
-
-  await addDependency('npm-run-all', { dev: true });
-  await addPackageJsonScripts({
-    lint: 'run-p lint:eslint lint:types lint:prettier',
-  });
-
-  await createScaffold();
-  await commit('Add app scaffold');
-
-  if (testing) {
-    await addTestingLibrary();
-    await commit('Add jest, Testing Library');
-  }
-
-  await addNavigation();
-  await commit('Add navigation');
-
-  await copyTemplateDirectory({ templateDir: 'createApp' });
-  await commit('Add scaffold');
+  await exec('git init');
+  await commit('Initial commit');
+  spinner.succeed('Installed dependencies');
 
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
@@ -153,11 +115,9 @@ async function commit(message: string) {
   await exec('git add .');
   await exec(`git commit -m "${message}"`);
 }
-// Installs Expo using the specified package manager, or if no package manager
-// option specified, try to determine based on which packager is running
-// create-belt-app eg. `npx create-belt-app` vs. `bunx create-belt-app`
-async function createExpoApp(appName: string, options: Options) {
-  const mgr = options.bun
+
+function getPackageManager(options: Options) {
+  return options.bun
     ? 'bun'
     : options.yarn
     ? 'yarn'
@@ -166,20 +126,6 @@ async function createExpoApp(appName: string, options: Options) {
     : options.npm
     ? 'npm'
     : getUserPackageManager();
-
-  // running with the right command will result in Expo creating the app
-  // using the same package manager
-  const command =
-    mgr === 'yarn'
-      ? 'yarn create expo'
-      : mgr === 'pnpm'
-      ? 'pnpm create expo@latest'
-      : mgr === 'bun'
-      ? 'bunx create-expo@latest'
-      : 'npx --yes create-expo@latest';
-
-  const fullCommand = `${command} ${appName}`;
-  await exec(fullCommand);
 }
 
 async function ensureDirectoryDoesNotExist(appName: string) {

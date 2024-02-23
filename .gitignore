@@ -8,3 +8,6 @@ npm-debug.log
 .DS_Store
 /dist
 /builds
+/templates/boilerplate/bun.lockb
+/templates/boilerplate/yarn.lock
+/templates/boilerplate/package-lock.json

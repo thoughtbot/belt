@@ -14,3 +14,5 @@ vi.mock('ora', () => ({
 vi.mock('./src/util/exec', () => ({
   default: vi.fn().mockResolvedValue(true),
 }));
+
+vi.spyOn(process, 'chdir').mockReturnValue(undefined);

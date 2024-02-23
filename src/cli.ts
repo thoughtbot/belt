@@ -18,16 +18,10 @@ export default function runCli() {
       'The name of the app and directory it will be created in',
       '',
     )
-    // todo: remove this option, since we will always end up installing during creation
-    .option(
-      '--no-testing',
-      'Pass true to skip installing Jest and React Native Testing Library',
-    )
     .option('--bun', 'Use Bun package manager')
     .option('--yarn', 'Use Yarn package manager')
     .option('--pnpm', 'Use PNPM package manager')
     .option('--npm', 'Use NPM package manager')
-    .option('--is-test', 'Used only by test suite')
     .option('--no-interactive', 'Pass true to skip all prompts')
     .action(buildAction(import('./commands/createApp')));
 

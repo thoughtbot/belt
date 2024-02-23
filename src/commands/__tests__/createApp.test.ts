@@ -1,11 +1,12 @@
-import { confirm } from '@inquirer/prompts';
+import { confirm, input } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
-import { Mock, afterEach, expect, test, vi } from 'vitest';
+import { Mock, afterEach, describe, expect, test, vi } from 'vitest';
 import exec from '../../util/exec';
 import print from '../../util/print';
 import { createApp } from '../createApp';
 
 vi.mock('@inquirer/prompts', () => ({
+  input: vi.fn(),
   confirm: vi.fn(),
 }));
 vi.mock('../../util/addDependency');
@@ -16,46 +17,67 @@ afterEach(() => {
   (print as Mock).mockReset();
 });
 
-test('creates app', async () => {
+test('creates app, substituting the app name where appropriate', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
-  vi.spyOn(process, 'chdir').mockImplementation(() => {
-    const json = {
-      'package.json': JSON.stringify({
-        scripts: {},
-        dependencies: {},
-        devDependencies: {},
-      }),
-      'yarn.lock': '',
-    };
-    vol.fromJSON(json, './');
-  });
-  await createApp('MyApp', { testing: true });
+  await createApp('MyApp');
 
-  const app = fs.readFileSync('App.tsx', 'utf8');
-  expect(app).toMatch('<NavigationContainer>');
-  const homeScreen = fs.readFileSync(
-    'src/screens/HomeScreen/HomeScreen.tsx',
-    'utf8',
-  );
-
-  expect(homeScreen).toMatch('expo-status-bar');
-  expect(exec).toHaveBeenCalledWith('yarn create expo MyApp');
+  expectFileContents('MyApp/package.json', '"name": "myapp"');
+  expectFileContents('MyApp/app.json', '"name": "MyApp"');
+  expectFileContents('MyApp/app.json', '"slug": "MyApp"');
+  expect(exec).toHaveBeenCalledWith('yarn install');
 });
 
-test('creates Expo app with npx if npm option passed', async () => {
+test('prompts for app name if not supplied', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
-  vi.spyOn(process, 'chdir').mockImplementation(() => {
-    const json = {
-      'package.json': JSON.stringify({
-        scripts: {},
-        dependencies: {},
-        devDependencies: {},
-      }),
-      'package-lock.json': '',
-    };
-    vol.fromJSON(json, './');
-  });
-  await createApp('MyApp', { testing: true, npm: true });
+  (input as Mock).mockReturnValue('MyApp');
+  await createApp(undefined);
 
-  expect(exec).toHaveBeenCalledWith('npx --yes create-expo@latest MyApp');
+  expectFileContents('MyApp/package.json', '"name": "myapp"');
+  expectFileContents('MyApp/app.json', '"name": "MyApp"');
+  expectFileContents('MyApp/app.json', '"slug": "MyApp"');
+  expect(exec).toHaveBeenCalledWith('yarn install');
 });
+
+test('exits if directory already exists', async () => {
+  (print as Mock).mockReset();
+  vi.spyOn(process, 'exit');
+  process.exit = vi.fn();
+
+  vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
+
+  await createApp('MyApp');
+
+  expect(print).toHaveBeenCalledWith(expect.stringMatching(/already exists/));
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  expect(process.exit).toHaveBeenCalledWith(0);
+});
+
+describe('package manager options', () => {
+  test('creates with NPM', async () => {
+    (confirm as Mock).mockResolvedValueOnce(true);
+    await createApp('MyApp', { npm: true });
+    expect(exec).toHaveBeenCalledWith('npm install');
+  });
+
+  test('creates with bun', async () => {
+    (confirm as Mock).mockResolvedValueOnce(true);
+    await createApp('MyApp', { bun: true });
+    expect(exec).toHaveBeenCalledWith('bun install');
+  });
+
+  test('creates with pnpm', async () => {
+    (confirm as Mock).mockResolvedValueOnce(true);
+    await createApp('MyApp', { pnpm: true });
+    expect(exec).toHaveBeenCalledWith('pnpm install');
+  });
+});
+
+function expectFileContents(file: string, expected: string) {
+  try {
+    const contents = fs.readFileSync(file, 'utf8');
+    expect(contents).toMatch(expected);
+  } catch (error) {
+    Error.captureStackTrace(error as Error, expectFileContents); // remove this function from stack trace
+    throw error;
+  }
+}

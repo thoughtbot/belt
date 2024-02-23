@@ -24,10 +24,10 @@ async function runCheck() {
   fs.mkdirSync(dir, { recursive: true });
   process.chdir(dir);
 
-  const opts = process.env.CI ? '--no-interactive --is-test' : '';
+  const opts = process.env.CI ? '--no-interactive' : '';
 
   // run CLI
-  execSync(`node ../dist/index.js ExpoSample --is-test ${opts}`, {
+  execSync(`node ../dist/index.js ExpoSample ${opts}`, {
     stdio: 'inherit',
   });
 

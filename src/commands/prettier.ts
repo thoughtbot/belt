@@ -45,11 +45,14 @@ export default async function addPrettier() {
     'fix:prettier': "prettier --write '**/*' --ignore-unknown",
   });
 
-  if (hasEslint) {
-    print(
-      'We noticed ESLint is already set up, you might consider adding the Prettier ESLint plugin or regenerating with the eslint command.',
-    );
-  }
-
   spinner.succeed('Prettier successfully configured');
+
+  if (hasEslint) {
+    print(`
+'We noticed ESLint is already set up, you might consider updating your ESLint
+configuration to use eslint-config-prettier:
+https://github.com/prettier/eslint-config-prettier. This turns off all ESLint
+rule that are unnecessary or might conflict with Prettier.
+`);
+  }
 }

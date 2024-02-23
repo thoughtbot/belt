@@ -32,7 +32,8 @@
     "test:run": "vitest run",
     "test:all": "yarn lint && yarn test:run",
     "pub:beta": "yarn build && npm publish --tag beta",
-    "pub:release": "yarn build && npm publish"
+    "pub:release": "yarn build && npm publish",
+    "diff-expo": "node bin/diff-expo.js"
   },
   "dependencies": {
     "@inquirer/prompts": "^3.2.0",

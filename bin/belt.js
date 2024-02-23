@@ -18,9 +18,7 @@ async function run() {
 
   // run CLI
   execSync(
-    `${getNodeRunner()} ../dist/index.js ${process.argv
-      .slice(2)
-      .join(' ')} --is-test`,
+    `${getNodeRunner()} ../dist/index.js ${process.argv.slice(2).join(' ')}`,
     {
       stdio: 'inherit',
     },

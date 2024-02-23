@@ -10,6 +10,7 @@ type Params = {
   /** relative to project root, eg ".", "src" */
   destinationDir?: string;
   variables?: object;
+  stringSubstitutions?: Record<string, string>;
 };
 
 /**
@@ -20,60 +21,52 @@ export default async function copyTemplateDirectory({
   templateDir,
   destinationDir = '.',
   variables = {},
+  stringSubstitutions = {},
 }: Params) {
   const srcDir = path.join(PACKAGE_ROOT, `templates`, templateDir);
   await fs.copy(srcDir, destinationDir);
 
-  await renderTemplates(srcDir, destinationDir, variables);
-  await removeKeepFilesIfNotNeeded(destinationDir);
+  await performFileModifications(
+    srcDir,
+    destinationDir,
+    stringSubstitutions,
+    variables,
+  );
 }
 
-async function renderTemplates(
+/**
+ * Iterate through all newly copied files in the destination directory. For each
+ * file, perform string substitutions and render any .eta template files
+ */
+async function performFileModifications(
   srcDir: string,
   destinationDir: string,
+  substitutions: Record<string, string>,
   variables: object,
 ) {
   const filenames = await getFiles(srcDir);
   // eslint-disable-next-line no-restricted-syntax
   for await (const filename of filenames) {
-    if (!filename.endsWith('.eta')) {
-      continue;
-    }
-
     const destinationFilename = path.join(
       destinationDir,
       path.relative(srcDir, filename),
     );
 
-    const rendered = eta.render(
-      (await fs.readFile(filename)).toString(),
-      variables ?? {},
-    );
+    let contents = (await fs.readFile(filename)).toString();
+    contents = Object.entries(substitutions).reduce((acc, [key, value]) => {
+      return acc.replaceAll(key, value);
+    }, contents);
+
+    if (filename.endsWith('.eta')) {
+      contents = eta.render(contents, variables);
+      await fs.rm(path.join(destinationFilename)); // remove .eta file
+    }
 
     await writeFile(
       path.join(destinationFilename.replace(/\.eta$/, '')),
-      rendered,
-      {
-        // don't try to format if unsupported file type (Prettier will error)
-        format: /\.(js|ts|jsx|tsx|json|md)\.eta$/.test(destinationFilename),
-      },
+      contents,
     );
-
-    // remove .eta file
-    await fs.rm(destinationFilename);
   }
-}
-
-async function removeKeepFilesIfNotNeeded(destinationDir: string) {
-  const filenames = await getFiles(destinationDir);
-  const promises = filenames.map((filename) => {
-    if (filename.endsWith('/.keep')) {
-      return fs.rm(filename);
-    }
-    return Promise.resolve();
-  });
-
-  return Promise.all(promises);
 }
 
 /**
