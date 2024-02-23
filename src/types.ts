@@ -8,3 +8,7 @@ export type PackageJson = {
     [k: string]: unknown;
   };
 };
+
+export type AppJson = {
+  [k: string]: unknown;
+};
