@@ -10,5 +10,7 @@ export type PackageJson = {
 };
 
 export type AppJson = {
-  [k: string]: unknown;
+  expo: {
+    [k: string]: unknown;
+  };
 };
