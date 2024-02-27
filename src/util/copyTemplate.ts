@@ -35,8 +35,8 @@ export default async function copyTemplate({
   const fullDestination = destination.endsWith('/')
     ? `${destination}${templateFile}`
     : destination === '.'
-    ? templateFile
-    : destination;
+      ? templateFile
+      : destination;
 
   const fullDestinationFilename = fullDestination.replace(/\.eta$/, '');
 

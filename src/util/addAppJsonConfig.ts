@@ -1,5 +1,4 @@
 import merge from 'lodash/merge.js';
-import print from './print';
 import readAppJson from './readAppJson';
 import writeFile from './writeFile';
 import { AppJson } from '../types';
