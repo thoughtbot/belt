@@ -18,7 +18,7 @@ export default async function addNotifications() {
     );
   } else {
     await addDependency(
-      '@react-native-firebase/app @react-native-firebase/messaging',
+      '@react-native-firebase/app @react-native-firebase/messaging expo-build-properties',
     );
   }
 
