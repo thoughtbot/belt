@@ -62,12 +62,12 @@ export default async function addNotifications() {
   spinner.succeed(
     `Successfully installed React Native Firebase and added notification handlers.
 
-In order to finish the setup, you need to:
-- Add your google-service.json and GoogleService-Info.plist files to your project's config folder
-- Define your package and bundle identifier in the app.json file
-- Run the command "npx expo prebuild --clean" to rebuild the app
+  In order to finish the setup, you need to:
+  - Add your google-service.json and GoogleService-Info.plist files to your project's config folder
+  - Define your package and bundle identifier in the app.json file
+  - Run the command "npx expo prebuild --clean" to rebuild the app
 
-For more details please refer to the official documentation: https://rnfirebase.io/#configure-react-native-firebase-modules.
-`,
+  For more details please refer to the official documentation: https://rnfirebase.io/#configure-react-native-firebase-modules.
+  `,
   );
 }
