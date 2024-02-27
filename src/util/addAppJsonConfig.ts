@@ -14,8 +14,6 @@ export default async function addAppJsonConfig(values: AppJson) {
   // Merge the values into the appJson
   merge(appJson, values);
 
-  print('Merged app.json with new configuration values.');
-
   return writeFile('app.json', JSON.stringify(appJson), {
     format: true,
   });
