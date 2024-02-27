@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 import getProjectDir from './getProjectDir';
+import exec from './exec';
 
 export default async function injectHooks(hooks: string, imports: string) {
   const rootDir = await getProjectDir();
@@ -16,11 +17,14 @@ export default async function injectHooks(hooks: string, imports: string) {
     throw new Error('Target line not found in file');
   }
 
-  // Inject the text after the target line
   lines.splice(targetLineIndex + 1, 0, hooks);
   lines.splice(0, 0, imports);
 
   const updatedData = lines.join('\n');
 
   await writeFile(filePath, updatedData, 'utf8');
+
+  // Format the file to make sure it's consistent
+  await exec(`npm run lint:fix`);
+  await exec(`npm run fix:prettier`);
 }

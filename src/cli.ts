@@ -45,6 +45,13 @@ export default function runCli() {
     .description('Install and configure Jest and Testing Library')
     .action(buildAction(import('./commands/testingLibrary')));
 
+  program
+    .command('add-notifications')
+    .description(
+      'Install and configure React Native Firebase with Notifications',
+    )
+    .action(buildAction(import('./commands/notifications')));
+
   printWelcome();
   program.parse();
 }

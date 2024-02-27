@@ -9,6 +9,7 @@ const providers: Provider[] = [
 ];
 
 export default function App() {
+  // CODEGEN:BELT:HOOKS - do not remove
   return (
     <Providers providers={providers}>
       <RootNavigator />
