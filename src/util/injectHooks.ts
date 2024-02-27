@@ -1,12 +1,13 @@
-import { readFile, writeFile } from 'fs/promises';
+import fs from 'fs-extra';
 import path from 'path';
 import getProjectDir from './getProjectDir';
 import exec from './exec';
+import writeFile from './writeFile';
 
 export default async function injectHooks(hooks: string, imports: string) {
   const rootDir = await getProjectDir();
   const filePath = path.join(rootDir, 'App.tsx');
-  const data = await readFile(filePath, 'utf8');
+  const data = await fs.readFile(filePath, 'utf8');
   const lines = data.split('\n');
 
   const targetLineIndex = lines.findIndex(
@@ -22,7 +23,7 @@ export default async function injectHooks(hooks: string, imports: string) {
 
   const updatedData = lines.join('\n');
 
-  await writeFile(filePath, updatedData, 'utf8');
+  await writeFile(filePath, updatedData, { format: true });
 
   // Format the file to make sure it's consistent
   await exec(`npm run lint:fix`);
