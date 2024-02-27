@@ -5,6 +5,7 @@ import exec from '../util/exec';
 import isExpo from '../util/isExpo';
 import addAppJsonConfig from '../util/addAppJsonConfig';
 import injectHooks from '../util/injectHooks';
+import addToGitignore from '../util/addToGitignore';
 
 export default async function addNotifications() {
   const spinner = ora().start('Installing React Native Firebase');
@@ -29,6 +30,8 @@ export default async function addNotifications() {
     'useNotifications();',
     "import useNotifications from 'src/hooks/useNotifications';\n",
   );
+
+  await addToGitignore('android/\nios/');
 
   await addAppJsonConfig({
     expo: {
