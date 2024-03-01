@@ -3,6 +3,11 @@
 # dependencies
 node_modules/
 
+# Prefer using Expo Continuous Native Generation (CNG), even if using prebuild
+# https://docs.expo.dev/workflow/continuous-native-generation/
+/ios
+/android
+
 # Expo
 .expo/
 dist/
