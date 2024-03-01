@@ -8,6 +8,9 @@ npm-debug.log
 .DS_Store
 /dist
 /builds
+
+# ignore these in case where ran boilerplate directory directly
 /templates/boilerplate/bun.lockb
 /templates/boilerplate/yarn.lock
 /templates/boilerplate/package-lock.json
+/templates/boilerplate/pnpm-lock.yaml

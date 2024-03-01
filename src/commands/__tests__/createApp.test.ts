@@ -19,6 +19,7 @@ afterEach(() => {
 
 test('creates app, substituting the app name where appropriate', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
+  vol.fromJSON({ 'file.txt': '{}' }, './');
   await createApp('MyApp');
 
   expectFileContents('MyApp/package.json', '"name": "myapp"');

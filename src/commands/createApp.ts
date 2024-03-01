@@ -2,9 +2,11 @@ import { confirm, input } from '@inquirer/prompts';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import ora from 'ora';
-import { globals } from '../constants';
+import path from 'path';
+import { PACKAGE_ROOT, globals } from '../constants';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
+import { lockFileNames } from '../util/getPackageManager';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
 
@@ -37,9 +39,14 @@ export async function createApp(
   await copyTemplateDirectory({
     templateDir: 'boilerplate',
     destinationDir: appName,
+    gitignore: await boilerplateIgnoreFiles(),
     stringSubstitutions: {
-      BELT_APP_NAME: appName,
-      belt_app_name: appName.toLowerCase(),
+      'app.json': {
+        BELT_APP_NAME: appName,
+      },
+      'package.json': {
+        belt_app_name: appName.toLowerCase(),
+      },
     },
   });
 
@@ -137,4 +144,22 @@ async function ensureDirectoryDoesNotExist(appName: string) {
     );
     process.exit(0);
   }
+}
+
+/**
+ * Don't copy any files over that are in the boilerplate gitignore.
+ * Additionally, don't copy any package manager lockfiles over. This is
+ * primarily helpful for development in the case that the developer has run the
+ * app directly from the `boilerplate` directory and might have a node_modules
+ * directory and lockfile
+ */
+async function boilerplateIgnoreFiles() {
+  const gitignorePath = path.join(
+    PACKAGE_ROOT,
+    'templates/boilerplate/.gitignore',
+  );
+  return `
+   ${(await fs.readFile(gitignorePath, 'utf8')).toString()}
+   ${lockFileNames.join('\n')}
+  `;
 }

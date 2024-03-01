@@ -1,5 +1,5 @@
-import actualfs from 'fs-extra';
-import { fs } from 'memfs';
+import fse from 'fs-extra';
+import { fs as memfs } from 'memfs';
 import path from 'path';
 
 let DONT_MOCK_PATTERNS = ['templates/'];
@@ -13,46 +13,63 @@ export default {
   mockTemplates() {
     DONT_MOCK_PATTERNS = [];
   },
-  ...fs.promises,
+  ...memfs.promises,
   exists(path) {
-    return new Promise((resolve) => {
-      fs.exists(path, (exists) => resolve(exists));
-    });
+    if (dontMock(path)) {
+      return fse.exists(path);
+    } else {
+      return new Promise((resolve) => {
+        memfs.exists(path, (exists) => resolve(exists));
+      });
+    }
   },
   isDirectory(src) {
-    return fs.statSync(src).isDirectory(src);
+    return memfs.statSync(src).isDirectory(src);
   },
-  appendFile: fs.promises.appendFile,
+  appendFile: memfs.promises.appendFile,
   // currently having to manually copy the sync methods over, there's prob a better way
-  rmSync: fs.rmSync,
+  rmSync: memfs.rmSync,
   readFileSync(file, options) {
     if (dontMock(file)) {
-      return actualfs.readFileSync(file, options);
+      return fse.readFileSync(file, options);
     }
 
-    return fs.readFileSync(file, options);
+    return memfs.readFileSync(file, options);
   },
-  writeFileSync: fs.writeFileSync,
-  existsSync: fs.existsSync,
-  appendFileSync: fs.appendFileSync,
+  readFile(path, options) {
+    return Promise.resolve(this.readFileSync(path, options));
+  },
+  outputFile: async (file, data, options) => {
+    const dirname = path.dirname(file);
+    const exists = memfs.existsSync(dirname);
+    if (!exists) {
+      memfs.mkdirSync(dirname, { recursive: true });
+    }
+
+    return Promise.resolve(memfs.writeFileSync(file, data, options));
+  },
+  writeFileSync: memfs.writeFileSync,
+  existsSync: memfs.existsSync,
+  appendFileSync: memfs.appendFileSync,
   readdir(path, options) {
     return Promise.resolve(this.readdirSync(path, options));
   },
   readdirSync(path, options) {
     if (dontMock(path)) {
-      return actualfs.readdirSync(path, options);
+      return fse.readdirSync(path, options);
     }
 
-    return fs.readdirSync(path, options);
+    return memfs.readdirSync(path, options);
   },
   copy(src, dest) {
     return Promise.resolve(this.copySync(src, dest));
   },
   copySync(src, dest) {
-    const sourceFS = dontMock(src) ? actualfs : fs;
+    // read templates from actual fs
+    const sourceFS = dontMock(src) ? fse : memfs;
 
     if (sourceFS.existsSync(src) && sourceFS.statSync(src).isDirectory(src)) {
-      fs.mkdirSync(dest, { recursive: true });
+      memfs.mkdirSync(dest, { recursive: true });
       sourceFS.readdirSync(src).forEach((childItemName) => {
         this.copySync(
           path.join(src, childItemName),
@@ -60,15 +77,15 @@ export default {
         );
       });
     } else {
-      fs.writeFileSync(dest, sourceFS.readFileSync(src, 'utf-8'));
+      memfs.writeFileSync(dest, sourceFS.readFileSync(src, 'utf-8'));
     }
   },
   readFile: (path, ...args) => {
     if (dontMock(path)) {
-      return actualfs.readFile(path, ...args);
+      return fse.readFile(path, ...args);
     }
 
-    return fs.promises.readFile(path, ...args);
+    return memfs.promises.readFile(path, ...args);
   },
 };
 

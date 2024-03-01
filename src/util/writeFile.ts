@@ -10,7 +10,8 @@ export default async function writeFile(
   contents: string,
   { format = false }: Options = {},
 ) {
-  await fs.writeFile(filePath, contents);
+  // outputFile is the same as writeFile, but it creates directories that don't exist
+  await fs.outputFile(filePath, contents);
 
   if (format) {
     await formatFile(filePath);
