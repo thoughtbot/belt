@@ -18,7 +18,7 @@ async function run() {
   process.chdir(dir);
 
   if (!process.argv[2] || !process.argv[3]) {
-    console.log('usage: yarn diff-expo 43 42');
+    console.log('Missing version argument. Usage: yarn diff-expo 43 42');
     return;
   }
 
@@ -36,7 +36,7 @@ async function run() {
 
   // create Expo app in builds/expo-XX
   await exec(
-    `npx create-expo@latest expo-${newVersion} --no-install --template expo-template-blank-typescript@${version}`,
+    `npx create-expo@latest expo-${newVersion} --no-install --template expo-template-blank-typescript@${newVersion}`,
     {
       stdio: 'inherit',
     },
