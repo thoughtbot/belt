@@ -47,27 +47,28 @@ export default async function copyTemplateDirectory({
 }: Params) {
   const srcDir = path.join(PACKAGE_ROOT, `templates`, templateDir);
   const filenames = await getFiles(srcDir, gitignore);
-  // eslint-disable-next-line no-restricted-syntax
-  for await (const filename of filenames) {
-    const destinationFilename = path.join(
-      destinationDir,
-      path.relative(srcDir, filename),
-    );
+  await Promise.all(
+    filenames.map(async (filename) => {
+      const destinationFilename = path.join(
+        destinationDir,
+        path.relative(srcDir, filename),
+      );
 
-    let contents = (await fs.readFile(filename)).toString();
-    const substitutions = substitutionsForFile(filename, stringSubstitutions);
-    if (Object.keys(substitutions).length > 0) {
-      contents = Object.entries(substitutions).reduce((acc, [key, value]) => {
-        return acc.replaceAll(new RegExp(key, 'g'), value);
-      }, contents);
-    }
+      let contents = (await fs.readFile(filename)).toString();
+      const substitutions = substitutionsForFile(filename, stringSubstitutions);
+      if (Object.keys(substitutions).length > 0) {
+        contents = Object.entries(substitutions).reduce((acc, [key, value]) => {
+          return acc.replaceAll(new RegExp(key, 'g'), value);
+        }, contents);
+      }
 
-    if (filename.endsWith('.eta')) {
-      contents = eta.render(contents, variables);
-    }
+      if (filename.endsWith('.eta')) {
+        contents = eta.render(contents, variables);
+      }
 
-    await writeFile(destinationFilename.replace(/\.eta$/, ''), contents);
-  }
+      return writeFile(destinationFilename.replace(/\.eta$/, ''), contents);
+    }),
+  );
 }
 
 function substitutionsSupported(filename: string) {
