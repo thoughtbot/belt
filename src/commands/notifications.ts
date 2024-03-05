@@ -31,8 +31,6 @@ export default async function addNotifications() {
     "import useNotifications from 'src/hooks/useNotifications';\n",
   );
 
-  await addToGitignore('android/\nios/');
-
   await addAppJsonConfig({
     expo: {
       android: {
@@ -66,6 +64,7 @@ export default async function addNotifications() {
   - Add your google-service.json and GoogleService-Info.plist files to your project's config folder
   - Define your package and bundle identifier in the app.json file
   - Run the command "npx expo prebuild --clean" to rebuild the app
+  - Add the ios/ and android/ folders to your .gitignore file if you don't need to track them
 
   For more details please refer to the official documentation: https://rnfirebase.io/#configure-react-native-firebase-modules.
   `,
