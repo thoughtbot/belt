@@ -26,6 +26,6 @@ export default async function injectHooks(hooks: string, imports: string) {
   await writeFile(filePath, updatedData, { format: true });
 
   // Format the file to make sure it's consistent
-  await exec(`npm run lint:fix`);
+  await exec(`npm run fix:eslint`);
   await exec(`npm run fix:prettier`);
 }
