@@ -18,7 +18,9 @@ const handleCommitError = (error) => {
 
 export default async function addNotifications() {
   const spinner = ora().start('Adding React Native Firebase and dependencies');
+
   const expo = await isExpo();
+
   // Install dependencies
   if (expo) {
     await exec(
@@ -33,9 +35,11 @@ export default async function addNotifications() {
   await commit('Add React Native Firebase and dependencies').catch(
     handleCommitError,
   );
+
   spinner.succeed('Added React Native Firebase and dependencies');
 
   spinner.start('Adding notification handlers');
+
   await copyTemplateDirectory({
     templateDir: 'notifications',
   });
@@ -46,6 +50,7 @@ export default async function addNotifications() {
   );
 
   await commit('Add notification handlers').catch(handleCommitError);
+
   spinner.succeed('Added notification handlers');
 
   // Verify for bundle identifier and package name in the AppJsonConfig
@@ -66,6 +71,7 @@ export default async function addNotifications() {
     }));
 
   spinner.start('Configuring app.json');
+
   await addAppJsonConfig({
     expo: {
       android: {
@@ -92,6 +98,7 @@ export default async function addNotifications() {
   });
 
   await commit('Configure app.json').catch(handleCommitError);
+
   spinner.succeed(
     `Successfully added notifications support to project.
 

@@ -52,3 +52,31 @@ test('install React Native Firebase and dependencies', async () => {
   expect(config).toMatch('"package":"com.myapp"');
   expect(config).toMatch('plugins');
 });
+
+test('add plugins to app.json preserves existing ones', async () => {
+  const json = {
+    'package.json': JSON.stringify({
+      scripts: {},
+      dependencies: {},
+      devDependencies: {},
+    }),
+    'yarn.lock': '',
+    'app.json': JSON.stringify({
+      expo: {
+        plugins: [
+          '@react-native-firebase/auth',
+          ['expo-build-properties', { config: 'test' }],
+        ],
+      },
+    }),
+  };
+  vol.fromJSON(json, './');
+
+  await addNotifications();
+
+  const config = fs.readFileSync('app.json', 'utf8');
+  expect(config).toMatch('"@react-native-firebase/auth"');
+  expect(config).toMatch('"@react-native-firebase/app"');
+  expect(config).toMatch('"@react-native-firebase/messaging"');
+  expect(config).toMatch('"expo-build-properties"');
+});
