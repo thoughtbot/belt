@@ -11,6 +11,14 @@ export type PackageJson = {
 
 export type AppJson = {
   expo: {
+    android?: {
+      googleServicesFile: string;
+      package?: string;
+    };
+    ios?: {
+      googleServicesFile?: string;
+      bundleIdentifier?: string;
+    };
     [k: string]: unknown;
   };
 };

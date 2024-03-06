@@ -5,12 +5,20 @@ import exec from '../util/exec';
 import isExpo from '../util/isExpo';
 import addAppJsonConfig from '../util/addAppJsonConfig';
 import injectHooks from '../util/injectHooks';
-import addToGitignore from '../util/addToGitignore';
+import readAppJson from '../util/readAppJson';
+import { input } from '@inquirer/prompts';
+import commit from '../util/commit';
+
+const handleCommitError = (error) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+  if (!error.stdout.includes('nothing to commit')) {
+    throw error;
+  }
+};
 
 export default async function addNotifications() {
-  const spinner = ora().start('Installing React Native Firebase');
+  const spinner = ora().start('Adding React Native Firebase and dependencies');
   const expo = await isExpo();
-
   // Install dependencies
   if (expo) {
     await exec(
@@ -22,6 +30,12 @@ export default async function addNotifications() {
     );
   }
 
+  await commit('Add React Native Firebase and dependencies').catch(
+    handleCommitError,
+  );
+  spinner.succeed('Added React Native Firebase and dependencies');
+
+  spinner.start('Adding notification handlers');
   await copyTemplateDirectory({
     templateDir: 'notifications',
   });
@@ -31,16 +45,36 @@ export default async function addNotifications() {
     "import useNotifications from 'src/hooks/useNotifications';\n",
   );
 
+  await commit('Add notification handlers').catch(handleCommitError);
+  spinner.succeed('Added notification handlers');
+
+  // Verify for bundle identifier and package name in the AppJsonConfig
+  const appJson = await readAppJson();
+
+  const packageName =
+    appJson.expo?.android?.package ??
+    (await input({
+      message: 'Define your Android package name:',
+      default: 'com.myapp',
+    }));
+
+  const bundleIdentifier =
+    appJson.expo?.ios?.bundleIdentifier ??
+    (await input({
+      message: 'Define your iOS bundle identifier:',
+      default: packageName,
+    }));
+
+  spinner.start('Configuring app.json');
   await addAppJsonConfig({
     expo: {
       android: {
         googleServicesFile: './config/google-services.json',
-        package: '<Define your package here (e.g. com.myapp)>',
+        package: packageName,
       },
       ios: {
         googleServicesFile: './config/GoogleService-Info.plist',
-        bundleIdentifier:
-          '<Define your bundle identifier here (e.g. com.myapp)>',
+        bundleIdentifier,
       },
       plugins: [
         '@react-native-firebase/app',
@@ -57,8 +91,9 @@ export default async function addNotifications() {
     },
   });
 
+  await commit('Configure app.json').catch(handleCommitError);
   spinner.succeed(
-    `Successfully installed React Native Firebase and added notification handlers.
+    `Successfully added notifications support to project.
 
   In order to finish the setup, you need to:
   - Add your google-service.json and GoogleService-Info.plist files to your project's config folder
