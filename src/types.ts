@@ -1,3 +1,5 @@
+import { ExpoConfig } from '@expo/config';
+
 export type PackageJson = {
   [k: string]: unknown;
   scripts: Record<string, string>;
@@ -10,15 +12,5 @@ export type PackageJson = {
 };
 
 export type AppJson = {
-  expo: {
-    android?: {
-      googleServicesFile: string;
-      package?: string;
-    };
-    ios?: {
-      googleServicesFile?: string;
-      bundleIdentifier?: string;
-    };
-    [k: string]: unknown;
-  };
+  expo: ExpoConfig;
 };

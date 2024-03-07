@@ -53,7 +53,7 @@ test('install React Native Firebase and dependencies', async () => {
   expect(config).toMatch('plugins');
 });
 
-test('add plugins to app.json preserves existing ones', async () => {
+test('add plugins to app.json expo config preserves existing ones', async () => {
   const json = {
     'package.json': JSON.stringify({
       scripts: {},

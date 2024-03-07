@@ -3,7 +3,7 @@ import addDependency from '../util/addDependency';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import isExpo from '../util/isExpo';
-import addAppJsonConfig from '../util/addAppJsonConfig';
+import addExpoConfig from '../util/addExpoConfig';
 import injectHooks from '../util/injectHooks';
 import readAppJson from '../util/readAppJson';
 import { input } from '@inquirer/prompts';
@@ -72,29 +72,27 @@ export default async function addNotifications() {
 
   spinner.start('Configuring app.json');
 
-  await addAppJsonConfig({
-    expo: {
-      android: {
-        googleServicesFile: './config/google-services.json',
-        package: packageName,
-      },
-      ios: {
-        googleServicesFile: './config/GoogleService-Info.plist',
-        bundleIdentifier,
-      },
-      plugins: [
-        '@react-native-firebase/app',
-        '@react-native-firebase/messaging',
-        [
-          'expo-build-properties',
-          {
-            ios: {
-              useFrameworks: 'static',
-            },
-          },
-        ],
-      ],
+  await addExpoConfig({
+    android: {
+      googleServicesFile: './config/google-services.json',
+      package: packageName,
     },
+    ios: {
+      googleServicesFile: './config/GoogleService-Info.plist',
+      bundleIdentifier,
+    },
+    plugins: [
+      '@react-native-firebase/app',
+      '@react-native-firebase/messaging',
+      [
+        'expo-build-properties',
+        {
+          ios: {
+            useFrameworks: 'static',
+          },
+        },
+      ],
+    ],
   });
 
   await commit('Configure app.json').catch(handleCommitError);
