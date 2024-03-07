@@ -45,6 +45,7 @@ export default async function addNotifications() {
   });
 
   await injectHooks(
+    'App.tsx',
     'useNotifications();',
     "import useNotifications from 'src/hooks/useNotifications';\n",
   );

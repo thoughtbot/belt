@@ -4,9 +4,13 @@ import getProjectDir from './getProjectDir';
 import exec from './exec';
 import writeFile from './writeFile';
 
-export default async function injectHooks(hooks: string, imports: string) {
+export default async function injectHooks(
+  filepath: string, // Path to the file to inject the hooks into, relative to the project root
+  hooks: string, // The hooks to inject under the target line
+  imports: string, // The import lines to the injected roots
+) {
   const rootDir = await getProjectDir();
-  const filePath = path.join(rootDir, 'App.tsx');
+  const filePath = path.join(rootDir, filepath);
   const data = await fs.readFile(filePath, 'utf8');
   const lines = data.split('\n');
 
