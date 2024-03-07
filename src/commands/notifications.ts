@@ -9,7 +9,7 @@ import readAppJson from '../util/readAppJson';
 import { input } from '@inquirer/prompts';
 import commit from '../util/commit';
 
-const handleCommitError = (error) => {
+const handleCommitError = (error: { stdout: string }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   if (!error.stdout.includes('nothing to commit')) {
     throw error;
