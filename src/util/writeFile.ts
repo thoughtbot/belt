@@ -1,7 +1,5 @@
 import fs from 'fs-extra';
-import path from 'path';
 import formatFile from './formatFile';
-import getProjectDir from './getProjectDir';
 
 type Options = {
   format?: boolean;
@@ -12,14 +10,10 @@ export default async function writeFile(
   contents: string,
   { format = false }: Options = {},
 ) {
-  const isAbsolute = filePath.startsWith('/') || filePath.startsWith('\\');
-  const fullPath = isAbsolute
-    ? filePath
-    : path.join(await getProjectDir(), filePath);
-
-  await fs.writeFile(fullPath, contents);
+  // outputFile is the same as writeFile, but it creates directories that don't exist
+  await fs.outputFile(filePath, contents);
 
   if (format) {
-    await formatFile(fullPath);
+    await formatFile(filePath);
   }
 }

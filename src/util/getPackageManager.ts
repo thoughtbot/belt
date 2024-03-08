@@ -3,6 +3,16 @@ import path from 'path';
 import getProjectDir from './getProjectDir';
 import { PackageManager } from './getUserPackageManager';
 
+const lockFiles: Record<string, PackageManager> = {
+  'yarn.lock': 'yarn',
+  '.yarn': 'yarn',
+  'package-lock.json': 'npm',
+  'pnpm-lock.yaml': 'pnpm',
+  'bun.lockb': 'bun',
+};
+
+export const lockFileNames = Object.keys(lockFiles);
+
 export default async function getPackageManager(): Promise<PackageManager> {
   const projectDir = await getProjectDir();
 
@@ -10,17 +20,12 @@ export default async function getPackageManager(): Promise<PackageManager> {
     return fs.exists(path.join(projectDir, name));
   }
 
-  return (await fileExists('yarn.lock')) || (await fileExists('.yarn'))
-    ? 'yarn'
-    : (await fileExists('package-lock.json'))
-    ? 'npm'
-    : (await fileExists('pnpm-lock.yaml'))
-    ? 'pnpm'
-    : (await fileExists('bun.lockb'))
-    ? 'bun'
-    : throwError('Unable to determine package manager.');
-}
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const [lockFile, packageManager] of Object.entries(lockFiles)) {
+    if (await fileExists(lockFile)) {
+      return packageManager;
+    }
+  }
 
-function throwError(msg: string): never {
-  throw new Error(msg);
+  throw new Error('Unable to determine package manager.');
 }

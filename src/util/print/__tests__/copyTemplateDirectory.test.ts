@@ -1,7 +1,6 @@
 import fse from 'fs-extra';
 import { fs, vol } from 'memfs';
-import path from 'path';
-import { expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import copyTemplateDirectory from '../../copyTemplateDirectory';
 
 vi.mock('../../print', () => ({ default: vi.fn() }));
@@ -17,9 +16,7 @@ test('copies directory structure to destination', async () => {
   await copyTemplateDirectory({ templateDir: 'testing', destinationDir: '.' });
 
   expect(fs.readFileSync('jest.config.js', 'utf8')).toEqual('1');
-  expect(fs.readFileSync(path.join('./src/test/render.ts'), 'utf8')).toEqual(
-    '2',
-  );
+  expect(fs.readFileSync('src/test/render.ts', 'utf8')).toEqual('2');
 });
 
 test('compiles files with .eta file extensions', async () => {
@@ -35,29 +32,72 @@ test('compiles files with .eta file extensions', async () => {
 
   await copyTemplateDirectory({
     templateDir: 'testing',
-    destinationDir: '.',
     variables: { expo: true },
   });
 
   expect(fs.readFileSync('jest.config.js', 'utf8')).toEqual('is expo');
   expect(fs.readFileSync('src/test/render.ts', 'utf8')).toEqual('not foo');
 
-  expect(fs.existsSync('./src/test/render.ts.eta')).toBe(false);
+  expect(fs.existsSync('src/test/render.ts.eta')).toBe(false);
 });
 
-test('deletes .keep files if they are no longer necessary', async () => {
-  fse.mockTemplates();
-  const json = {
-    'src/test/.keep': '',
-    'templates/sample/src/test/file.txt': '1',
-  };
-  vol.fromJSON(json, './');
+describe('string substitutions', () => {
+  test('performs string substitutions', async () => {
+    fse.mockTemplates();
+    const json = {
+      'templates/boilerplate/app.json': '{ "appName": "BELT_APP_NAME" }',
+    };
+    vol.fromJSON(json, './');
 
-  await copyTemplateDirectory({
-    templateDir: 'sample',
-    destinationDir: '.',
+    await copyTemplateDirectory({
+      templateDir: 'boilerplate',
+      stringSubstitutions: {
+        'app.json': {
+          BELT_APP_NAME: 'MyApp',
+        },
+      },
+    });
+
+    expect(fs.readFileSync('app.json', 'utf8')).toEqual(
+      '{ "appName": "MyApp" }',
+    );
   });
 
-  expect(fs.readFileSync('./src/test/file.txt', 'utf8')).toEqual('1');
-  expect(fs.existsSync('./src/test/.keep')).toBe(false);
+  test('matches file name using regex', async () => {
+    fse.mockTemplates();
+    const json = {
+      'templates/boilerplate/src/app1.json': '{ "appName": "BELT_APP_NAME" }',
+    };
+    vol.fromJSON(json, './');
+
+    await copyTemplateDirectory({
+      templateDir: 'boilerplate',
+      stringSubstitutions: {
+        'src/app.*.json': {
+          BELT_APP_NAME: 'MyApp',
+        },
+      },
+    });
+
+    expect(fs.readFileSync('src/app1.json', 'utf8')).toEqual(
+      '{ "appName": "MyApp" }',
+    );
+  });
+
+  test('matches string to replace using regex', async () => {
+    fse.mockTemplates();
+    const json = {
+      'templates/boilerplate/app.json': '{ "appName": "BELT_APP_NAME" }',
+    };
+    vol.fromJSON(json, './');
+
+    await copyTemplateDirectory({
+      templateDir: 'boilerplate',
+      stringSubstitutions: { 'app.json': { 'BELT_.*_NAME': 'MyApp' } },
+    });
+
+    expect(fs.readFileSync('app.json', 'utf8')).toEqual(
+      '{ "appName": "MyApp" }',
+    );
+  });
 });

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
 import fs from 'fs-extra';
+import path from 'path';
 
 // executes the CLI locally from the `builds` directory
 // this can be useful for troubleshooting
@@ -14,17 +15,31 @@ async function run() {
 
   // clean /builds, cd into it
   fs.mkdirSync(dir, { recursive: true });
+  const appName = process.argv[2];
+  if (fs.existsSync(path.join(dir, appName))) {
+    fs.rmSync(path.join(dir, appName), { recursive: true });
+  }
   process.chdir(dir);
 
   // run CLI
   execSync(
-    `${getNodeRunner()} ../dist/index.js ${process.argv
-      .slice(2)
-      .join(' ')} --is-test`,
+    `${getNodeRunner()} ../dist/index.js ${process.argv.slice(2).join(' ')}`,
     {
       stdio: 'inherit',
     },
   );
+
+  process.chdir(appName);
+  execSync(`npm run test:all`, { stdio: 'inherit' });
+
+  process.chdir('../..');
+  console.log(`some commands you might want to run now:
+
+  cd builds/${appName}
+  cd builds/${appName} && npm run test:all
+  cd builds/${appName} && npm run ios
+  code builds/${appName}
+  `);
 }
 
 function getNodeRunner() {
