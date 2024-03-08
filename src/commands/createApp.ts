@@ -65,9 +65,8 @@ export async function createApp(
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
   print(`
-Your pants are now secure! Each tool was configured as an individual commit.
-Take a look at the commits to understand what all was done. For more information
-about Belt, visit https://github.com/thoughtbot/belt.
+Your pants are now secure! For more information about Belt,
+visit https://github.com/thoughtbot/belt.
 `);
 }
 
@@ -96,14 +95,14 @@ export default function createAppAction(...args: unknown[]) {
 
 async function printIntro() {
   print('Let’s get started!');
-  print(`\nWe will now perform the following tasks:
-  - Create a new app using the latest create-expo-app
-  - Add and configure TypeScript
-  - Add and configure Prettier
-  - Add and configure ESLint
-  - Create the project directory structure
-  - Install and configure Jest and Testing Library
-  - Install and configure React Navigation
+  print(`\nWe will now create a new app for you with all of the following goodies:
+  - Expo
+  - TypeScript
+  - Prettier
+  - ESLint
+  - Jest, React Native Testing Library
+  - React Navigation
+  - Intuitive directory structure
   `);
 
   if (!globals.interactive) {
