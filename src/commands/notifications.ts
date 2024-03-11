@@ -103,7 +103,6 @@ export default async function addNotifications() {
 
   In order to finish the setup, you need to:
   - Add your google-service.json and GoogleService-Info.plist files to your project's config folder
-  - Define your package and bundle identifier in the app.json file
   - Run the command "npx expo prebuild --clean" to rebuild the app
   - Add the ios/ and android/ folders to your .gitignore file if you don't need to track them
 
