@@ -39,6 +39,9 @@ test('install React Native Firebase and dependencies', async () => {
 
   const app = fs.readFileSync('App.tsx', 'utf8');
   expect(app).toMatch(
+    "import useNotifications from 'src/hooks/useNotifications';",
+  );
+  expect(app).toMatch(
     '// CODEGEN:BELT:HOOKS - do not remove\nuseNotifications();',
   );
 
