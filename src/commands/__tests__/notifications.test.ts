@@ -33,10 +33,7 @@ test('install React Native Firebase and dependencies', async () => {
     '@react-native-firebase/app @react-native-firebase/messaging expo-build-properties',
   );
 
-  expect(copyTemplateDirectory).toHaveBeenCalledWith({
-    templateDir: 'notifications',
-  });
-
+  expect(fs.existsSync('src/hooks/useNotifications.ts')).toBe(true);
   const app = fs.readFileSync('App.tsx', 'utf8');
   expect(app).toMatch(
     "import useNotifications from 'src/hooks/useNotifications';",
