@@ -14,8 +14,8 @@ export default async function injectHooks(
   const data = await fs.readFile(filePath, 'utf8');
   const lines = data.split('\n');
 
-  const targetLineIndex = lines.findIndex(
-    (line) => line.includes('CODEGEN:BELT:HOOKS')
+  const targetLineIndex = lines.findIndex((line) =>
+    line.includes('CODEGEN:BELT:HOOKS'),
   );
 
   if (targetLineIndex === -1) {
@@ -30,6 +30,6 @@ export default async function injectHooks(
   await writeFile(filePath, updatedData, { format: true });
 
   // Format the file to make sure it's consistent
-  await exec(`npm run fix:eslint`);
-  await exec(`npm run fix:prettier`);
+  await exec(`npx eslint --max-warnings=0 --fix ${filepath}`);
+  await exec(`npx prettier --write ${filepath}`);
 }
