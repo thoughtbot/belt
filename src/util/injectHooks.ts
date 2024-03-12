@@ -15,7 +15,7 @@ export default async function injectHooks(
   const lines = data.split('\n');
 
   const targetLineIndex = lines.findIndex(
-    (line) => line.trim() === '// CODEGEN:BELT:HOOKS - do not remove',
+    (line) => line.includes('CODEGEN:BELT:HOOKS')
   );
 
   if (targetLineIndex === -1) {
