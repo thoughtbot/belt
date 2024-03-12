@@ -46,7 +46,9 @@ export default function runCli() {
     .action(buildAction(import('./commands/testingLibrary')));
 
   program
-    .command('add-notifications')
+    .command('add')
+    .description('Add a new feature to your project')
+    .command('notifications')
     .description(
       'Install and configure React Native Firebase with Notifications',
     )
