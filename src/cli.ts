@@ -52,6 +52,14 @@ export default function runCli() {
     .description(
       'Install and configure React Native Firebase with Notifications',
     )
+    .option(
+      '--bundleId',
+      'The bundle identifier for your app to be used on both iOS and Android',
+    )
+    .option(
+      '--no-interactive',
+      'Pass true to skip all prompts and use default values',
+    )
     .action(buildAction(import('./commands/notifications')));
 
   printWelcome();

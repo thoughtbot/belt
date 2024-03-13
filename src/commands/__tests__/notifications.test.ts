@@ -1,6 +1,6 @@
 import { fs, vol } from 'memfs';
 import { Mock, expect, test, vi } from 'vitest';
-import addNotifications from '../notifications';
+import { addNotifications } from '../notifications';
 import addDependency from '../../util/addDependency';
 import { input } from '@inquirer/prompts';
 
@@ -77,4 +77,51 @@ test('add plugins to app.json expo config preserves existing ones', async () => 
   expect(config).toMatch('"@react-native-firebase/app"');
   expect(config).toMatch('"@react-native-firebase/messaging"');
   expect(config).toMatch('"expo-build-properties"');
+});
+
+test('adds package name and bundle identifier from bundleId option', async () => {
+  const json = {
+    'package.json': JSON.stringify({
+      scripts: {},
+      dependencies: {},
+      devDependencies: {},
+    }),
+    'yarn.lock': '',
+    'app.json': JSON.stringify({}),
+  };
+  vol.fromJSON(json, './');
+
+  await addNotifications({ bundleId: 'com.myapp' });
+
+  const config = fs.readFileSync('app.json', 'utf8');
+  expect(config).toMatch('"package":"com.myapp"');
+  expect(config).toMatch('"bundleIdentifier":"com.myapp"');
+});
+
+test('preserves existing package name and bundle identifier when bundleId is passed', async () => {
+  const json = {
+    'package.json': JSON.stringify({
+      scripts: {},
+      dependencies: {},
+      devDependencies: {},
+    }),
+    'yarn.lock': '',
+    'app.json': JSON.stringify({
+      expo: {
+        android: {
+          package: 'com.myexistingapp',
+        },
+        ios: {
+          bundleIdentifier: 'com.myexistingapp',
+        },
+      },
+    }),
+  };
+  vol.fromJSON(json, './');
+
+  await addNotifications({ bundleId: 'com.myapp' });
+
+  const config = fs.readFileSync('app.json', 'utf8');
+  expect(config).toMatch('"package":"com.myexistingapp"');
+  expect(config).toMatch('"bundleIdentifier":"com.myexistingapp"');
 });

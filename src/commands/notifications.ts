@@ -1,5 +1,6 @@
 import ora from 'ora';
 import addDependency from '../util/addDependency';
+import { globals } from '../constants';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import isExpo from '../util/isExpo';
@@ -9,6 +10,11 @@ import readAppJson from '../util/readAppJson';
 import { input } from '@inquirer/prompts';
 import commit from '../util/commit';
 
+type Options = {
+  bundleId?: string;
+  interactive?: boolean;
+};
+
 const handleCommitError = (error: { stdout: string }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   if (!error.stdout.includes('nothing to commit')) {
@@ -16,7 +22,13 @@ const handleCommitError = (error: { stdout: string }) => {
   }
 };
 
-export default async function addNotifications() {
+export async function addNotifications(options: Options = {}) {
+  const { interactive = true } = options;
+
+  globals.interactive = interactive;
+
+  const { bundleId = !interactive ? 'com.myapp' : undefined } = options;
+
   const spinner = ora().start('Adding React Native Firebase and dependencies');
 
   const expo = await isExpo();
@@ -59,6 +71,7 @@ export default async function addNotifications() {
 
   const packageName =
     appJson.expo?.android?.package ??
+    bundleId ??
     (await input({
       message: 'Define your Android package name:',
       default: 'com.myapp',
@@ -66,6 +79,7 @@ export default async function addNotifications() {
 
   const bundleIdentifier =
     appJson.expo?.ios?.bundleIdentifier ??
+    bundleId ??
     (await input({
       message: 'Define your iOS bundle identifier:',
       default: packageName,
@@ -109,4 +123,15 @@ export default async function addNotifications() {
   For more details please refer to the official documentation: https://rnfirebase.io/#configure-react-native-firebase-modules.
   `,
   );
+}
+
+/**
+ * Commander requires this signature to be ...args: unknown[]
+ * Actual args are:
+ *   ([<Options hash>, <Command>])
+ */
+export default function addNotificationsAction(...args: unknown[]) {
+  // if argument ommitted, args[0] is options
+  const options = (args[0] as unknown[])[0] as Options;
+  return addNotifications(options);
 }
