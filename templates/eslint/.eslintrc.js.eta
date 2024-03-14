@@ -6,7 +6,6 @@ module.exports = {
       "@thoughtbot/eslint-config/typescript"
     <% } %>
   ],
-  plugins: ['import'],
   rules: {
     'import/order': [
       'error',
