@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 
 export const globals = {
   interactive: true,
+  addBottomTabs: false,
 };
 
 // TSUP builds files without hierarchy to dist/, so the path is ultimately
