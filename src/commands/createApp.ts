@@ -17,6 +17,7 @@ type PackageManagerOptions = {
   npm?: boolean;
   yarn?: boolean;
   pnpm?: boolean;
+  bottomTabs?: boolean;
 };
 type Options = {
   interactive?: boolean;
@@ -26,9 +27,10 @@ export async function createApp(
   name: string | undefined,
   options: Options = {},
 ) {
-  const { interactive = true } = options;
+  const { interactive = true, bottomTabs = false } = options;
 
   globals.interactive = interactive;
+  globals.addBottomTabs = bottomTabs;
 
   const appName = await validateAndSanitizeAppName(name);
 
@@ -59,7 +61,7 @@ export async function createApp(
   spinner.start('Installing dependencies');
   const packageManager = getPackageManager(options);
   await exec(`${packageManager} install`);
-
+  bottomTabs && (await addNavigation({ bottomTabs }));
   await exec('git init');
   await commit('Initial commit');
   spinner.succeed('Installed dependencies');
@@ -101,7 +103,9 @@ async function printIntro(appName: string) {
   - Prettier
   - ESLint
   - Jest, React Native Testing Library
-  - React Navigation
+  - React Navigation ${
+    globals.addBottomTabs ? 'with Botttom Tabs Navigation' : ''
+  }
   - Intuitive directory structure
   `);
 

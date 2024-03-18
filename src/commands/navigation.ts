@@ -3,16 +3,18 @@ import addDependency from '../util/addDependency';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import isExpo from '../util/isExpo';
-import { confirm } from '@inquirer/prompts';
-import print from '../util/print';
+import { globals } from '../constants';
 
 type Options = {
   bottomTabs?: boolean;
 };
 
-export default async function addNavigation({ bottomTabs }: Options) {
+export default async function addNavigation(options: Options) {
   const spinner = ora().start('Installing React Navigation');
   const expo = await isExpo();
+
+  const { bottomTabs = false } = options;
+  globals.addBottomTabs = bottomTabs;
 
   if (expo) {
     await exec(
@@ -26,19 +28,7 @@ export default async function addNavigation({ bottomTabs }: Options) {
     '@react-navigation/native @react-navigation/native-stack',
   );
 
-  let addBottomTabsPrompt = false;
-  if (!bottomTabs) {
-    spinner.succeed();
-    addBottomTabsPrompt = await confirm({
-      message: 'Would you like to add Bottom Tabs Navigation?',
-    });
-    if (!addBottomTabsPrompt) {
-      process.exit(0);
-    }
-  }
-
-  const addBottomTabs = bottomTabs || addBottomTabsPrompt;
-  if (addBottomTabs) {
+  if (bottomTabs) {
     const bottomTabsSpinner = ora().start('Adding Bottom Tabs Navigation');
 
     await addDependency(
@@ -48,12 +38,12 @@ export default async function addNavigation({ bottomTabs }: Options) {
   }
 
   await copyTemplateDirectory({
-    templateDir: addBottomTabs
-      ? 'reactNavigationBottomTabs'
-      : 'reactNavigation',
+    templateDir: bottomTabs ? 'reactNavigationBottomTabs' : 'reactNavigation',
   });
 
   spinner.succeed(
-    'Successfully installed React Navigation and Native Stack navigator',
+    `Successfully installed React Navigation ${
+      bottomTabs ? 'Bottom Tab Navigation,' : ''
+    } and Native Stack navigator`,
   );
 }
