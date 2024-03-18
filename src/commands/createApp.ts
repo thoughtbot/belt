@@ -9,12 +9,14 @@ import exec from '../util/exec';
 import { lockFileNames } from '../util/getPackageManager';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
+import addNavigation from './navigation';
 
 type PackageManagerOptions = {
   bun?: boolean;
   npm?: boolean;
   yarn?: boolean;
   pnpm?: boolean;
+  bottomTabs?: boolean;
 };
 type Options = {
   interactive?: boolean;
@@ -24,9 +26,10 @@ export async function createApp(
   name: string | undefined,
   options: Options = {},
 ) {
-  const { interactive = true } = options;
+  const { interactive = true, bottomTabs = false } = options;
 
   globals.interactive = interactive;
+  globals.addBottomTabs = bottomTabs;
 
   const appName = name || (await getAppName());
 
@@ -57,7 +60,7 @@ export async function createApp(
   spinner.start('Installing dependencies');
   const packageManager = getPackageManager(options);
   await exec(`${packageManager} install`);
-
+  bottomTabs && (await addNavigation({ bottomTabs }));
   await exec('git init');
   await commit('Initial commit');
   spinner.succeed('Installed dependencies');
@@ -101,7 +104,9 @@ async function printIntro() {
   - Prettier
   - ESLint
   - Jest, React Native Testing Library
-  - React Navigation
+  - React Navigation ${
+    globals.addBottomTabs ? 'with Botttom Tabs Navigation' : ''
+  }
   - Intuitive directory structure
   `);
 
