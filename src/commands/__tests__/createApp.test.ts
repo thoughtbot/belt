@@ -28,6 +28,17 @@ test('creates app, substituting the app name where appropriate', async () => {
   expect(exec).toHaveBeenCalledWith('yarn install');
 });
 
+test('creates app with the name provided even if it includes spaces', async () => {
+  (confirm as Mock).mockResolvedValueOnce(true);
+  vol.fromJSON({ 'file.txt': '{}' }, './');
+  await createApp(' My App ');
+
+  expectFileContents('MyApp/package.json', '"name": "myapp"');
+  expectFileContents('MyApp/app.json', '"name": "MyApp"');
+  expectFileContents('MyApp/app.json', '"slug": "MyApp"');
+  expect(exec).toHaveBeenCalledWith('yarn install');
+});
+
 test('prompts for app name if not supplied', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
   (input as Mock).mockReturnValue('MyApp');
@@ -51,6 +62,44 @@ test('exits if directory already exists', async () => {
   expect(print).toHaveBeenCalledWith(expect.stringMatching(/already exists/));
   // eslint-disable-next-line @typescript-eslint/unbound-method
   expect(process.exit).toHaveBeenCalledWith(0);
+});
+
+test('let the user know that App name can only include letters, numbers, and underscores', async () => {
+  (print as Mock).mockReset();
+
+  vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
+
+  await createApp('belt***');
+
+  expect(print).toHaveBeenCalledWith(
+    expect.stringMatching(
+      'App name can only include letters, numbers, and underscores',
+    ),
+  );
+});
+
+test('let the user know that cannot choose belt as application name', async () => {
+  (print as Mock).mockReset();
+
+  vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
+
+  await createApp('belt');
+
+  expect(print).toHaveBeenCalledWith(
+    expect.stringMatching('Please choose a different name than "belt"'),
+  );
+});
+
+test('let the user know that cannot choose only numbers as application name', async () => {
+  (print as Mock).mockReset();
+
+  vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
+
+  await createApp('555');
+
+  expect(print).toHaveBeenCalledWith(
+    expect.stringMatching('App name cannot be a number'),
+  );
 });
 
 describe('package manager options', () => {

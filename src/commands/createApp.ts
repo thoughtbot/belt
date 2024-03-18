@@ -1,4 +1,4 @@
-import { confirm, input } from '@inquirer/prompts';
+import { confirm } from '@inquirer/prompts';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import ora from 'ora';
@@ -9,6 +9,7 @@ import exec from '../util/exec';
 import { lockFileNames } from '../util/getPackageManager';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
+import validatedAppName from '../util/validateAppName';
 
 type PackageManagerOptions = {
   bun?: boolean;
@@ -28,7 +29,7 @@ export async function createApp(
 
   globals.interactive = interactive;
 
-  const appName = name || (await getAppName());
+  const appName = await validatedAppName(name);
 
   await ensureDirectoryDoesNotExist(appName);
   await printIntro();
@@ -68,16 +69,6 @@ export async function createApp(
 Your pants are now secure! For more information about Belt,
 visit https://github.com/thoughtbot/belt.
 `);
-}
-
-async function getAppName() {
-  if (!globals.interactive) {
-    throw new Error(
-      'App name not provided and running in non-interactive mode, aborting..',
-    );
-  }
-
-  return input({ message: 'What is the name of your app?' });
 }
 
 /**
