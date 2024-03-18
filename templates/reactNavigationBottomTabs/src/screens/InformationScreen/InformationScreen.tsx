@@ -4,6 +4,7 @@ import { useRoute } from '@react-navigation/native';
 
 export default function InformationScreen() {
   const { params } = useRoute();
+
   return (
     <View style={styles.container}>
       <Text>Information Screen</Text>

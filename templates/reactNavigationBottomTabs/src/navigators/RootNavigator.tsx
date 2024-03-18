@@ -1,7 +1,7 @@
-import { DashboardStack } from './DashboardStack';
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import SettingsScreen from 'src/screens/SettingsScreen/SettingsScreen';
+import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
+import DashboardStack from './DashboardStack';
 
 const Tab = createMaterialBottomTabNavigator();
 
