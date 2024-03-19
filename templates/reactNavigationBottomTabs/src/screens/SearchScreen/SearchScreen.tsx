@@ -10,7 +10,12 @@ export default function HomeScreen() {
       <Text>Home Screen</Text>
       <Button
         title="Go to information screen"
-        onPress={() => navigation.navigate('Information', { owner: 'Will' })}
+        onPress={() =>
+          navigation.navigate('HomeTab', {
+            screen: 'Information',
+            params: { owner: 'Will' },
+          })
+        }
       />
       <StatusBar style="auto" />
     </View>
