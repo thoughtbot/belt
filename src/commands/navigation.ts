@@ -9,7 +9,7 @@ type Options = {
   bottomTabs?: boolean;
 };
 
-export default async function addNavigation(options: Options) {
+export default async function addNavigation(options: Options = {}) {
   const spinner = ora().start('Installing React Navigation');
   const expo = await isExpo();
 
@@ -32,7 +32,7 @@ export default async function addNavigation(options: Options) {
     const bottomTabsSpinner = ora().start('Adding Bottom Tabs Navigation');
 
     await addDependency(
-      '@react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons',
+      '@react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons @expo/vector-icons',
     );
     bottomTabsSpinner.succeed();
   }
