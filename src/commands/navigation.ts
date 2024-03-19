@@ -9,7 +9,7 @@ type Options = {
   bottomTabs?: boolean;
 };
 
-export default async function addNavigation(options: Options = {}) {
+export async function addNavigation(options: Options = {}) {
   const spinner = ora().start('Installing React Navigation');
   const expo = await isExpo();
 
@@ -46,4 +46,18 @@ export default async function addNavigation(options: Options = {}) {
       bottomTabs ? 'Bottom Tab Navigation,' : ''
     } and Native Stack navigator`,
   );
+}
+
+// TODO: Document this as a common error/easy fix!
+
+/**
+ * Commander requires this signature to be ...args: unknown[]
+ * Actual args are:
+ *   ([<Options hash>])
+ *
+ */
+export default function addNavigationAction(...args: unknown[]) {
+  // if argument ommitted, args[0] is options
+  const options = (args[0] as unknown[])[0] as Options;
+  return addNavigation(options);
 }
