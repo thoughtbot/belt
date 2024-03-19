@@ -3,7 +3,8 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 // key: screen name
 // value: params (use undefined if accepts none)
 export type RootStackParamList = {
-  Tabs: NavigatorScreenParams<TabsParamList>;
+  HomeTab: NavigatorScreenParams<HomeTabParamList>;
+  SettingsTab: NavigatorScreenParams<SettingsTabParamList>;
 };
 
 export type TabsParamList = {
