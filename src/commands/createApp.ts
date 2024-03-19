@@ -35,6 +35,7 @@ export async function createApp(
 
   await ensureDirectoryDoesNotExist(appName);
   await printIntro();
+  await bottomTabsPrompt();
 
   const spinner = ora('Creating app with Belt').start();
 
@@ -60,7 +61,8 @@ export async function createApp(
   spinner.start('Installing dependencies');
   const packageManager = getPackageManager(options);
   await exec(`${packageManager} install`);
-  bottomTabs && (await addNavigation({ bottomTabs }));
+  globals.addBottomTabs &&
+    (await addNavigation({ bottomTabs: globals.addBottomTabs }));
   await exec('git init');
   await commit('Initial commit');
   spinner.succeed('Installed dependencies');
@@ -120,6 +122,20 @@ async function printIntro() {
   }
 
   print(''); // add new line
+}
+
+async function bottomTabsPrompt() {
+  const bottomTabs = await confirm({
+    message: 'Would you like your app set up with bottom tab navigation?',
+  });
+
+  if (bottomTabs) {
+    globals.addBottomTabs = bottomTabs;
+  }
+
+  print(''); // add new line
+
+  return bottomTabs;
 }
 
 async function commit(message: string) {
