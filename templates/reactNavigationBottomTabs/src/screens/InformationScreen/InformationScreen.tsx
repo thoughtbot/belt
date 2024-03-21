@@ -1,9 +1,12 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { RootStackParamList } from 'src/navigators/navigatorTypes';
 
-export default function InformationScreen() {
-  const { params } = useRoute();
+type Props = NativeStackScreenProps<RootStackParamList, 'Information'>;
+
+export default function InformationScreen({ route }: Props) {
+  const { params } = route;
 
   return (
     <View style={styles.container}>

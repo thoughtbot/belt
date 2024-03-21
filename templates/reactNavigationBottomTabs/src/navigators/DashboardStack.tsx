@@ -2,9 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import SearchScreen from '../screens/SearchScreen/SearchScreen';
 import InformationScreen from '../screens/InformationScreen/InformationScreen';
-import { HomeTabParamList } from './navigatorTypes';
+import { DashboardStackParamList } from './navigatorTypes';
 
-const Dashboard = createNativeStackNavigator<HomeTabParamList>();
+const Dashboard = createNativeStackNavigator<DashboardStackParamList>();
 
 export default function DashboardStack() {
   return (
