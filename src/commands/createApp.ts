@@ -59,7 +59,6 @@ export async function createApp(
   spinner.start('Installing dependencies');
   const packageManager = getPackageManager(options);
   await exec(`${packageManager} install`);
-
   await exec('git init');
   await commit('Initial commit');
   spinner.succeed('Installed dependencies');
