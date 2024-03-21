@@ -2,8 +2,9 @@ import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navig
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
 import DashboardStack from './DashboardStack';
+import { RootStackParamList } from './navigatorTypes';
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   return (
