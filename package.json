@@ -19,7 +19,6 @@
     "package.json"
   ],
   "scripts": {
-    "prepack": "node ./bin/prepack.js",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist node_modules",
@@ -33,7 +32,8 @@
     "test:run": "vitest run",
     "test:all": "yarn lint && yarn test:run",
     "pub:beta": "yarn build && npm publish --tag beta",
-    "pub:release": "yarn build && npm publish"
+    "pub:release": "yarn build && npm publish",
+    "prepare": "husky"
   },
   "dependencies": {
     "@inquirer/prompts": "^3.2.0",
@@ -52,6 +52,7 @@
     "@types/fs-extra": "^11.0.3",
     "@types/node": "^18.16.3",
     "@types/react": "^18.2.6",
+    "husky": "^9.0.11",
     "memfs": "^4.5.1",
     "npm-run-all": "^4.1.5",
     "tsup": "^7.2.0",

@@ -155,7 +155,7 @@ async function ensureDirectoryDoesNotExist(appName: string) {
 async function boilerplateIgnoreFiles() {
   const gitignorePath = path.join(
     PACKAGE_ROOT,
-    'templates/boilerplate/.gitignore',
+    'templates/boilerplate/.gitignore.eta',
   );
   return `
    ${(await fs.readFile(gitignorePath, 'utf8')).toString()}

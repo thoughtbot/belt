@@ -10,13 +10,3 @@ npm-debug.log
 /builds
 ios/
 android/
-
-# don't commit this since is auto-generated when packing or publishing
-templates/boilerplate/.npmignore
-
-# ignore these in case the app was run directly from templates/boilerplate
-# also add these to bin/prepack.js
-/templates/boilerplate/bun.lockb
-/templates/boilerplate/yarn.lock
-/templates/boilerplate/package-lock.json
-/templates/boilerplate/pnpm-lock.yaml
