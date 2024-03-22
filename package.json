@@ -19,6 +19,7 @@
     "package.json"
   ],
   "scripts": {
+    "prepack": "node ./bin/prepack.js",
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist node_modules",
