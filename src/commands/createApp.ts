@@ -124,15 +124,14 @@ async function printIntro() {
 
 async function bottomTabsPrompt() {
   const bottomTabs = await confirm({
-    message: 'Would you like your app set up with bottom tab navigation?',
+    message: 'Add bottom tab navigation?',
   });
 
-  if (!bottomTabs) {
-    process.exit(0);
+  if (bottomTabs) {
+    globals.addBottomTabs = bottomTabs;
+    await addNavigation({ bottomTabs });
+    await commit('Setup bottom tab navigation');
   }
-
-  globals.addBottomTabs = bottomTabs;
-  await addNavigation({ bottomTabs });
 
   print(''); // add new line
 
