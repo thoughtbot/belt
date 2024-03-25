@@ -2,21 +2,24 @@ import { globals } from '../constants';
 import { input } from '@inquirer/prompts';
 import print from './print';
 import chalk from 'chalk';
+import { camelCase, upperFirst } from 'lodash';
 
-export default async function validatedAppName(
-  name: string | undefined,
-): Promise<string> {
-  if (!name) {
-    return getAppName();
+export default async function validateAppName(name: string | undefined) {
+  const appName = camelize(name || (await getAppName()));
+  console.log(appName)
+  if (/^\d+$/.test(appName)) {
+    printWarning('App name cannot be all numbers.');
+    process.exit(0);
   }
 
-  if (name.includes(' ')) {
-    const parsedName = parseName(name);
-
-    return validate(parsedName);
+  if (!/^[a-zA-Z].*$/i.test(appName)) {
+    printWarning(
+      'App name must start with a letter.',
+    );
+    process.exit(0);
   }
 
-  return validate(name);
+  return appName;
 }
 
 async function getAppName() {
@@ -29,31 +32,10 @@ async function getAppName() {
   return input({ message: 'What is the name of your app?' });
 }
 
-function validate(name: string) {
-  if (name.toLowerCase() === 'belt') {
-    printWarning('Please choose a different name than "belt"');
-    return getAppName();
-  }
-
-  if (/^\d+$/.test(name)) {
-    printWarning('App name cannot be a number');
-    return getAppName();
-  }
-
-  if (!/^[a-z_][a-z0-9_-]+$/i.test(parseName(name))) {
-    printWarning('App name can only include letters, numbers, and underscores');
-    return getAppName();
-  }
-
-  return name;
-}
-
-function parseName(appName: string) {
-  return appName
-    .trim()
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join('');
+function camelize(appName: string) {
+  const trimmedAppName = appName.trim();
+  const camelizedName = camelCase(trimmedAppName);
+  return upperFirst(camelizedName);
 }
 
 function printWarning(message: string) {
