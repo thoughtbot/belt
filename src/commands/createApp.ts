@@ -9,7 +9,7 @@ import exec from '../util/exec';
 import { lockFileNames } from '../util/getPackageManager';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
-import validatedAppName from '../util/validateAppName';
+import validateAppName from '../util/validateAppName';
 
 type PackageManagerOptions = {
   bun?: boolean;
@@ -29,7 +29,7 @@ export async function createApp(
 
   globals.interactive = interactive;
 
-  const appName = await validatedAppName(name);
+  const appName = await validateAppName(name);
 
   await ensureDirectoryDoesNotExist(appName);
   await printIntro();

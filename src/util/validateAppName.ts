@@ -2,20 +2,18 @@ import { globals } from '../constants';
 import { input } from '@inquirer/prompts';
 import print from './print';
 import chalk from 'chalk';
-import { camelCase, upperFirst } from 'lodash';
+import pkg from 'lodash';
 
 export default async function validateAppName(name: string | undefined) {
   const appName = camelize(name || (await getAppName()));
-  console.log(appName)
+  console.log('appName', appName);
   if (/^\d+$/.test(appName)) {
     printWarning('App name cannot be all numbers.');
     process.exit(0);
   }
 
   if (!/^[a-zA-Z].*$/i.test(appName)) {
-    printWarning(
-      'App name must start with a letter.',
-    );
+    printWarning('App name must start with a letter.');
     process.exit(0);
   }
 
@@ -34,8 +32,8 @@ async function getAppName() {
 
 function camelize(appName: string) {
   const trimmedAppName = appName.trim();
-  const camelizedName = camelCase(trimmedAppName);
-  return upperFirst(camelizedName);
+  const camelizedName = pkg.camelCase(trimmedAppName);
+  return pkg.upperFirst(camelizedName);
 }
 
 function printWarning(message: string) {
