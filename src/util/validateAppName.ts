@@ -4,15 +4,18 @@ import print from './print';
 import chalk from 'chalk';
 import pkg from 'lodash';
 
+const allNumbersString = /^\d+$/;
+const startWithLetter = /^[a-zA-Z].*$/i;
+
 export default async function validateAppName(name: string | undefined) {
   const appName = camelize(name || (await getAppName()));
   console.log('appName', appName);
-  if (/^\d+$/.test(appName)) {
+  if (allNumbersString.test(appName)) {
     printWarning('App name cannot be all numbers.');
     process.exit(0);
   }
 
-  if (!/^[a-zA-Z].*$/i.test(appName)) {
+  if (!startWithLetter.test(appName)) {
     printWarning('App name must start with a letter.');
     process.exit(0);
   }
