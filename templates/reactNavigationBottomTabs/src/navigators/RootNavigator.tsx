@@ -6,6 +6,20 @@ import { RootStackParamList } from './navigatorTypes';
 
 const Tab = createMaterialBottomTabNavigator<RootStackParamList>();
 
+function HomeIcon() {
+  return function Icon({ focused = false, color = 'gray' }) {
+    return <MaterialCommunityIcons name="home" color={color} size={26} />;
+  };
+}
+
+function AccountIcon() {
+  return function Icon({ focused = false, color = 'gray' }) {
+    return (
+      <MaterialCommunityIcons name="account-circle" color={color} size={26} />
+    );
+  };
+}
+
 export default function RootNavigator() {
   return (
     <Tab.Navigator
@@ -17,22 +31,14 @@ export default function RootNavigator() {
         name="Dashboard"
         component={DashboardStack}
         options={{
-          tabBarIcon: ({ color, size = 26 }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
+          tabBarIcon: HomeIcon(),
         }}
       />
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
-          tabBarIcon: ({ color, size = 26 }) => (
-            <MaterialCommunityIcons
-              name="account-circle"
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: AccountIcon(),
         }}
       />
     </Tab.Navigator>
