@@ -4,9 +4,6 @@ import addDependency from '../../util/addDependency';
 import copyTemplateDirectory from '../../util/copyTemplateDirectory';
 import addNavigation from '../navigation';
 
-vi.mock('@inquirer/prompts', () => ({
-  confirm: vi.fn(),
-}));
 vi.mock('../../util/addDependency');
 vi.mock('../../util/copyTemplateDirectory');
 
