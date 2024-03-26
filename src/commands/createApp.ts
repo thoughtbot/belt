@@ -63,7 +63,10 @@ export async function createApp(
   await exec('git init');
   await commit('Initial commit');
   spinner.succeed('Installed dependencies');
-  await bottomTabsPrompt();
+
+  globals.addBottomTabs
+    ? await bottomTabsPrompt(globals.addBottomTabs)
+    : await bottomTabsPrompt();
 
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
@@ -122,14 +125,16 @@ async function printIntro() {
   print(''); // add new line
 }
 
-async function bottomTabsPrompt() {
-  const bottomTabs = await confirm({
-    message: 'Add bottom tab navigation?',
-  });
+async function bottomTabsPrompt(flag?: boolean) {
+  const bottomTabs =
+    !flag &&
+    (await confirm({
+      message: 'Add bottom tab navigation?',
+    })); // Make confirm conditional; if flag is passed in & truthy, skip it, if not, ask
 
-  if (bottomTabs) {
+  if (flag || bottomTabs) {
     globals.addBottomTabs = bottomTabs;
-    await addNavigation({ bottomTabs });
+    await addNavigation({ bottomTabs: true });
     await commit('Setup bottom tab navigation');
   }
 

@@ -10,12 +10,15 @@ type Options = {
 };
 
 async function addNavigation(options: Options = {}) {
-  const spinner = ora().start('Installing React Navigation');
-  const expo = await isExpo();
+  const { bottomTabs = false } = options;
+  globals.addBottomTabs = bottomTabs;
 
-  // TODO: Get bottomTabs option passed in correctly; bottomTabs and addBottomTabs are always falsy
-  const { bottomTabs = true } = options;
-  globals.addBottomTabs = Boolean(bottomTabs);
+  const spinner = ora().start(
+    `Installing React Navigation ${
+      bottomTabs ? 'with Bottom Tab Navigation' : ''
+    }`,
+  );
+  const expo = await isExpo();
 
   if (expo) {
     await exec(
@@ -30,12 +33,9 @@ async function addNavigation(options: Options = {}) {
   );
 
   if (bottomTabs) {
-    const bottomTabsSpinner = ora().start('Adding Bottom Tabs Navigation');
-
     await addDependency(
       '@react-navigation/bottom-tabs @react-navigation/material-bottom-tabs @react-navigation/stack @expo/vector-icons react-native-paper react-native-vector-icons',
     );
-    bottomTabsSpinner.succeed();
   }
 
   await copyTemplateDirectory({
@@ -43,9 +43,9 @@ async function addNavigation(options: Options = {}) {
   });
 
   spinner.succeed(
-    `Successfully installed React Navigation ${
-      bottomTabs ? 'Bottom Tab Navigation,' : ''
-    } and Native Stack navigator`,
+    `Successfully installed React Navigation and ${
+      bottomTabs ? 'Tab' : 'Native'
+    } Stack navigator.`,
   );
 }
 
@@ -55,10 +55,9 @@ async function addNavigation(options: Options = {}) {
  * Commander requires this signature to be ...args: unknown[]
  * Actual args are:
  *   ([<Options hash>])
- *
  */
 export default function addNavigationAction(...args: unknown[]) {
   // if argument ommitted, args[0] is options
-  const options = (args[0] as unknown[])[0] as Options;
+  const options = args[0] as object[] as Options;
   return addNavigation(options);
 }
