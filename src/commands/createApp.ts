@@ -130,7 +130,7 @@ async function bottomTabsPrompt(flag?: boolean) {
     !flag &&
     (await confirm({
       message: 'Add bottom tab navigation?',
-    })); // Make confirm conditional; if flag is passed in & truthy, skip it, if not, ask
+    }));
 
   if (flag || bottomTabs) {
     globals.addBottomTabs = bottomTabs;
