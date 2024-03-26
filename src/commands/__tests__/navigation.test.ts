@@ -3,7 +3,6 @@ import { expect, test, vi } from 'vitest';
 import addDependency from '../../util/addDependency';
 import copyTemplateDirectory from '../../util/copyTemplateDirectory';
 import addNavigation from '../navigation';
-import { confirm } from '@inquirer/prompts';
 
 vi.mock('@inquirer/prompts', () => ({
   confirm: vi.fn(),
@@ -50,11 +49,8 @@ test('installs React Navigation with Bottom Tabs', async () => {
   expect(addDependency).toHaveBeenCalledWith(
     '@react-navigation/native @react-navigation/native-stack',
   );
-  expect(confirm).toHaveBeenCalledWith(
-    '@react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons',
-  );
   expect(addDependency).toHaveBeenCalledWith(
-    '@react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons',
+    '@react-navigation/bottom-tabs @react-navigation/material-bottom-tabs @react-navigation/stack @expo/vector-icons react-native-paper react-native-vector-icons',
   );
   expect(copyTemplateDirectory).toHaveBeenCalledWith({
     templateDir: 'reactNavigationBottomTabs',
