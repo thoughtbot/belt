@@ -7,6 +7,9 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
+jest.mock('expo-font');
+jest.mock('expo-asset');
+
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
 jest.mock('react-native/Libraries/Alert/Alert', () => ({
