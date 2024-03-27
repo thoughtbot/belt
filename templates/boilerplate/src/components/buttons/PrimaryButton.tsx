@@ -1,19 +1,15 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native';
+import { StyleSheet, Pressable, PressableProps, ViewStyle } from 'react-native';
 
-type ButtonProps = TouchableOpacityProps;
+type ButtonProps = PressableProps;
 
-export default function PrimaryButton({ style, ...props }: ButtonProps) {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.6}
-      style={[styles.button, style]}
-      {...props}
-    />
-  );
+export default function PrimaryButton({
+  style,
+  ...props
+}: {
+  style: ViewStyle | undefined;
+  props: ButtonProps;
+}) {
+  return <Pressable style={[styles.button, style]} {...props} />;
 }
 
 const styles = StyleSheet.create({
