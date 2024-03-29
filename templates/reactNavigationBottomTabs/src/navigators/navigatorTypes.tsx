@@ -1,25 +1,16 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import {
-  CompositeScreenProps,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
+import { NavigatorScreenParams } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
-  Home: undefined;
-  Dashboard: StackScreenProps<DashboardStackParamList>;
-  Information: { owner: string } | undefined;
-  Settings: undefined;
+  Tabs: NavigatorScreenParams<TabsParamList>;
 };
 
-// ❓ Is this the correct type for Stack navigator nested inside of a Tab navigator?
-// TODO: Remove this before merging PR... this type isn't used anywhere!
-export type CompositeRootStackParamList = CompositeScreenProps<
-  BottomTabScreenProps<RootStackParamList, 'Home'>,
-  StackScreenProps<DashboardStackParamList>
->;
+export type TabsParamList = {
+  DashboardTab: NavigatorScreenParams<DashboardTabParamList>;
+  SettingsTab: NavigatorScreenParams<SettingsTabParamList>;
+};
 
-export type DashboardStackParamList = {
+export type DashboardTabParamList = {
   Home: undefined;
   Information: { owner: string } | undefined;
 };
@@ -28,18 +19,22 @@ export type SettingsTabParamList = {
   Settings: undefined;
 };
 
-export type TabsParamList = {
-  Home: NavigatorScreenParams<DashboardStackParamList['Home']>;
-  Information: NavigatorScreenParams<DashboardStackParamList['Information']>;
-  Settings: SettingsTabParamList;
-};
-
 /* ----------------------------------------------------------------
-  Derived types -- these should not need to be regularly modified
+  Derived types -- these should not need to be frequently modified
   -------------------------------------------------------------*/
 export type TabName = keyof TabsParamList;
-export type RouteName = keyof RootStackParamList;
+export type RootRouteName = keyof RootStackParamList;
 export type AppRouteName =
   | keyof RootStackParamList
-  | keyof DashboardStackParamList
+  | keyof DashboardTabParamList
   | keyof SettingsTabParamList;
+
+export type HomeScreenProp = NativeStackScreenProps<
+  DashboardTabParamList,
+  'Home'
+>;
+
+export type InformationScreenProp = NativeStackScreenProps<
+  DashboardTabParamList,
+  'Information'
+>;

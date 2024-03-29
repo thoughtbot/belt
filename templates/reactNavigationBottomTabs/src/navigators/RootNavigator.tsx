@@ -1,46 +1,30 @@
-import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
-import DashboardStack from './DashboardStack';
-import { RootStackParamList } from './navigatorTypes';
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
+import TabNavigator from './TabNavigator';
 
-const Tab = createMaterialBottomTabNavigator<RootStackParamList>();
+const navigatorScreenOptions: NativeStackNavigationOptions = {
+  headerShadowVisible: false,
+};
 
-function HomeIcon() {
-  return function Icon({ focused = false, color = 'gray' }) {
-    return <MaterialCommunityIcons name="home" color={color} size={26} />;
-  };
-}
-
-function AccountIcon() {
-  return function Icon({ focused = false, color = 'gray' }) {
-    return (
-      <MaterialCommunityIcons name="account-circle" color={color} size={26} />
-    );
-  };
-}
+const Stack = createNativeStackNavigator();
 
 export default function RootNavigator() {
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      activeColor="#fff"
-      barStyle={{ backgroundColor: '#7B7B7B' }}
-    >
-      <Tab.Screen
-        name="Dashboard"
-        component={DashboardStack}
-        options={{
-          tabBarIcon: HomeIcon(),
-        }}
+    <Stack.Navigator screenOptions={navigatorScreenOptions}>
+      <Stack.Screen
+        name="Tabs"
+        component={TabNavigator}
+        options={{ headerShown: false }}
       />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: AccountIcon(),
-        }}
-      />
-    </Tab.Navigator>
+
+      {/*
+        screens that are navigable outside of tabs go here. This can include:
+          - authentication screens (only render tab navigator conditionally)
+          - screens that should not display bottom tab bar and that might be
+            navigated to from a screen from multiple tabs
+        */}
+    </Stack.Navigator>
   );
 }
