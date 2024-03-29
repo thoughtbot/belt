@@ -1,3 +1,35 @@
+# -----------------------------------------------------------------------------
+# This file is generated from .gitignore.eta in bin/util/gitignoreUtil.js, do
+# not modify directly
+# -----------------------------------------------------------------------------
+
+# this file is not packaged to npm, because npm does not support packaging
+# .gitignore files. we package .gitignore.eta instead. We still want to have a
+# .gitignore file present though for two reasons:
+#
+#  - The belt repo uses this file to ignore files that should not be committed
+#  - NPM uses this file to exclude files from the NPM package
+#
+# This file is auto-generated in a pre-commit hook. See bin/generate-gitignore.js
+
+# -----------------------------------------------------------------------------
+# The following are not in .gitignore.eta because we don't want them to be
+# ignored in generated Belt apps. But we do want to ignore them in the Belt repo
+# and the npm package, so we add them.
+#
+# This file is auto-generated. To make changes here, update it in
+# bin/util/gitignoreUtil.js
+# -----------------------------------------------------------------------------
+
+bun.lockb
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# -----------------------------------------------------------------------------
+# begin .gitignore contents from .gitignore.eta
+# -----------------------------------------------------------------------------
+
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies

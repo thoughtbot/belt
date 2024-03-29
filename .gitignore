@@ -10,9 +10,3 @@ npm-debug.log
 /builds
 ios/
 android/
-
-# ignore these in case the app was run directly from templates/boilerplate
-/templates/boilerplate/bun.lockb
-/templates/boilerplate/yarn.lock
-/templates/boilerplate/package-lock.json
-/templates/boilerplate/pnpm-lock.yaml
