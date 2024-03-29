@@ -22,7 +22,7 @@ test('creates app, substituting the app name where appropriate', async () => {
   vol.fromJSON({ 'file.txt': '{}' }, './');
   await createApp('MyApp');
 
-  expectFileContents('MyApp/package.json', '"name": "myapp"');
+  expectFileContents('MyApp/package.json', '"name": "my-app"');
   expectFileContents('MyApp/app.json', '"name": "MyApp"');
   expectFileContents('MyApp/app.json', '"slug": "MyApp"');
   expect(exec).toHaveBeenCalledWith('yarn install');
@@ -33,7 +33,7 @@ test('prompts for app name if not supplied', async () => {
   (input as Mock).mockReturnValue('MyApp');
   await createApp(undefined);
 
-  expectFileContents('MyApp/package.json', '"name": "myapp"');
+  expectFileContents('MyApp/package.json', '"name": "my-app"');
   expectFileContents('MyApp/app.json', '"name": "MyApp"');
   expectFileContents('MyApp/app.json', '"slug": "MyApp"');
   expect(exec).toHaveBeenCalledWith('yarn install');
@@ -46,40 +46,25 @@ test('exits if directory already exists', async () => {
 
   vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
 
-  await createApp('MyApp');
+  await createApp('my-app'); // gets sanitized to MyApp
 
   expect(print).toHaveBeenCalledWith(expect.stringMatching(/already exists/));
   // eslint-disable-next-line @typescript-eslint/unbound-method
   expect(process.exit).toHaveBeenCalledWith(0);
 });
 
-test('creates app with the correct application name when the application name includes spaces', async () => {
+test('converts directory to camel case and strips special characters', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON({ 'file.txt': '{}' }, './');
-  await createApp(' My App ');
+  await createApp('my-$%-app');
 
-  expectFileContents('MyApp/package.json', '"name": "myapp"');
+  expectFileContents('MyApp/package.json', '"name": "my-app"');
   expectFileContents('MyApp/app.json', '"name": "MyApp"');
   expectFileContents('MyApp/app.json', '"slug": "MyApp"');
   expect(exec).toHaveBeenCalledWith('yarn install');
 });
 
-test('let the user know that cannot choose only numbers as application name', async () => {
-  (print as Mock).mockReset();
-  vi.spyOn(process, 'exit');
-  process.exit = vi.fn();
-  vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
-
-  await createApp('555');
-
-  expect(print).toHaveBeenCalledWith(
-    expect.stringMatching('App name cannot be all numbers.'),
-  );
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  expect(process.exit).toHaveBeenCalledWith(0);
-});
-
-test('let the user know that application name must start with a letter', async () => {
+test('exits if app name does not start with a letter', async () => {
   (print as Mock).mockReset();
   vi.spyOn(process, 'exit');
   process.exit = vi.fn();

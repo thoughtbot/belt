@@ -6,7 +6,9 @@ import print from './print';
 
 const startWithLetter = /^[a-zA-Z].*$/i;
 
-export default async function validateAppName(name: string | undefined) {
+export default async function validateAndSanitizeAppName(
+  name: string | undefined,
+) {
   const appName = camelize(name || (await getAppName()));
 
   if (!startWithLetter.test(appName)) {

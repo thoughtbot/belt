@@ -1,6 +1,7 @@
 import { confirm } from '@inquirer/prompts';
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import _ from 'lodash';
 import ora from 'ora';
 import path from 'path';
 import { PACKAGE_ROOT, globals } from '../constants';
@@ -9,7 +10,7 @@ import exec from '../util/exec';
 import { lockFileNames } from '../util/getPackageManager';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
-import validateAppName from '../util/validateAppName';
+import validateAndSanitizeAppName from '../util/validateAndSanitizeAppName';
 
 type PackageManagerOptions = {
   bun?: boolean;
@@ -29,7 +30,7 @@ export async function createApp(
 
   globals.interactive = interactive;
 
-  const appName = await validateAppName(name);
+  const appName = await validateAndSanitizeAppName(name);
 
   await ensureDirectoryDoesNotExist(appName);
   await printIntro(appName);
@@ -46,7 +47,7 @@ export async function createApp(
         BELT_APP_NAME: appName,
       },
       'package.json': {
-        belt_app_name: appName.toLowerCase(),
+        belt_app_name: _.kebabCase(appName),
       },
     },
   });
