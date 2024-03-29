@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
 import fs from 'fs-extra';
+import _ from 'lodash';
 import path from 'path';
 
 // executes the CLI locally from the `builds` directory
@@ -15,7 +16,8 @@ async function run() {
 
   // clean /builds, cd into it
   fs.mkdirSync(dir, { recursive: true });
-  const appName = process.argv[2];
+  const rawAppName = process.argv[2];
+  const appName = _.upperFirst(_.camelCase(rawAppName.trim()));
   if (fs.existsSync(path.join(dir, appName))) {
     fs.rmSync(path.join(dir, appName), { recursive: true });
   }
