@@ -15,7 +15,7 @@ afterEach(() => {
   (print as Mock).mockReset();
 });
 
-describe('validateAppName', () => {
+describe('validateAndSanitizeAppName', () => {
   test('returns the correct camelized application name', async () => {
     (input as Mock).mockReturnValue('my_app');
     const appName = await validateAndSanitizeAppName(undefined);
