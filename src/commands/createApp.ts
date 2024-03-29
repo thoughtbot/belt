@@ -1,6 +1,7 @@
-import { confirm, input } from '@inquirer/prompts';
+import { confirm } from '@inquirer/prompts';
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import _ from 'lodash';
 import ora from 'ora';
 import path from 'path';
 import { PACKAGE_ROOT, globals } from '../constants';
@@ -9,6 +10,7 @@ import exec from '../util/exec';
 import { lockFileNames } from '../util/getPackageManager';
 import getUserPackageManager from '../util/getUserPackageManager';
 import print from '../util/print';
+import validateAndSanitizeAppName from '../util/validateAndSanitizeAppName';
 
 type PackageManagerOptions = {
   bun?: boolean;
@@ -28,10 +30,10 @@ export async function createApp(
 
   globals.interactive = interactive;
 
-  const appName = name || (await getAppName());
+  const appName = await validateAndSanitizeAppName(name);
 
   await ensureDirectoryDoesNotExist(appName);
-  await printIntro();
+  await printIntro(appName);
 
   const spinner = ora('Creating app with Belt').start();
 
@@ -45,7 +47,7 @@ export async function createApp(
         BELT_APP_NAME: appName,
       },
       'package.json': {
-        belt_app_name: appName.toLowerCase(),
+        belt_app_name: _.kebabCase(appName),
       },
     },
   });
@@ -65,19 +67,14 @@ export async function createApp(
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
   print(`
-Your pants are now secure! For more information about Belt,
-visit https://github.com/thoughtbot/belt.
+Your pants are now secure! To get started with your new app:
+
+cd ${appName}
+${packageManager} run ios
+${packageManager} run android
+
+For more information about Belt, visit https://github.com/thoughtbot/belt.
 `);
-}
-
-async function getAppName() {
-  if (!globals.interactive) {
-    throw new Error(
-      'App name not provided and running in non-interactive mode, aborting..',
-    );
-  }
-
-  return input({ message: 'What is the name of your app?' });
 }
 
 /**
@@ -93,9 +90,12 @@ export default function createAppAction(...args: unknown[]) {
   return createApp(appNameArg, options);
 }
 
-async function printIntro() {
+async function printIntro(appName: string) {
   print('Let’s get started!');
-  print(`\nWe will now create a new app for you with all of the following goodies:
+  print(`\nWe will now create a new app in ./${chalk.bold(
+    appName,
+  )} for you with all of the following goodies:
+
   - Expo
   - TypeScript
   - Prettier
