@@ -11,8 +11,13 @@ export default async function validateAndSanitizeAppName(
 ) {
   const appName = camelize(name || (await getAppName()));
 
+  if (!appName) {
+    printWarning("\nPants required! App name can't be blank.");
+    process.exit(0);
+  }
+
   if (!startWithLetter.test(appName)) {
-    printWarning('App name must start with a letter.');
+    printWarning('\nApp name must start with a letter.');
     process.exit(0);
   }
 

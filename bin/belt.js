@@ -17,8 +17,8 @@ async function run() {
   // clean /builds, cd into it
   fs.mkdirSync(dir, { recursive: true });
   const rawAppName = process.argv[2];
-  const appName = _.upperFirst(_.camelCase(rawAppName.trim()));
-  if (fs.existsSync(path.join(dir, appName))) {
+  const appName = _.upperFirst(_.camelCase((rawAppName || '').trim()));
+  if (appName && fs.existsSync(path.join(dir, appName))) {
     fs.rmSync(path.join(dir, appName), { recursive: true });
   }
   process.chdir(dir);
@@ -31,17 +31,19 @@ async function run() {
     },
   );
 
-  process.chdir(appName);
-  execSync(`npm run test:all`, { stdio: 'inherit' });
+  if (appName) {
+    process.chdir(appName);
+    execSync(`npm run test:all`, { stdio: 'inherit' });
 
-  process.chdir('../..');
-  console.log(`some commands you might want to run now:
+    process.chdir('../..');
+    console.log(`some commands you might want to run now:
 
   cd builds/${appName}
   cd builds/${appName} && npm run test:all
   cd builds/${appName} && npm run ios
   code builds/${appName}
   `);
+  }
 }
 
 function getNodeRunner() {
