@@ -1,6 +1,6 @@
 import { input } from '@inquirer/prompts';
 import { vol } from 'memfs';
-import { Mock, afterEach, expect, test, vi, describe } from 'vitest';
+import { Mock, afterEach, describe, expect, test, vi } from 'vitest';
 import print from '../print';
 import validateAppName from '../validateAppName';
 
@@ -42,20 +42,6 @@ describe('validateAppName', () => {
     const appName = await validateAppName(undefined);
 
     expect(appName).toBe('MyApp');
-  });
-
-  test('returns a warning when the application name includes only numbers', async () => {
-    (print as Mock).mockReset();
-    vi.spyOn(process, 'exit');
-    process.exit = vi.fn();
-    (input as Mock).mockReturnValue('123');
-    await validateAppName(undefined);
-
-    expect(print).toHaveBeenCalledWith(
-      expect.stringMatching('App name cannot be all numbers.'),
-    );
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(process.exit).toHaveBeenCalledWith(0);
   });
 
   test('returns a warning when the application name does not start with a letter', async () => {

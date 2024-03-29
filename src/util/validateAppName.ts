@@ -4,15 +4,10 @@ import _ from 'lodash';
 import { globals } from '../constants';
 import print from './print';
 
-const allNumbersString = /^\d+$/;
 const startWithLetter = /^[a-zA-Z].*$/i;
 
 export default async function validateAppName(name: string | undefined) {
   const appName = camelize(name || (await getAppName()));
-  if (allNumbersString.test(appName)) {
-    printWarning('App name cannot be all numbers.');
-    process.exit(0);
-  }
 
   if (!startWithLetter.test(appName)) {
     printWarning('App name must start with a letter.');
