@@ -32,7 +32,7 @@ export async function createApp(
   const appName = await validateAppName(name);
 
   await ensureDirectoryDoesNotExist(appName);
-  await printIntro();
+  await printIntro(appName);
 
   const spinner = ora('Creating app with Belt').start();
 
@@ -66,8 +66,13 @@ export async function createApp(
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
   print(`
-Your pants are now secure! For more information about Belt,
-visit https://github.com/thoughtbot/belt.
+Your pants are now secure! To get started with your new app:
+
+cd ${appName}
+${packageManager} run ios
+${packageManager} run android
+
+For more information about Belt, visit https://github.com/thoughtbot/belt.
 `);
 }
 
@@ -84,9 +89,12 @@ export default function createAppAction(...args: unknown[]) {
   return createApp(appNameArg, options);
 }
 
-async function printIntro() {
+async function printIntro(appName: string) {
   print('Let’s get started!');
-  print(`\nWe will now create a new app for you with all of the following goodies:
+  print(`\nWe will now create a new app in ./${chalk.bold(
+    appName,
+  )} for you with all of the following goodies:
+
   - Expo
   - TypeScript
   - Prettier
