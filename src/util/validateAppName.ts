@@ -1,15 +1,14 @@
-import { globals } from '../constants';
 import { input } from '@inquirer/prompts';
-import print from './print';
 import chalk from 'chalk';
-import pkg from 'lodash';
+import _ from 'lodash';
+import { globals } from '../constants';
+import print from './print';
 
 const allNumbersString = /^\d+$/;
 const startWithLetter = /^[a-zA-Z].*$/i;
 
 export default async function validateAppName(name: string | undefined) {
   const appName = camelize(name || (await getAppName()));
-  console.log('appName', appName);
   if (allNumbersString.test(appName)) {
     printWarning('App name cannot be all numbers.');
     process.exit(0);
@@ -34,9 +33,7 @@ async function getAppName() {
 }
 
 function camelize(appName: string) {
-  const trimmedAppName = appName.trim();
-  const camelizedName = pkg.camelCase(trimmedAppName);
-  return pkg.upperFirst(camelizedName);
+  return _.upperFirst(_.camelCase(appName.trim()));
 }
 
 function printWarning(message: string) {
