@@ -1,20 +1,21 @@
 # Belt
 
-Belt is a CLI tool for starting a new React Native Expo app and will keep your pants secure as you continue development.
+_While we actively use Belt internally at thoughtbot, this project is still in early phases of development, so its API might still change frequently._
 
-Belts are not inherently innovative—they've been around even longer than pants—and neither is this tool! Belt creates your app using the absolute latest version of [create-expo](https://github.com/expo/expo/tree/main/packages/create-expo). It then layers on the missing pieces, based on the conventions we have found to consistently work for us at thoughtbot, so your pants will be secured tightly from the very beginning.
+Belt is an opionated CLI tool for starting a new React Native app. It makes the mundane decisions for you using tooling and conventions that we at thoughtbot have battle-tested and found to work well for the many successful apps we have built for clients.
 
 Here are some of what gets configured when you start a new Belt app:
 
+- Expo
 - ESLint
 - Prettier
 - TypeScript
 - Jest
 - React Native Testing Library
-- Custom test "render" function to facilitate testing
+- Custom testing "render" function to facilitate testing
 - MSW for mocking
 - Directory structure
-- React Navigation
+- React Navigation (tab navigator coming soon!)
 - Tanstack Query (for REST APIs) or Apollo Client (for GraphQL) (coming soon!)
 - Redux for global state (coming soon!)
 
@@ -24,16 +25,16 @@ Create a new React Native Expo app using Belt with:
 
 ```sh
 # With NPM
-npx create-belt-app
+npx create-belt-app MyApp
 
 # With Yarn
-npx create-belt-app --yarn
+npx create-belt-app MyApp --yarn
 
 # With pnpm (experimental)
-npx create-belt-app --pnpm
+npx create-belt-app MyApp --pnpm
 
 # With Bun (experimental)
-npx create-belt-app --bun
+npx create-belt-app MyApp --bun
 ```
 
 Or, if you already have an app and want to use Belt, run:
