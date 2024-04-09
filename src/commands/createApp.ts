@@ -27,7 +27,6 @@ export async function createApp(
   options: Options = {},
 ) {
   const { interactive = true } = options;
-
   globals.interactive = interactive;
 
   const appName = await validateAndSanitizeAppName(name);
@@ -38,6 +37,7 @@ export async function createApp(
   const spinner = ora('Creating app with Belt').start();
 
   await exec(`mkdir ${appName}`);
+
   await copyTemplateDirectory({
     templateDir: 'boilerplate',
     destinationDir: appName,
