@@ -23,7 +23,6 @@ export default function runCli() {
     .option('--pnpm', 'Use PNPM package manager')
     .option('--npm', 'Use NPM package manager')
     .option('--is-test', 'Used only by test suite')
-    .option('--bottom-tabs', 'Add bottom tab navigator')
     .option('--no-interactive', 'Pass true to skip all prompts')
     .action(buildAction(import('./commands/createApp')));
 
