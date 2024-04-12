@@ -1,14 +1,14 @@
+import { input } from '@inquirer/prompts';
 import ora from 'ora';
-import addDependency from '../util/addDependency';
 import { globals } from '../constants';
+import addDependency from '../util/addDependency';
+import addExpoConfig from '../util/addExpoConfig';
+import commit from '../util/commit';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
-import isExpo from '../util/isExpo';
-import addExpoConfig from '../util/addExpoConfig';
 import injectHooks from '../util/injectHooks';
+import isExpo from '../util/isExpo';
 import readAppJson from '../util/readAppJson';
-import { input } from '@inquirer/prompts';
-import commit from '../util/commit';
 
 type Options = {
   bundleId?: string;
@@ -72,10 +72,10 @@ export async function addNotifications(options: Options = {}) {
   const packageName =
     appJson.expo?.android?.package ??
     bundleId ??
-    (await input({
+    ((await input({
       message: 'Define your Android package name:',
       default: 'com.myapp',
-    }));
+    })) as string);
 
   const bundleIdentifier =
     appJson.expo?.ios?.bundleIdentifier ??
