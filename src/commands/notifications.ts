@@ -46,10 +46,6 @@ export async function addNotifications(options: Options = {}) {
     );
   }
 
-  await commit('Add React Native Firebase and dependencies').catch(
-    handleCommitError,
-  );
-
   spinner.succeed('Added React Native Firebase and dependencies');
 
   spinner.start('Adding notification handlers');
@@ -63,8 +59,6 @@ export async function addNotifications(options: Options = {}) {
     'useNotifications();',
     "import useNotifications from 'src/hooks/useNotifications';\n",
   );
-
-  await commit('Add notification handlers').catch(handleCommitError);
 
   spinner.succeed('Added notification handlers');
 
@@ -112,7 +106,7 @@ export async function addNotifications(options: Options = {}) {
     ],
   });
 
-  await commit('Configure app.json').catch(handleCommitError);
+  await commit('Add push notifications support.').catch(handleCommitError);
 
   spinner.succeed(
     `Successfully added notifications support to project.
