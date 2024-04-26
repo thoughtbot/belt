@@ -1,4 +1,4 @@
-import { input } from '@inquirer/prompts';
+import { confirm, input } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
 import { Mock, expect, test, vi } from 'vitest';
 import addDependency from '../../util/addDependency';
@@ -6,12 +6,14 @@ import { addNotifications } from '../notifications';
 
 vi.mock('@inquirer/prompts', () => ({
   input: vi.fn(),
+  confirm: vi.fn(),
 }));
 vi.mock('../../util/addDependency');
 
 test('install React Native Firebase and dependencies', async () => {
   (input as Mock).mockResolvedValueOnce('com.myapp');
   (input as Mock).mockResolvedValueOnce('com.myapp');
+  (confirm as Mock).mockResolvedValueOnce(true);
   const json = {
     'package.json': JSON.stringify({
       scripts: {},
@@ -51,6 +53,7 @@ test('install React Native Firebase and dependencies', async () => {
 });
 
 test('add plugins to app.json expo config preserves existing ones', async () => {
+  (confirm as Mock).mockResolvedValueOnce(true);
   const json = {
     'package.json': JSON.stringify({
       scripts: {},
@@ -79,6 +82,7 @@ test('add plugins to app.json expo config preserves existing ones', async () => 
 });
 
 test('adds package name and bundle identifier from bundleId option', async () => {
+  (confirm as Mock).mockResolvedValueOnce(true);
   const json = {
     'package.json': JSON.stringify({
       scripts: {},
@@ -98,6 +102,7 @@ test('adds package name and bundle identifier from bundleId option', async () =>
 });
 
 test('preserves existing package name and bundle identifier when bundleId is passed', async () => {
+  (confirm as Mock).mockResolvedValueOnce(true);
   const json = {
     'package.json': JSON.stringify({
       scripts: {},
