@@ -1,14 +1,13 @@
+import { input } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
 import { Mock, expect, test, vi } from 'vitest';
-import { addNotifications } from '../notifications';
 import addDependency from '../../util/addDependency';
-import { input } from '@inquirer/prompts';
+import { addNotifications } from '../notifications';
 
 vi.mock('@inquirer/prompts', () => ({
   input: vi.fn(),
 }));
 vi.mock('../../util/addDependency');
-vi.mock('../../util/getProjectDir', () => ({ default: vi.fn(() => './') }));
 
 test('install React Native Firebase and dependencies', async () => {
   (input as Mock).mockResolvedValueOnce('com.myapp');
