@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
-import RootNavigator from 'src/navigators/RootNavigator';
+
 import Providers, { Provider } from 'src/components/Providers';
+import RootNavigator from 'src/navigators/RootNavigator';
 
 // Add providers to this array
 const providers: Provider[] = [
@@ -9,6 +10,7 @@ const providers: Provider[] = [
 ];
 
 export default function App() {
+  // CODEGEN:BELT:HOOKS - do not remove
   return (
     <Providers providers={providers}>
       <RootNavigator />

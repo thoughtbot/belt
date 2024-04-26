@@ -24,6 +24,7 @@ export default async function addEslint() {
 
   await addPackageJsonScripts({
     'lint:eslint': 'eslint --max-warnings=0 --ext js,jsx,ts,tsx .',
+    'fix:eslint': 'eslint --fix --ext js,jsx,ts,tsx .',
   });
 
   spinner.succeed('ESLint successfully configured');

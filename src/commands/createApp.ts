@@ -5,6 +5,7 @@ import _ from 'lodash';
 import ora from 'ora';
 import path from 'path';
 import { PACKAGE_ROOT, globals } from '../constants';
+import commit from '../util/commit';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import { lockFileNames } from '../util/getPackageManager';
@@ -114,11 +115,6 @@ async function printIntro(appName: string) {
   }
 
   print(''); // add new line
-}
-
-async function commit(message: string) {
-  await exec('git add .');
-  await exec(`git commit -m "${message}"`);
 }
 
 function getPackageManager(options: Options) {
