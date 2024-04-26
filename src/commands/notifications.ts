@@ -1,4 +1,4 @@
-import { input } from '@inquirer/prompts';
+import { confirm, input } from '@inquirer/prompts';
 import ora from 'ora';
 import { globals } from '../constants';
 import addDependency from '../util/addDependency';
@@ -8,6 +8,7 @@ import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import injectHooks from '../util/injectHooks';
 import isExpo from '../util/isExpo';
+import print from '../util/print';
 import readAppJson from '../util/readAppJson';
 
 type Options = {
@@ -16,7 +17,6 @@ type Options = {
 };
 
 const handleCommitError = (error: { stdout: string }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   if (!error.stdout.includes('nothing to commit')) {
     throw error;
   }
@@ -28,6 +28,8 @@ export async function addNotifications(options: Options = {}) {
   globals.interactive = interactive;
 
   const { bundleId = !interactive ? 'com.myapp' : undefined } = options;
+
+  await printIntro();
 
   const spinner = ora().start('Adding React Native Firebase and dependencies');
 
@@ -115,7 +117,7 @@ export async function addNotifications(options: Options = {}) {
   spinner.succeed(
     `Successfully added notifications support to project.
 
-  In order to finish the setup, you need to:
+  In order to finish the setup please complete the following steps:
   - Add your google-service.json and GoogleService-Info.plist files to your project's config folder
   - Run the command "npx expo prebuild --clean" to rebuild the app
   - Add the ios/ and android/ folders to your .gitignore file if you don't need to track them
@@ -123,6 +125,29 @@ export async function addNotifications(options: Options = {}) {
   For more details please refer to the official documentation: https://rnfirebase.io/#configure-react-native-firebase-modules.
   `,
   );
+}
+
+async function printIntro() {
+  print('Let’s get started!');
+  print(`\nWe will now add notifications support to your app. This will include the following changes:
+
+  - Add React Native Firebase, Messaging and Expo Build Properties dependencies
+  - Add notification handlers to your app
+  - Configure your app.json file with the necessary information
+
+  NOTE: React Native Firebase cannot be used in the pre-compiled Expo Go app because React Native Firebase uses native code that is not compiled into Expo Go. This will switch the app build process to use Continuos Native Generation (CGN), for more details please refer to the documentation (https://docs.expo.dev/workflow/continuous-native-generation).
+  `);
+
+  if (!globals.interactive) {
+    return;
+  }
+
+  const proceed = await confirm({ message: 'Ready to proceed?' });
+  if (!proceed) {
+    process.exit(0);
+  }
+
+  print(''); // add new line
 }
 
 /**
