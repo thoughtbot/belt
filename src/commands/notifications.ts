@@ -72,10 +72,10 @@ export async function addNotifications(options: Options = {}) {
   const packageName =
     appJson.expo?.android?.package ??
     bundleId ??
-    ((await input({
+    (await input({
       message: 'Define your Android package name:',
       default: 'com.myapp',
-    })) as string);
+    }));
 
   const bundleIdentifier =
     appJson.expo?.ios?.bundleIdentifier ??
