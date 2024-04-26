@@ -39,7 +39,7 @@
     "@testing-library/react-native": "^12.4.5",
     "@thoughtbot/eslint-config": "^1.0.2",
     "@types/jest": "^29.5.12",
-    "@types/react": "^18.2.73",
+    "@types/react": "~18.2.73",
     "babel-jest": "^29.7.0",
     "create-belt-app": "^0.4.0",
     "eslint": "^8.56.0",
