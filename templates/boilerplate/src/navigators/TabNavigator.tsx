@@ -26,7 +26,6 @@ export default function TabNavigator() {
           backgroundColor: 'transparent',
           borderTopColor: '#eee',
           borderTopWidth: 1,
-          paddingBottom: 2,
         },
       }}
     >
@@ -36,6 +35,7 @@ export default function TabNavigator() {
         options={{
           headerShown: false,
           tabBarIcon: HomeIcon,
+          tabBarLabel: 'Home',
         }}
       />
       <Tab.Screen
@@ -43,6 +43,7 @@ export default function TabNavigator() {
         component={SettingsScreen}
         options={{
           tabBarIcon: AccountIcon,
+          tabBarLabel: 'Settings',
         }}
       />
     </Tab.Navigator>
