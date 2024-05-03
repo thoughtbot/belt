@@ -1,12 +1,8 @@
-import fs from 'fs-extra';
-import path from 'path';
-import getProjectDir from './getProjectDir';
+import appendToFile from './appendToFile';
+
 /**
  * lines should be separated by newlines
  */
 export default async function addToGitignore(lines: string) {
-  return fs.appendFile(
-    path.join(await getProjectDir(), '.gitignore'),
-    `\n${lines}`,
-  );
+  return appendToFile('.gitignore', lines);
 }

@@ -102,7 +102,7 @@ async function printIntro(appName: string) {
   - ESLint
   - Jest, React Native Testing Library
   - React Navigation
-  - Intuitive directory structure
+  - TanStack Query (formerly known as React Query)
   `);
 
   if (!globals.interactive) {
