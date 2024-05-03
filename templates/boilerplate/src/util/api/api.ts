@@ -36,7 +36,7 @@ const api = {
 export type Coffee = {
   title: string;
   description: string;
-  /** url */
+  /** the url to the image */
   image: string;
   id: number;
 };

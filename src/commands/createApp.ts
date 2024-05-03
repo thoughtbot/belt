@@ -64,10 +64,6 @@ export async function createApp(
   await commit('Initial commit');
   spinner.succeed('Installed dependencies');
 
-  spinner.start('Formatting codebase');
-  await exec('npm run fix:prettier');
-  spinner.succeed('Formatted codebase');
-
   print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
   print(`
@@ -106,7 +102,7 @@ async function printIntro(appName: string) {
   - ESLint
   - Jest, React Native Testing Library
   - React Navigation
-  - Intuitive directory structure
+  - TanStack Query (formerly known as React Query)
   `);
 
   if (!globals.interactive) {

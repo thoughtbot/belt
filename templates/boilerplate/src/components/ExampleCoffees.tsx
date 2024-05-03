@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { FlatList, Image, Text, View } from 'react-native';
 import api, { Coffee as CoffeeType } from 'src/util/api/api';
 
-// TODO: sample component, remove
+// TODO: sample data, remove
 export default function ExampleCoffees() {
   const { data } = useQuery({ queryKey: ['coffee'], queryFn: api.coffee });
 
