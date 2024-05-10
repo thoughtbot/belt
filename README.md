@@ -12,12 +12,10 @@ Here are some of what gets configured when you start a new Belt app:
 - TypeScript
 - Jest
 - React Native Testing Library
-- Custom testing "render" function to facilitate testing
 - MSW for mocking
-- Directory structure
-- React Navigation (tab navigator coming soon!)
-- Tanstack Query (for REST APIs) or Apollo Client (for GraphQL) (coming soon!)
-- Redux for global state (coming soon!)
+- React Navigation with bottom tabs
+- Tanstack Query for REST APIs. Apollo Client for GraphQL coming soon!
+- Redux Toolkit for global state (coming soon!)
 
 ## Usage
 
@@ -54,13 +52,13 @@ then run the command you'd like to perform:
 
 ```sh
 # eg. add TypeScript to the project
-yarn belt typescript
+yarn belt add notifications
 
 # or, with NPM
-npx belt typescript
+npx belt add notifications
 
 # or, with PNPM
-pnpm belt typescript
+pnpm belt add notifications
 ```
 
 ## Contributing
