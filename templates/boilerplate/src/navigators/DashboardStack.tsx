@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
+import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import InformationScreen from '../screens/InformationScreen/InformationScreen';
 import { DashboardTabParamList } from './navigatorTypes';
 

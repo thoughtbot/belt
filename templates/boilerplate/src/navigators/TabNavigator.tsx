@@ -1,19 +1,22 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Feather from '@expo/vector-icons/Feather';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
+import AboutStack from './AboutStack';
 import DashboardStack from './DashboardStack';
 import { TabsParamList } from './navigatorTypes';
 
 const Tab = createBottomTabNavigator<TabsParamList>();
 
 function HomeIcon({ focused = false, color = 'gray' }) {
-  return <MaterialCommunityIcons name="home" color={color} size={26} />;
+  return <Feather name="home" color={color} size={26} />;
+}
+
+function AboutIcon({ focused = false, color = 'gray' }) {
+  return <Feather name="info" color={color} size={26} />;
 }
 
 function AccountIcon({ focused = false, color = 'gray' }) {
-  return (
-    <MaterialCommunityIcons name="account-circle" color={color} size={26} />
-  );
+  return <Feather name="settings" color={color} size={26} />;
 }
 
 export default function TabNavigator() {
@@ -36,6 +39,15 @@ export default function TabNavigator() {
           headerShown: false,
           tabBarIcon: HomeIcon,
           tabBarLabel: 'Home',
+        }}
+      />
+      <Tab.Screen
+        name="AboutTab"
+        component={AboutStack}
+        options={{
+          headerShown: false,
+          tabBarIcon: AboutIcon,
+          tabBarLabel: 'About',
         }}
       />
       <Tab.Screen

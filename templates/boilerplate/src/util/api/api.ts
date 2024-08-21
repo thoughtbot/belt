@@ -8,14 +8,14 @@ export const BASE_URL = 'https://api.sampleapis.com';
 
 type Params = {
   path: string;
-  method: RequestMethod;
+  method?: RequestMethod;
   params?: unknown;
   parseJson?: boolean;
   baseUrl?: string;
 };
 
 async function makeRequest<TData>(options: Params): Promise<TData> {
-  const { path, method, params, baseUrl = BASE_URL } = options;
+  const { path, method = 'GET', params, baseUrl = BASE_URL } = options;
 
   const response = await axios<TData>(`${baseUrl}/${path}`, {
     method,
@@ -29,10 +29,23 @@ async function makeRequest<TData>(options: Params): Promise<TData> {
 }
 
 const api = {
-  coffee: () => makeRequest<Coffee[]>({ path: 'coffee/hot', method: 'GET' }),
+  githubRepos: () =>
+    makeRequest<{ projects: GithubProject[] }>({
+      baseUrl: 'https://github-projects-api.vercel.app',
+      path: 'api/projects',
+    }),
 };
 
 // TODO: sample data, remove
+export type GithubProject = {
+  id: string;
+  name: string;
+  description: string | null;
+  url: string;
+  stars?: number;
+  forks?: number;
+};
+
 export type Coffee = {
   title: string;
   description: string;
