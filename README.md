@@ -1,3 +1,7 @@
+<div align="center" style="padding: 30px 0px 20px 0px;">
+  <img src="https://github.com/user-attachments/assets/95171e10-a4cd-474e-9bb2-c95524f39b6a" alt="Logo" width=250>
+</div>
+
 # Belt
 
 _While we actively use Belt internally at thoughtbot, this project is still in early phases of development, so its API might still change frequently._
