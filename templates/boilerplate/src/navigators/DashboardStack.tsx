@@ -9,7 +9,11 @@ const Dashboard = createNativeStackNavigator<DashboardTabParamList>();
 export default function DashboardStack() {
   return (
     <Dashboard.Navigator>
-      <Dashboard.Screen name="Home" component={HomeScreen} />
+      <Dashboard.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
       <Dashboard.Screen name="Information" component={InformationScreen} />
     </Dashboard.Navigator>
   );

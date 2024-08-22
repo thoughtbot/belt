@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import { StatusBarStyle } from 'expo-status-bar';
 import { ReactNode } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
@@ -12,7 +11,14 @@ import {
 } from 'react-native-safe-area-context';
 
 type Props = KeyboardAwareScrollViewProps & {
+  /**
+   * If true (default), horizontal padding is added to the screen content
+   */
   padHorizontal?: boolean;
+  /**
+   * If true, the screen will be scrollable. If false, the screen will not scroll.
+   * Set to false if screen includes a scrollable component like a FlatList
+   */
   scroll?: boolean;
   /**
    * If true, a safe area view is not added for the top of the screen, since it is
@@ -25,19 +31,13 @@ type Props = KeyboardAwareScrollViewProps & {
    * is used on the bottom */
   FixedBottomComponent?: ReactNode;
   fixedBottomAddSafeArea?: boolean;
-  statusBarStyle?: StatusBarStyle;
 };
-
-const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
-  KeyboardAwareScrollView,
-);
 
 export default function Screen({
   style,
   padHorizontal = true,
   scroll = true,
   testID,
-  /** if screen has a navigation header, safe area view is not needed, since header takes into account */
   hasHeader = false,
   children,
   FixedBottomComponent,
@@ -64,20 +64,17 @@ export default function Screen({
         ]}
       >
         {scroll ? (
-          <AnimatedKeyboardAwareScrollView
+          <KeyboardAwareScrollView
             keyboardShouldPersistTaps="handled"
             contentInsetAdjustmentBehavior="automatic"
             bounces
             onAccessibilityEscape={() => navigation.goBack()}
-            testID={`${testID || 'ScreenContainer'}ScrollView`}
+            testID={`${testID || 'Screen'}ScrollView`}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingTop: 0,
-            }}
             {...props}
           >
             {children}
-          </AnimatedKeyboardAwareScrollView>
+          </KeyboardAwareScrollView>
         ) : (
           children
         )}

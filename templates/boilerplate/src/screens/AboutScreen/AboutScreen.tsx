@@ -11,6 +11,24 @@ import Screen from 'src/components/Screen';
 import api, { GithubProject } from 'src/util/api/api';
 
 export default function AboutScreen() {
+  return <GitHubProjects />;
+}
+
+function Header() {
+  return (
+    <>
+      <Text style={styles.heading} accessibilityRole="header">
+        Open Source
+      </Text>
+      <Text style={styles.paragraph}>
+        Here are a few projects that we maintain.
+      </Text>
+    </>
+  );
+}
+
+// TODO: sample data, remove
+function GitHubProjects() {
   const { data, isLoading } = useQuery({
     queryKey: ['githubRepos'],
     queryFn: api.githubRepos,
@@ -25,7 +43,7 @@ export default function AboutScreen() {
       <FlatList
         data={projects}
         renderItem={({ item }) => <Project project={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={Header}
         stickyHeaderHiddenOnScroll
         ListEmptyComponent={
@@ -34,17 +52,6 @@ export default function AboutScreen() {
         style={{ flexGrow: 0 }}
       />
     </Screen>
-  );
-}
-
-function Header() {
-  return (
-    <>
-      <Text style={styles.heading}>Open Source</Text>
-      <Text style={styles.paragraph}>
-        Here are a few projects that we maintain.
-      </Text>
-    </>
   );
 }
 

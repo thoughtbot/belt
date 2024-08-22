@@ -19,6 +19,11 @@ function AccountIcon({ focused = false, color = 'gray' }) {
   return <Feather name="settings" color={color} size={26} />;
 }
 
+// To add a new bottom tab:
+// 1. Create a new stack navigator for the tab's screens
+// 2. Add a new screen to the stack navigator
+// 3. Add a new Tab.Screen to the TabNavigator
+// 4. Update navigatorTypes with the TypeScript types for the tab
 export default function TabNavigator() {
   return (
     <Tab.Navigator

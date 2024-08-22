@@ -53,11 +53,14 @@ One way to build new features is to generate a new Belt app locally using the co
 > cd builds/MyApp
 # now make some changes
 
-# now copy changes back into Belt, dry-run first (-n flag):
-> rsync -avpn . ../../templates/boilerplate/ --exclude node_modules --exclude .cache --exclude .expo --exclude .vscode --exclude assets --exclude .git --exclude .gitignore
+# now copy changes back into Belt. Go back to Belt project:
+> cd ../..
+
+# run sync script
+> node bin/sync-from-app.js MyApp --dry-run
 
 # now run without the dry-run flag:
-> rsync -avp . ../../templates/boilerplate/ --exclude node_modules --exclude .cache --exclude .expo --exclude .vscode --exclude assets --exclude .git --exclude .gitignore
+> node bin/sync-from-app.js MyApp
 ```
 
 ## Creating a pull request

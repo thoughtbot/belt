@@ -5,7 +5,7 @@ import {
   StrictRequest,
   http,
 } from 'msw';
-import { BASE_URL, RequestMethod } from 'src/util/api/api';
+import { RequestMethod } from 'src/util/api/api';
 
 type RequestParams = Record<
   string,
@@ -22,19 +22,18 @@ type MockRequestParams<TData, TParams = RequestParams> = {
 };
 
 function mockRequest<TData = unknown, TParams = RequestParams>(
-  path: string,
+  url: string,
   {
     method,
     status = 200,
     response,
     headers,
     params,
-    baseUrl = BASE_URL,
   }: MockRequestParams<TData, TParams>,
 ) {
   const methodName = method.toLowerCase() as Lowercase<RequestMethod>;
   return http[methodName](
-    `${baseUrl}/${path}`,
+    url,
     async (info) => {
       const { request, params: actualParams } = info;
       validateHeaders(headers, request);
@@ -120,29 +119,29 @@ export type MockParams<TData, TParams = undefined> = Omit<
  */
 const mock = {
   /**
-   * mock a GET request to the specified path.
+   * mock a GET request to the specified url
    * If params are passed, will throw an error if request params do not match
    * */
-  get: <TData, TParams>(
-    path: string,
+  get: <TData, TParams = Record<string, never>>(
+    url: string,
     params: MockParams<TData, TParams> = {},
-  ) => mockRequest(path, { ...params, method: 'GET' }),
+  ) => mockRequest(url, { ...params, method: 'GET' }),
   /**
-   * mock a POST request to the specified path
+   * mock a POST request to the specified url
    * if params are passed, will throw an error if request params do not match
    * */
-  post: <TData, TParams>(
-    path: string,
+  post: <TData, TParams = Record<string, never>>(
+    url: string,
     params: MockParams<TData, TParams> = {},
-  ) => mockRequest(path, { ...params, method: 'POST' }),
+  ) => mockRequest(url, { ...params, method: 'POST' }),
   /**
-   * mock a DELETE request to the specified path
+   * mock a DELETE request to the specified url
    * if params are passed, will throw an error if request params do not match
    * */
-  delete: <TData, TParams>(
-    path: string,
+  delete: <TData, TParams = Record<string, never>>(
+    url: string,
     params: MockParams<TData, TParams> = {},
-  ) => mockRequest(path, { ...params, method: 'DELETE' }),
+  ) => mockRequest(url, { ...params, method: 'DELETE' }),
 };
 
 export default mock;
