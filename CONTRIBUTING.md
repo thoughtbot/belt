@@ -44,6 +44,25 @@ bun bin/belt.js MyApp
 
 This generates a new Belt app in builds/MyApp, `cd`s to the directory, runs tests, and then `cd`s back. You can then run that app by `cd`ing to the directory and running `yarn ios` or the desired command.
 
+## Common development techniques
+
+One way to build new features is to generate a new Belt app locally using the command outlined above. You can then build the new feature in the generated app and then copy the changed files back over to Belt. Example:
+
+```
+> bun bin/belt.js MyApp
+> cd builds/MyApp
+# now make some changes
+
+# now copy changes back into Belt. Go back to Belt project:
+> cd ../..
+
+# run sync script
+> node bin/sync-from-app.js MyApp --dry-run
+
+# now run without the dry-run flag:
+> node bin/sync-from-app.js MyApp
+```
+
 ## Creating a pull request
 
 Make sure the tests pass:

@@ -8,8 +8,7 @@ export default function InformationScreen() {
 
   return (
     <View style={styles.container}>
-      <Text>Information Screen</Text>
-      {params && <Text>{params.owner}’s Profile</Text>}
+      {params && <Text style={{ fontSize: 22 }}>{params.greeting}</Text>}
       <StatusBar style="auto" />
     </View>
   );

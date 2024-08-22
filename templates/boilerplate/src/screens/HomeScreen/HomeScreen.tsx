@@ -1,30 +1,12 @@
-import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import ExampleCoffees from 'src/components/ExampleCoffees';
-import { HomeScreenProp } from 'src/navigators/navigatorTypes';
+import Screen from 'src/components/Screen';
+import HomeScreenContent from './HomeScreenContent';
 
 export default function HomeScreen() {
-  const navigation = useNavigation<HomeScreenProp['navigation']>();
-
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <Button
-        title="Go to information screen"
-        onPress={() => navigation.navigate('Information', { owner: 'Will' })}
-      />
+    <Screen>
+      <HomeScreenContent />
       <StatusBar style="auto" />
-      <ExampleCoffees />
-    </View>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

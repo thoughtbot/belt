@@ -1,21 +1,29 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Feather from '@expo/vector-icons/Feather';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
+import AboutStack from './AboutStack';
 import DashboardStack from './DashboardStack';
 import { TabsParamList } from './navigatorTypes';
 
 const Tab = createBottomTabNavigator<TabsParamList>();
 
 function HomeIcon({ focused = false, color = 'gray' }) {
-  return <MaterialCommunityIcons name="home" color={color} size={26} />;
+  return <Feather name="home" color={color} size={26} />;
+}
+
+function AboutIcon({ focused = false, color = 'gray' }) {
+  return <Feather name="info" color={color} size={26} />;
 }
 
 function AccountIcon({ focused = false, color = 'gray' }) {
-  return (
-    <MaterialCommunityIcons name="account-circle" color={color} size={26} />
-  );
+  return <Feather name="settings" color={color} size={26} />;
 }
 
+// To add a new bottom tab:
+// 1. Create a new stack navigator for the tab's screens
+// 2. Add a new screen to the stack navigator
+// 3. Add a new Tab.Screen to the TabNavigator
+// 4. Update navigatorTypes with the TypeScript types for the tab
 export default function TabNavigator() {
   return (
     <Tab.Navigator
@@ -36,6 +44,15 @@ export default function TabNavigator() {
           headerShown: false,
           tabBarIcon: HomeIcon,
           tabBarLabel: 'Home',
+        }}
+      />
+      <Tab.Screen
+        name="AboutTab"
+        component={AboutStack}
+        options={{
+          headerShown: false,
+          tabBarIcon: AboutIcon,
+          tabBarLabel: 'About',
         }}
       />
       <Tab.Screen
