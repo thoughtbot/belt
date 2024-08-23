@@ -140,3 +140,23 @@ yarn up --interactive
 # audit and fix any packages that aren't compatible with the installed Expo
 npx expo install --fix
 ```
+
+### Cutting releases
+
+To cut a new release:
+
+```bash
+# increment version (either major/minor/patch), following semver
+npm version minor
+
+# publish with the "beta" tag, good for testing out a release before it's fully ready
+# or if there is less certainty about its stability
+yarn pub:beta
+
+# publish as a regular release (the "latest" tag)
+yarn pub:release
+
+# push up the version changes
+git push
+git push --tags
+```
