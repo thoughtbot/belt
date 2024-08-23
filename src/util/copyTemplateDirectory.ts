@@ -49,31 +49,66 @@ export default async function copyTemplateDirectory({
   const filenames = await getFiles(srcDir, gitignore);
   await Promise.all(
     filenames.map(async (filename) => {
-      const destinationFilename = path.join(
-        destinationDir,
-        path.relative(srcDir, filename),
-      );
+      const relativeFilename = path.relative(srcDir, filename);
+      const destinationFilename = path.join(destinationDir, relativeFilename);
 
-      let contents = (await fs.readFile(filename)).toString();
-      const substitutions = substitutionsForFile(filename, stringSubstitutions);
-      if (Object.keys(substitutions).length > 0) {
-        contents = Object.entries(substitutions).reduce((acc, [key, value]) => {
-          return acc.replaceAll(new RegExp(key, 'g'), value);
-        }, contents);
+      if (substitutionsSupported(filename)) {
+        const contents = await makeFileSubstitutions(
+          filename,
+          stringSubstitutions,
+          variables,
+        );
+
+        return writeFile(destinationFilename.replace(/\.eta$/, ''), contents);
       }
 
-      if (filename.endsWith('.eta')) {
-        contents = eta.render(contents, variables);
+      try {
+        // file is binary or otherwise doesn't support substitutions, just copy
+        // it over instead of reading it to a string
+        return await fs.copy(filename, destinationFilename);
+      } catch (e) {
+        if (e instanceof Error) {
+          throw new Error(
+            `An error occurred copying file ${relativeFilename} to ${destinationFilename}: ${e.message}`,
+          );
+        }
       }
 
-      return writeFile(destinationFilename.replace(/\.eta$/, ''), contents);
+      return null;
     }),
   );
 }
 
+async function makeFileSubstitutions(
+  filename: string,
+  stringSubstitutions: Substitutions,
+  variables: object,
+): Promise<string> {
+  let contents = (await fs.readFile(filename)).toString();
+  const substitutions = substitutionsForFile(filename, stringSubstitutions);
+  if (Object.keys(substitutions).length > 0) {
+    contents = Object.entries(substitutions).reduce((acc, [key, value]) => {
+      return acc.replaceAll(new RegExp(key, 'g'), value);
+    }, contents);
+  }
+
+  if (filename.endsWith('.eta')) {
+    contents = eta.render(contents, variables);
+  }
+
+  return contents;
+}
+
 function substitutionsSupported(filename: string) {
-  const unsupportedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'pdf'];
-  const extension = filename.split('.').pop()?.toLocaleLowerCase();
+  const unsupportedExtensions = [
+    '.png',
+    '.jpg',
+    '.jpeg',
+    '.gif',
+    '.svg',
+    '.pdf',
+  ];
+  const extension = path.extname(filename).toLocaleLowerCase();
   return !extension || !unsupportedExtensions.includes(extension);
 }
 

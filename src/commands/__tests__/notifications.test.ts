@@ -4,6 +4,8 @@ import { Mock, expect, test, vi } from 'vitest';
 import addDependency from '../../util/addDependency';
 import { addNotifications } from '../notifications';
 
+vi.mock('../../util/print', () => ({ default: vi.fn() }));
+
 vi.mock('@inquirer/prompts', () => ({
   input: vi.fn(),
   confirm: vi.fn(),

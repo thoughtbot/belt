@@ -42,7 +42,7 @@ test('prompts for app name if not supplied', async () => {
 test('exits if directory already exists', async () => {
   (print as Mock).mockReset();
   vi.spyOn(process, 'exit');
-  process.exit = vi.fn();
+  process.exit = vi.fn<typeof process.exit>();
 
   vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
 
@@ -67,7 +67,7 @@ test('converts directory to camel case and strips special characters', async () 
 test('exits if app name does not start with a letter', async () => {
   (print as Mock).mockReset();
   vi.spyOn(process, 'exit');
-  process.exit = vi.fn();
+  process.exit = vi.fn<typeof process.exit>();
   vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
 
   await createApp('555MyApp');

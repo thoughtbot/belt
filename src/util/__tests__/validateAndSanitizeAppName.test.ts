@@ -47,7 +47,7 @@ describe('validateAndSanitizeAppName', () => {
   test('returns a warning when the application name does not start with a letter', async () => {
     (print as Mock).mockReset();
     vi.spyOn(process, 'exit');
-    process.exit = vi.fn();
+    process.exit = vi.fn<typeof process.exit>();
     (input as Mock).mockReturnValue('123MyApp');
     await validateAndSanitizeAppName(undefined);
 

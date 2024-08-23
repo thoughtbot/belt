@@ -36,9 +36,6 @@ export default {
 
     return memfs.readFileSync(file, options);
   },
-  readFile(path, options) {
-    return Promise.resolve(this.readFileSync(path, options));
-  },
   outputFile: async (file, data, options) => {
     const dirname = path.dirname(file);
     const exists = memfs.existsSync(dirname);
@@ -68,8 +65,8 @@ export default {
     // read templates from actual fs
     const sourceFS = dontMock(src) ? fse : memfs;
 
+    memfs.mkdirSync(path.dirname(dest), { recursive: true });
     if (sourceFS.existsSync(src) && sourceFS.statSync(src).isDirectory(src)) {
-      memfs.mkdirSync(dest, { recursive: true });
       sourceFS.readdirSync(src).forEach((childItemName) => {
         this.copySync(
           path.join(src, childItemName),
