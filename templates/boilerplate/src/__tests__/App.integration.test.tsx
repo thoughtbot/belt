@@ -38,7 +38,7 @@ test('renders app, can navigate between screens', async () => {
 // Recommended to place these mocks in a central location like `src/test/mocks`
 function mockGitHubProjects() {
   return mock.get<GithubProjectsResponse, null>(
-    'https://github-projects-api.vercel.app/api/projects',
+    'https://thoughtbot-projects-api-68b03dc59059.herokuapp.com/api/projects',
     {
       response: {
         projects: [

@@ -27,7 +27,7 @@ const api = {
   // TODO: sample, remove
   githubRepos: () =>
     makeRequest<GithubProjectsResponse>({
-      url: 'https://github-projects-api.vercel.app/api/projects',
+      url: 'https://thoughtbot-projects-api-68b03dc59059.herokuapp.com/api/projects',
     }),
 };
 
