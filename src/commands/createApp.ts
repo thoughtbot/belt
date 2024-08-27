@@ -29,44 +29,43 @@ export async function createApp(
 ) {
   const { interactive = true } = options;
   globals.interactive = interactive;
-
   const appName = await validateAndSanitizeAppName(name);
 
   await ensureDirectoryDoesNotExist(appName);
   await printIntro(appName);
-
   const spinner = ora('Creating app with Belt').start();
 
-  await exec(`mkdir ${appName}`);
+  try {
+    await exec(`mkdir ${appName}`);
 
-  await copyTemplateDirectory({
-    templateDir: 'boilerplate',
-    destinationDir: appName,
-    gitignore: await boilerplateIgnoreFiles(),
-    stringSubstitutions: {
-      'app.json': {
-        BELT_APP_NAME: appName,
+    await copyTemplateDirectory({
+      templateDir: 'boilerplate',
+      destinationDir: appName,
+      gitignore: await boilerplateIgnoreFiles(),
+      stringSubstitutions: {
+        'app.json': {
+          BELT_APP_NAME: appName,
+        },
+        'package.json': {
+          belt_app_name: _.kebabCase(appName),
+        },
       },
-      'package.json': {
-        belt_app_name: _.kebabCase(appName),
-      },
-    },
-  });
+    });
 
-  spinner.succeed('Created new Belt app with Expo');
+    spinner.succeed('Created new Belt app with Expo');
 
-  process.chdir(`./${appName}`);
+    process.chdir(`./${appName}`);
 
-  spinner.start('Installing dependencies');
-  const packageManager = getPackageManager(options);
-  await exec(`${packageManager} install`);
-  await exec('git init');
-  await commit('Initial commit');
-  spinner.succeed('Installed dependencies');
+    spinner.start('Installing dependencies');
+    const packageManager = getPackageManager(options);
+    await exec(`${packageManager} install`);
+    await exec('git init');
+    await commit('Initial commit');
+    spinner.succeed('Installed dependencies');
 
-  print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
+    print(chalk.green(`\n\n👖 ${appName} successfully configured!`));
 
-  print(`
+    print(`
 Your pants are now secure! To get started with your new app:
 
 cd ${appName}
@@ -75,6 +74,13 @@ ${packageManager} run android
 
 For more information about Belt, visit https://github.com/thoughtbot/belt.
 `);
+  } catch (e) {
+    spinner.fail('An error occurred creating the app\n');
+    if (e instanceof Error) {
+      print(chalk.red(e.message));
+    }
+    process.exit(1);
+  }
 }
 
 /**

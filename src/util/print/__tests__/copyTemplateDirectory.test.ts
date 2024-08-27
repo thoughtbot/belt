@@ -5,11 +5,12 @@ import copyTemplateDirectory from '../../copyTemplateDirectory';
 
 vi.mock('../../print', () => ({ default: vi.fn() }));
 
-test('copies directory structure to destination', async () => {
+test('copies directory structure to destination, including binary files (based on the extension)', async () => {
   fse.mockTemplates();
   const json = {
     'templates/testing/jest.config.js': '1',
     'templates/testing/src/test/render.ts': '2',
+    'templates/testing/assets/splash.png': '3',
   };
   vol.fromJSON(json, './');
 
@@ -17,6 +18,7 @@ test('copies directory structure to destination', async () => {
 
   expect(fs.readFileSync('jest.config.js', 'utf8')).toEqual('1');
   expect(fs.readFileSync('src/test/render.ts', 'utf8')).toEqual('2');
+  expect(fs.readFileSync('assets/splash.png', 'utf8')).toEqual('3');
 });
 
 test('compiles files with .eta file extensions', async () => {
