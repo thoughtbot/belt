@@ -5,6 +5,15 @@ import path from 'path';
 import { PACKAGE_ROOT } from '../constants';
 import writeFile from './writeFile';
 
+const UNSUPPORTED_EXTENSIONS = [
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.gif',
+  '.svg',
+  '.pdf',
+];
+
 type Substitutions = {
   [fileNamePattern: string]: Record<string, string>;
 };
@@ -100,16 +109,8 @@ async function makeFileSubstitutions(
 }
 
 function substitutionsSupported(filename: string) {
-  const unsupportedExtensions = [
-    '.png',
-    '.jpg',
-    '.jpeg',
-    '.gif',
-    '.svg',
-    '.pdf',
-  ];
   const extension = path.extname(filename).toLocaleLowerCase();
-  return !extension || !unsupportedExtensions.includes(extension);
+  return !extension || !UNSUPPORTED_EXTENSIONS.includes(extension);
 }
 
 function substitutionsForFile(
