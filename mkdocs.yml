@@ -1,0 +1,105 @@
+site_name: Belt
+site_url: https://mydomain.org/belt
+site_author: Diego Oliveira
+site_description: >-
+  Discover Belt, thoughtbot’s new CLI tool that simplifies starting React Native apps with smart defaults and easy feature integration. Perfect for developers looking to streamline their workflow.
+
+repo_name: thoughtbot/belt
+repo_url: https://github.com/thoughtbot/belt
+
+copyright: Copyright &copy; 2024 thoughtbot
+
+theme:
+  name: material
+  # custom_dir: overrides
+  features:
+    - header.autohide
+    - navigation.footer
+    - navigation.path
+    - toc.follow
+    - navigation.sections
+    - navigation.instant
+
+  icon:
+    logo: logo
+
+# extra_css:
+#   - stylesheets/extra.css
+extra:
+  social:
+    - icon: fontawesome/brands/mastodon
+      link: https://thoughtbot.social/public/local
+    - icon: fontawesome/brands/github
+      link: https://github.com/thoughtbot
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/thoughtbot?lang=en
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/thoughtbot-inc-/posts/?feedView=all
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/thoughtbot/?hl=en
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/mkdocs.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+not_in_nav: |
+  /tutorials/**/*.md
+
+# Page tree
+nav:
+  - Getting Started:
+    - Overview: getting_started/overview.md
+    - Installation: getting_started/installation.md
+
+  - Commands:
+    - Create: getting_started/navigation.md
+
+  - Reference:
+    - Belt: reference/index.md
+    - Types: reference/types.md
+    - Requests: reference/types.requests.md
