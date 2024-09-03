@@ -94,10 +94,19 @@ not_in_nav: |
 nav:
   - Getting Started:
     - Overview: getting_started/overview.md
-    - Installation: getting_started/installation.md
+    - Creating a new app with Belt: getting_started/installation.md
+  - Core Features:
+    - Expo: core/expo.md
+    - ESLint and Prettier: core/expo.md
+    - TypeScript: core/expo.md
+    - Testing: core/expo.md
+    - Navigation: core/expo.md
+    - Data Management: core/expo.md
 
   - Commands:
-    - Create: getting_started/navigation.md
+    - Create: getting_started/create.md
+    - Add:
+      - Notifications: commands/add/notifications.md
 
   - Reference:
     - Belt: reference/index.md
