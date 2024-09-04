@@ -97,11 +97,11 @@ nav:
     - Creating a new app with Belt: getting_started/installation.md
   - Core Features:
     - Expo: core/expo.md
-    - ESLint and Prettier: core/expo.md
-    - TypeScript: core/expo.md
-    - Testing: core/expo.md
-    - Navigation: core/expo.md
-    - Data Management: core/expo.md
+    - ESLint and Prettier: core/eslint.md
+    - TypeScript: core/typescript.md
+    - Testing: core/testing.md
+    - Navigation: core/navigation.md
+    - Data Management: core/query.md
 
   - Commands:
     - Create: getting_started/create.md
