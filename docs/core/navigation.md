@@ -1,8 +1,8 @@
-## Setting Up Navigation with Belt
+# Setting Up Navigation with Belt
 
 When you generate a new React Native project using Belt, it automatically sets up navigation to ensure you have a robust and scalable navigation structure out of the box. Here’s how Belt configures navigation for your project:
 
-### Installation
+## Installation
 
 Belt installs the necessary dependencies for navigation, including React Navigation and related libraries. The following packages are added to your project:
 
@@ -12,11 +12,11 @@ Belt installs the necessary dependencies for navigation, including React Navigat
 - `react-native-screens`
 - `react-native-safe-area-context`
 
-### Configuration
+## Configuration
 
 Belt configures navigation with sensible defaults to get you started quickly. Here’s what Belt sets up:
 
-#### Navigation Container
+### Navigation Container
 The `NavigationContainer` is set up in the main application component to manage the navigation tree and state. It is injected in the list of providers in order to wrap other components under the navigation structure. For instance:
 
    ```tsx
@@ -41,7 +41,7 @@ The `NavigationContainer` is set up in the main application component to manage 
    ```
 The order of providers added in the `Providers` array will matter, as they are wrapped in reverse order from the array.
 
-#### Root Navigator
+### Root Navigator
 The RootNavigator is a central component in the navigation structure of your application. It defines the main navigation stack and serves as the entry point for all other navigators and screens.
 
 ```tsx

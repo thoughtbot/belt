@@ -60,7 +60,7 @@ export default function App() {
 
 To demonstrate how to use TanStack Query in your project, Belt includes an example in the `AboutScreen.tsx` file:
 
-### Benefits of Using TanStack Query
+## Benefits of Using TanStack Query
 
 1. **Automatic Caching**: TanStack Query automatically caches query results, reducing the need for manual state management.
 2. **Background Updates**: Queries can be configured to refetch in the background, ensuring your data is always up-to-date.
