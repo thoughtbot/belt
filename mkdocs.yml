@@ -19,9 +19,8 @@ theme:
     - toc.follow
     - navigation.sections
     - navigation.instant
-
-  icon:
-    logo: logo
+  logo: assets/logo.png
+  favicon: assets/favicon.png
 
 # extra_css:
 #   - stylesheets/extra.css
@@ -102,13 +101,3 @@ nav:
     - Testing: core/testing.md
     - Navigation: core/navigation.md
     - Data Management: core/query.md
-
-  - Commands:
-    - Create: getting_started/create.md
-    - Add:
-      - Notifications: commands/add/notifications.md
-
-  - Reference:
-    - Belt: reference/index.md
-    - Types: reference/types.md
-    - Requests: reference/types.requests.md
