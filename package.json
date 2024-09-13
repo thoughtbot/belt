@@ -4,6 +4,11 @@
   "license": "MIT",
   "version": "0.7.3",
   "description": "React Native Expo project starter and generator CLI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thoughtbot/belt.git"
+  },
+  "homepage": "https://github.com/thoughtbot/belt#readme",
   "type": "module",
   "exports": "./dist/index.js",
   "bin": {
