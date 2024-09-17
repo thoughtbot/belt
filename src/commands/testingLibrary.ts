@@ -17,7 +17,7 @@ export default async function addTestingLibrary() {
   );
 
   await copyTemplateDirectory({
-    templateDir: 'testingLibrary'
+    templateDir: 'testingLibrary',
   });
 
   const mgr = await getPackageManager();

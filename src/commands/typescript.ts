@@ -24,7 +24,7 @@ export default async function addTypescript() {
   await addDependency('typescript @types/react', { dev: true });
 
   await copyTemplateDirectory({
-    templateDir: 'typescript'
+    templateDir: 'typescript',
   });
 
   if (await fs.exists(path.join(projectDir, 'App.js'))) {
