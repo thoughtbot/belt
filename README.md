@@ -39,19 +39,6 @@ npx create-belt-app MyApp --pnpm
 npx create-belt-app MyApp --bun
 ```
 
-Or, if you already have an app and want to use Belt, run:
-
-```sh
-# with NPM
-npm install --save-dev create-belt-app
-
-# with Yarn
-yarn add --dev create-belt-app
-
-# with PNPM
-pnpm install --save-dev create-belt-app
-```
-
 then run the command you'd like to perform:
 
 ```sh

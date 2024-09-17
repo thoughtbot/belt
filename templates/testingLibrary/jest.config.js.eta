@@ -1,5 +1,5 @@
 module.exports = {
-  preset: '<%= it.expo ? "jest-expo" : "react-native" %>',
+  preset: 'jest-expo',
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
   coveragePathIgnorePatterns: ['/node_modules', 'src/test'],
   transformIgnorePatterns: [

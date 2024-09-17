@@ -5,26 +5,19 @@ import addToGitignore from '../util/addToGitignore';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import getPackageManager from '../util/getPackageManager';
-import isExpo from '../util/isExpo';
 
 export default async function addTestingLibrary() {
   const spinner = ora().start('Installing Jest and Testing Library');
-  const expo = await isExpo();
 
-  if (expo) {
-    await exec('npx expo install jest jest-expo');
-  }
+  await exec('npx expo install jest jest-expo');
 
   await addDependency(
-    `${
-      expo ? '' : 'jest'
-    } @testing-library/react-native @testing-library/jest-native @types/jest babel-jest`,
+    `@testing-library/react-native @testing-library/jest-native @types/jest babel-jest`,
     { dev: true },
   );
 
   await copyTemplateDirectory({
-    templateDir: 'testingLibrary',
-    variables: { expo },
+    templateDir: 'testingLibrary'
   });
 
   const mgr = await getPackageManager();
