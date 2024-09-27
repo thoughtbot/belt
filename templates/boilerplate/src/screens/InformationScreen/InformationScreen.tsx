@@ -1,7 +1,8 @@
 import { useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { InformationScreenProp } from 'src/navigators/navigatorTypes';
+import Text from 'src/components/Text';
 
 export default function InformationScreen() {
   const { params } = useRoute<InformationScreenProp['route']>();
