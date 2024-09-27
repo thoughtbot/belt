@@ -21,7 +21,7 @@
       "assets/*": ["assets/*"]
     }
   },
-   "include": ["src/**/*", "*.js", ".*.js", "*.ts", "*.tsx", "__mocks__"],
+  "include": ["src/**/*", "*.js", ".*.js", "*.ts", "*.tsx", "__mocks__"],
   "exclude": [
     "node_modules",
     "babel.config.js",
