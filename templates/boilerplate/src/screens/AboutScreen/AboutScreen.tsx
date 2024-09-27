@@ -1,13 +1,8 @@
 import Feather from '@expo/vector-icons/Feather';
 import { useQuery } from '@tanstack/react-query';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import Screen from 'src/components/Screen';
+import Text from 'src/components/Text';
 import api, { GithubProject } from 'src/util/api/api';
 
 export default function AboutScreen() {
