@@ -1,13 +1,11 @@
 import { confirm, input } from '@inquirer/prompts';
 import ora from 'ora';
 import { globals } from '../constants';
-import addDependency from '../util/addDependency';
 import addExpoConfig from '../util/addExpoConfig';
 import commit from '../util/commit';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import injectHooks from '../util/injectHooks';
-import isExpo from '../util/isExpo';
 import print from '../util/print';
 import readAppJson from '../util/readAppJson';
 
@@ -33,18 +31,10 @@ export async function addNotifications(options: Options = {}) {
 
   const spinner = ora().start('Adding React Native Firebase and dependencies');
 
-  const expo = await isExpo();
-
   // Install dependencies
-  if (expo) {
-    await exec(
-      'npx expo install @react-native-firebase/app @react-native-firebase/messaging expo-build-properties',
-    );
-  } else {
-    await addDependency(
-      '@react-native-firebase/app @react-native-firebase/messaging expo-build-properties',
-    );
-  }
+  await exec(
+    'npx expo install @react-native-firebase/app @react-native-firebase/messaging expo-build-properties',
+  );
 
   spinner.succeed('Added React Native Firebase and dependencies');
 
