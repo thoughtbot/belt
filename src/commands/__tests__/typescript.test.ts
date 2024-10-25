@@ -55,22 +55,3 @@ test('writes new tsconfig.json, adds dependencies', async () => {
     expect.stringMatching(/already exists/),
   );
 });
-
-test("doesn't extend expo/tsconfig.base if not an Expo project", async () => {
-  vol.fromJSON({
-    'package.json': JSON.stringify({
-      scripts: {},
-      dependencies: {},
-    }),
-  });
-
-  await addTypescript();
-
-  expect(addDependency).toHaveBeenCalledWith('typescript @types/react', {
-    dev: true,
-  });
-
-  expect(fs.readFileSync('tsconfig.json', 'utf8')).not.toMatch(
-    'expo/tsconfig.base',
-  );
-});

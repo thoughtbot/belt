@@ -6,7 +6,6 @@ import addDependency from '../util/addDependency';
 import addPackageJsonScripts from '../util/addPackageJsonScripts';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import getProjectDir from '../util/getProjectDir';
-import isExpo from '../util/isExpo';
 import print from '../util/print';
 
 export default async function addTypescript() {
@@ -26,9 +25,6 @@ export default async function addTypescript() {
 
   await copyTemplateDirectory({
     templateDir: 'typescript',
-    variables: {
-      expo: await isExpo(),
-    },
   });
 
   if (await fs.exists(path.join(projectDir, 'App.js'))) {

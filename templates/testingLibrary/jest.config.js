@@ -1,5 +1,5 @@
 module.exports = {
-  preset: '<%= it.expo ? "jest-expo" : "react-native" %>',
+  preset: 'jest-expo',
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
   coveragePathIgnorePatterns: ['/node_modules', 'src/test'],
   transformIgnorePatterns: [
@@ -7,8 +7,7 @@ module.exports = {
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
-    '.+\\.(png|jpg|ttf|woff|woff2)$':
-      '<rootDir>/src/test/fileMock.js',
+    '.+\\.(png|jpg|ttf|woff|woff2)$': '<rootDir>/src/test/fileMock.js',
   },
   setupFilesAfterEnv: [
     '@testing-library/jest-native/extend-expect',

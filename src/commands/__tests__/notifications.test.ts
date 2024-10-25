@@ -1,7 +1,7 @@
 import { confirm, input } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
 import { Mock, expect, test, vi } from 'vitest';
-import addDependency from '../../util/addDependency';
+import exec from '../../util/exec';
 import { addNotifications } from '../notifications';
 
 vi.mock('../../util/print', () => ({ default: vi.fn() }));
@@ -10,7 +10,7 @@ vi.mock('@inquirer/prompts', () => ({
   input: vi.fn(),
   confirm: vi.fn(),
 }));
-vi.mock('../../util/addDependency');
+vi.mock('../../util/exec');
 
 test('install React Native Firebase and dependencies', async () => {
   (input as Mock).mockResolvedValueOnce('com.myapp');
@@ -30,8 +30,8 @@ test('install React Native Firebase and dependencies', async () => {
 
   await addNotifications();
 
-  expect(addDependency).toHaveBeenCalledWith(
-    '@react-native-firebase/app @react-native-firebase/messaging expo-build-properties',
+  expect(exec).toHaveBeenCalledWith(
+    'npx expo install @react-native-firebase/app @react-native-firebase/messaging expo-build-properties',
   );
 
   expect(fs.existsSync('./src/hooks/useNotifications.ts')).toBe(true);
