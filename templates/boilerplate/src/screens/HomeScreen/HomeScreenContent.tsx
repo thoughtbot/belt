@@ -1,12 +1,7 @@
 import { ReactNode } from 'react';
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  TextProps,
-  Text as UnStyledText,
-  View,
-} from 'react-native';
+import { Image, Platform, StyleSheet, TextProps, View } from 'react-native';
+import UnStyledText from 'src/components/Text';
+import useTheme from 'src/theme/useTheme';
 
 // TODO: sample, remove
 export default function HomeScreenContent() {
@@ -32,14 +27,14 @@ export default function HomeScreenContent() {
         started.
       </Text>
 
-      <View style={styles.card}>
+      <Card>
         <Text>
           <Text style={styles.bold}>We set some things up for you:</Text> Expo,
           TanStack Query, Testing Library, React Navigation, and more!
         </Text>
-      </View>
+      </Card>
 
-      <View style={styles.card}>
+      <Card>
         <Text style={styles.bold}>Some notes about organization</Text>
         <View style={styles.orgBullets} accessibilityRole="list">
           <BulletListItem>
@@ -77,32 +72,32 @@ export default function HomeScreenContent() {
             </UnStyledText>
           </BulletListItem>
         </View>
-      </View>
+      </Card>
 
-      <View style={styles.card}>
+      <Card>
         <Text>
           <Text style={styles.bold}>To add a new bottom tab</Text> head to{' '}
           <Text style={styles.inlineCode}>TabNavigator.tsx</Text> and follow the
           instructions commented there.
         </Text>
-      </View>
+      </Card>
 
-      <View style={styles.card}>
+      <Card>
         <Text>
           <Text style={styles.bold}>To add a new screen</Text> head to the
           screens directory and mount it in the appropriate stack.
         </Text>
-      </View>
+      </Card>
 
-      <View style={styles.card}>
+      <Card>
         <Text>
           Check out an <Text style={styles.bold}>example API call</Text> using
           TanStack Query in{' '}
           <Text style={styles.inlineCode}>AboutScreen.tsx</Text>.
         </Text>
-      </View>
+      </Card>
 
-      <View style={styles.card}>
+      <Card>
         <Text>
           Check out <Text style={styles.bold}>a sample test</Text> in{' '}
           <Text style={styles.inlineCode}>
@@ -110,9 +105,9 @@ export default function HomeScreenContent() {
           </Text>
           .
         </Text>
-      </View>
+      </Card>
 
-      <View style={styles.card}>
+      <Card>
         <Text>
           Sample code is marked with a{' '}
           <Text style={styles.inlineCode}>“TODO”</Text> comment.{' '}
@@ -120,7 +115,7 @@ export default function HomeScreenContent() {
           <Text style={styles.inlineCode}>“TODO”</Text> and remove any desired
           sample code.
         </Text>
-      </View>
+      </Card>
     </>
   );
 }
@@ -138,6 +133,15 @@ function BulletListItem({ children }: { children: ReactNode }) {
   );
 }
 
+function Card({ children }: { children: ReactNode }) {
+  const { colors } = useTheme();
+  return (
+    <View style={[styles.card, { backgroundColor: colors.card }]}>
+      {children}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   text: {
     fontSize: 18,
@@ -151,7 +155,6 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 18,
-    backgroundColor: '#fefafa',
     paddingVertical: 18,
     paddingHorizontal: 12,
     borderRadius: 10,
