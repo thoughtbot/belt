@@ -8,5 +8,6 @@ import sleep from './sleep';
  * @param time
  */
 export default async function waitForUpdates(time = 2) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
   return act(() => sleep(time));
 }
