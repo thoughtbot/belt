@@ -13,4 +13,7 @@ module.exports = {
     '@testing-library/jest-native/extend-expect',
     './jest.setup.js',
   ],
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
 };
