@@ -1,6 +1,9 @@
 import { program } from 'commander';
 import buildAction from './util/buildAction';
 import printWelcome from './util/print/printWelcome';
+import packageJson from '../package.json';
+
+const typedPackageJson = packageJson;
 
 export default function runCli() {
   program
@@ -61,6 +64,10 @@ export default function runCli() {
       'Pass true to skip all prompts and use default values',
     )
     .action(buildAction(import('./commands/notifications')));
+
+  program.version(
+    `The current version of Belt is: ${typedPackageJson.version}`,
+  );
 
   printWelcome();
   program.parse();
