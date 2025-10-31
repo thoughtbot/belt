@@ -5,6 +5,7 @@ import _ from 'lodash';
 import ora from 'ora';
 import path from 'path';
 import { PACKAGE_ROOT, globals } from '../constants';
+import addNpmrc from '../util/addNpmrc';
 import commit from '../util/commit';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
@@ -54,10 +55,14 @@ export async function createApp(
 
     spinner.succeed('Created new Belt app with Expo');
 
+    const packageManager = getPackageManager(options);
+    if (packageManager === 'npm') {
+      await addNpmrc(appName);
+    }
+
     process.chdir(`./${appName}`);
 
     spinner.start('Installing dependencies');
-    const packageManager = getPackageManager(options);
     await exec(`${packageManager} install`);
     await exec('git init');
     await commit('Initial commit');
