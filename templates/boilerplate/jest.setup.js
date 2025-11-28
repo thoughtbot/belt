@@ -1,7 +1,6 @@
 import '@testing-library/jest-native/extend-expect';
 import { configure } from '@testing-library/react-native';
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
-import mockBackHandler from 'react-native/Libraries/Utilities/__mocks__/BackHandler';
 import server from 'src/test/server';
 import queryClient from 'src/util/api/queryClient';
 
@@ -28,7 +27,10 @@ jest.mock('react-native/Libraries/LogBox/LogBox', () => ({
 
 jest.mock('react-native/Libraries/Utilities/BackHandler', () => ({
   __esModule: true,
-  default: mockBackHandler,
+  default: {
+    addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+    removeEventListener: jest.fn(),
+  },
 }));
 
 jest.mock('@react-native-async-storage/async-storage', () =>

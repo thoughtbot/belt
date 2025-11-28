@@ -1,6 +1,14 @@
 import { confirm, input } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
-import { Mock, afterEach, describe, expect, test, vi } from 'vitest';
+import {
+  Mock,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vi,
+} from 'vitest';
 import exec from '../../util/exec';
 import print from '../../util/print';
 import { createApp } from '../createApp';
@@ -11,6 +19,10 @@ vi.mock('@inquirer/prompts', () => ({
 }));
 vi.mock('../../util/addDependency');
 vi.mock('../../util/print', () => ({ default: vi.fn() }));
+
+beforeEach(() => {
+  process.env.npm_config_user_agent = 'yarn/1.22.0';
+});
 
 afterEach(() => {
   vol.reset();
@@ -84,18 +96,28 @@ describe('package manager options', () => {
     (confirm as Mock).mockResolvedValueOnce(true);
     await createApp('MyApp', { npm: true });
     expect(exec).toHaveBeenCalledWith('npm install');
+    expectFileContents('MyApp/.npmrc', 'legacy-peer-deps=true');
   });
 
   test('creates with bun', async () => {
     (confirm as Mock).mockResolvedValueOnce(true);
     await createApp('MyApp', { bun: true });
     expect(exec).toHaveBeenCalledWith('bun install');
+    expect(() => fs.readFileSync('MyApp/.npmrc', 'utf8')).toThrow();
   });
 
   test('creates with pnpm', async () => {
     (confirm as Mock).mockResolvedValueOnce(true);
     await createApp('MyApp', { pnpm: true });
     expect(exec).toHaveBeenCalledWith('pnpm install');
+    expect(() => fs.readFileSync('MyApp/.npmrc', 'utf8')).toThrow();
+  });
+
+  test('creates with yarn (does not add .npmrc)', async () => {
+    (confirm as Mock).mockResolvedValueOnce(true);
+    await createApp('MyApp', { yarn: true });
+    expect(exec).toHaveBeenCalledWith('yarn install');
+    expect(() => fs.readFileSync('MyApp/.npmrc', 'utf8')).toThrow();
   });
 });
 
