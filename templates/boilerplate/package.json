@@ -26,6 +26,7 @@
     "@tanstack/react-query": "^5.32.1",
     "axios": "^1.6.8",
     "expo": "^54.0.0",
+    "expo-asset": "~12.0.0",
     "expo-font": "~14.0.9",
     "expo-status-bar": "~3.0.8",
     "react": "19.1.0",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "babel-preset-expo": "~54.0.0",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.2.0",
     "@thoughtbot/eslint-config": "^1.0.2",
