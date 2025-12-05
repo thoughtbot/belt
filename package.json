@@ -2,7 +2,7 @@
   "name": "create-belt-app",
   "author": "thoughtbot, Inc.",
   "license": "MIT",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "React Native Expo project starter and generator CLI",
   "repository": {
     "type": "git",
