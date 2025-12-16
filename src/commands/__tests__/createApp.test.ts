@@ -1,4 +1,4 @@
-import { confirm, input } from '@inquirer/prompts';
+import { confirm, input, select } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
 import { Mock, afterEach, describe, expect, test, vi } from 'vitest';
 import exec from '../../util/exec';
@@ -8,19 +8,21 @@ import { createApp } from '../createApp';
 vi.mock('@inquirer/prompts', () => ({
   input: vi.fn(),
   confirm: vi.fn(),
+  select: vi.fn(),
 }));
 vi.mock('../../util/addDependency');
 vi.mock('../../util/print', () => ({ default: vi.fn() }));
 
 afterEach(() => {
   vol.reset();
+  vi.clearAllMocks();
   (print as Mock).mockReset();
 });
 
 test('creates app, substituting the app name where appropriate', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON({ 'file.txt': '{}' }, './');
-  await createApp('MyApp');
+  await createApp('MyApp', { yarn: true });
 
   expectFileContents('MyApp/package.json', '"name": "my-app"');
   expectFileContents('MyApp/app.json', '"name": "MyApp"');
@@ -31,7 +33,7 @@ test('creates app, substituting the app name where appropriate', async () => {
 test('prompts for app name if not supplied', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
   (input as Mock).mockReturnValue('MyApp');
-  await createApp(undefined);
+  await createApp(undefined, { yarn: true });
 
   expectFileContents('MyApp/package.json', '"name": "my-app"');
   expectFileContents('MyApp/app.json', '"name": "MyApp"');
@@ -46,7 +48,7 @@ test('exits if directory already exists', async () => {
 
   vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
 
-  await createApp('my-app'); // gets sanitized to MyApp
+  await createApp('my-app', { yarn: true }); // gets sanitized to MyApp
 
   expect(print).toHaveBeenCalledWith(expect.stringMatching(/already exists/));
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -56,7 +58,7 @@ test('exits if directory already exists', async () => {
 test('converts directory to camel case and strips special characters', async () => {
   (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON({ 'file.txt': '{}' }, './');
-  await createApp('my-$%-app');
+  await createApp('my-$%-app', { yarn: true });
 
   expectFileContents('MyApp/package.json', '"name": "my-app"');
   expectFileContents('MyApp/app.json', '"name": "MyApp"');
@@ -70,7 +72,7 @@ test('exits if app name does not start with a letter', async () => {
   process.exit = vi.fn<typeof process.exit>();
   vol.fromJSON({ 'MyApp/package.json': '{}' }, './');
 
-  await createApp('555MyApp');
+  await createApp('555MyApp', { yarn: true });
 
   expect(print).toHaveBeenCalledWith(
     expect.stringMatching('App name must start with a letter.'),
@@ -96,6 +98,44 @@ describe('package manager options', () => {
     (confirm as Mock).mockResolvedValueOnce(true);
     await createApp('MyApp', { pnpm: true });
     expect(exec).toHaveBeenCalledWith('pnpm install');
+  });
+});
+
+describe('user preferred package manager prompt', () => {
+  test('prompts user for preferred package manager when none was provided', async () => {
+    (confirm as Mock).mockResolvedValueOnce(true);
+    await createApp('MyApp');
+
+    expect(select).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringMatching(
+          'What package manager would you like Belt to use?',
+        ) as string,
+      }),
+    );
+  });
+
+  test('allows user select a preferred package manager from list', async () => {
+    (confirm as Mock).mockResolvedValueOnce(true);
+    (select as Mock).mockResolvedValueOnce('pnpm');
+    await createApp('MyApp');
+
+    expect(exec).toHaveBeenCalledWith('pnpm install');
+  });
+
+  test('user prompt for preferred package manager has correct choices', async () => {
+    (confirm as Mock).mockResolvedValueOnce(true);
+    await createApp('MyApp');
+    expect(select).toHaveBeenCalledWith(
+      expect.objectContaining({
+        choices: expect.arrayContaining([
+          expect.objectContaining({ value: 'npm' }),
+          expect.objectContaining({ value: 'pnpm' }),
+          expect.objectContaining({ value: 'yarn' }),
+          expect.objectContaining({ value: 'bun' }),
+        ]) as Array<{ value: string }>,
+      }),
+    );
   });
 });
 

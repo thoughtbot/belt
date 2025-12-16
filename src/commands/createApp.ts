@@ -55,9 +55,9 @@ export async function createApp(
     spinner.succeed('Created new Belt app with Expo');
 
     process.chdir(`./${appName}`);
+    const packageManager = await getPackageManager(options);
 
     spinner.start('Installing dependencies');
-    const packageManager = getPackageManager(options);
     await exec(`${packageManager} install`);
     await exec('git init');
     await commit('Initial commit');
