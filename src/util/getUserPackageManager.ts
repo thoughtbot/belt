@@ -1,24 +1,18 @@
-export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun';
+import { select } from '@inquirer/prompts';
+
+const PACKAGE_MANAGER_CHOICES = ['npm', 'pnpm', 'yarn', 'bun'] as const;
+
+export type PackageManager = (typeof PACKAGE_MANAGER_CHOICES)[number];
 
 /**
- * attempts to detect the runtime / package manager that was used to
- * run the current process
+ * requests the user to select their preferred package manager from the
+ * provided list
  */
-export default function getUserPackageManager(): PackageManager {
-  // This environment variable is set by npm and yarn but pnpm seems less consistent
-  const userAgent = process.env.npm_config_user_agent;
-
-  if (userAgent?.startsWith('yarn')) {
-    return 'yarn';
-  }
-  if (userAgent?.startsWith('pnpm')) {
-    return 'pnpm';
-  }
-  // bun sets Bun.env if running in Bun process. userAgent bit doesn't seem to work
-  if (userAgent?.startsWith('bun') || typeof Bun !== 'undefined') {
-    return 'bun';
-  }
-
-  // If no user agent is set, assume npm
-  return 'npm';
+export default async function getUserPackageManager(): Promise<PackageManager> {
+  return select({
+    message: 'What package manager would you like Belt to use?',
+    choices: PACKAGE_MANAGER_CHOICES.map((packageManager) => ({
+      value: packageManager,
+    })),
+  });
 }
