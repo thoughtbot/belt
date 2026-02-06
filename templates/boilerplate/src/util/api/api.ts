@@ -23,17 +23,39 @@ async function makeRequest<TData>(options: Params): Promise<TData> {
   return response.data;
 }
 
+function mapRepoToProject(repo: GithubRepo): GithubProject {
+  return {
+    id: repo.id,
+    name: repo.name,
+    description: repo.description,
+    url: repo.html_url,
+    stars: repo.stargazers_count,
+    forks: repo.forks_count,
+  };
+}
+
 const api = {
-  // TODO: sample, remove
-  githubRepos: () =>
-    makeRequest<GithubProjectsResponse>({
-      url: 'https://thoughtbot-projects-api-68b03dc59059.herokuapp.com/api/projects',
-    }),
+  // Fetch thoughtbot's public repositories from GitHub API
+  githubRepos: (): Promise<GithubProjectsResponse> =>
+    makeRequest<GithubRepo[]>({
+      url: 'https://api.github.com/orgs/thoughtbot/repos',
+    }).then((repos) => ({
+      projects: repos.map(mapRepoToProject),
+    })),
 };
 
 // TODO: sample data, remove
 export type GithubProjectsResponse = {
   projects: GithubProject[];
+};
+
+type GithubRepo = {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  stargazers_count: number;
+  forks_count: number;
 };
 
 export type GithubProject = {
