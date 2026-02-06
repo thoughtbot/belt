@@ -49,7 +49,7 @@ export type GithubProjectsResponse = {
   projects: GithubProject[];
 };
 
-type GithubRepo = {
+export type GithubRepo = {
   id: number;
   name: string;
   description: string | null;

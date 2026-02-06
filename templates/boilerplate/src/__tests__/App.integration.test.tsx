@@ -2,7 +2,7 @@ import { screen, userEvent } from '@testing-library/react-native';
 
 import mock from 'src/test/mock';
 import { renderApplication } from 'src/test/render';
-import { GithubProjectsResponse } from 'src/util/api/api';
+import type { GithubRepo } from 'src/util/api/api';
 
 // Testing philosophy:
 // - Tests that render the entire application with `renderApplication` go in the
@@ -37,22 +37,20 @@ test('renders app, can navigate between screens', async () => {
 // Pass this mock to `render` or `renderApplication` to register it with MSW.
 // Recommended to place these mocks in a central location like `src/test/mocks`
 function mockGitHubProjects() {
-  return mock.get<GithubProjectsResponse, null>(
-    'https://thoughtbot-projects-api-68b03dc59059.herokuapp.com/api/projects',
+  return mock.get<GithubRepo[], null>(
+    'https://api.github.com/orgs/thoughtbot/repos',
     {
-      response: {
-        projects: [
-          {
-            id: 635980144,
-            name: 'belt',
-            description:
-              'Belt is a CLI for starting a new React Native Expo app and will even keep your pants secure as you continue development.',
-            url: 'https://github.com/thoughtbot/belt',
-            stars: 8,
-            forks: 0,
-          },
-        ],
-      },
+      response: [
+        {
+          id: 635980144,
+          name: 'belt',
+          description:
+            'Belt is a CLI for starting a new React Native Expo app and will even keep your pants secure as you continue development.',
+          html_url: 'https://github.com/thoughtbot/belt',
+          stargazers_count: 8,
+          forks_count: 0,
+        },
+      ],
     },
   );
 }
