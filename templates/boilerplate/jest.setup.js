@@ -4,6 +4,8 @@ import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import server from 'src/test/server';
 import queryClient from 'src/util/api/queryClient';
 
+global.ReadableStream = require('stream/web').ReadableStream;
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
