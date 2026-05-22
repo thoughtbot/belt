@@ -14,6 +14,9 @@ export default {
     DONT_MOCK_PATTERNS = [];
   },
   ...memfs.promises,
+  pathExists(path) {
+    return this.exists(path);
+  },
   exists(path) {
     if (dontMock(path)) {
       return fse.exists(path);

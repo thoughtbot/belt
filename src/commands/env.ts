@@ -5,7 +5,7 @@ import path from 'path';
 import { globals } from '../constants';
 import addDependency from '../util/addDependency';
 import addToGitignore from '../util/addToGitignore';
-import commit from '../util/commit';
+import commit, { handleCommitError } from '../util/commit';
 import copyTemplate from '../util/copyTemplate';
 import getProjectDir from '../util/getProjectDir';
 import print from '../util/print';
@@ -13,12 +13,6 @@ import writeFile from '../util/writeFile';
 
 type Options = {
   interactive?: boolean;
-};
-
-const handleCommitError = (error: { stdout: string }) => {
-  if (!error.stdout.includes('nothing to commit')) {
-    throw error;
-  }
 };
 
 const API_PATH = 'src/util/api/api.ts';
@@ -31,6 +25,19 @@ const JEST_CONFIG_PATH = 'jest.config.js';
 const JEST_SETUP_FILES_BEFORE = '  setupFilesAfterEnv: [';
 const JEST_SETUP_FILES_AFTER =
   "  setupFiles: ['./jest.setup.env.js'],\n  setupFilesAfterEnv: [";
+
+async function patchFile(
+  filePath: string,
+  search: string,
+  replacement: string,
+): Promise<boolean> {
+  if (!(await fs.pathExists(filePath))) return false;
+  const contents = (await fs.readFile(filePath)).toString();
+  const updated = contents.replace(search, replacement);
+  if (updated === contents) return false;
+  await writeFile(filePath, updated, { format: true });
+  return true;
+}
 
 export async function addEnv(options: Options = {}) {
   const { interactive = true } = options;
@@ -65,39 +72,22 @@ export async function addEnv(options: Options = {}) {
   });
 
   const envPath = path.join(projectDir, '.env');
-  const envExists = await fs.pathExists(envPath);
-  if (!envExists) {
+  if (!(await fs.pathExists(envPath))) {
     await fs.copy(path.join(projectDir, '.env.example'), envPath);
   }
 
   await addToGitignore('.env');
 
-  const apiFilePath = path.join(projectDir, API_PATH);
-  const apiFileExists = await fs.pathExists(apiFilePath);
-  let patchedApi = false;
-  if (apiFileExists) {
-    const contents = (await fs.readFile(apiFilePath)).toString();
-    const updated = contents.replace(HARDCODED_API_URL, REPLACED_API_URL);
-    if (updated !== contents) {
-      await writeFile(apiFilePath, updated, { format: true });
-      patchedApi = true;
-    }
-  }
-
-  const jestConfigPath = path.join(projectDir, JEST_CONFIG_PATH);
-  const jestConfigExists = await fs.pathExists(jestConfigPath);
-  let patchedJest = false;
-  if (jestConfigExists) {
-    const contents = (await fs.readFile(jestConfigPath)).toString();
-    const updated = contents.replace(
-      JEST_SETUP_FILES_BEFORE,
-      JEST_SETUP_FILES_AFTER,
-    );
-    if (updated !== contents) {
-      await writeFile(jestConfigPath, updated, { format: true });
-      patchedJest = true;
-    }
-  }
+  const patchedApi = await patchFile(
+    path.join(projectDir, API_PATH),
+    HARDCODED_API_URL,
+    REPLACED_API_URL,
+  );
+  const patchedJest = await patchFile(
+    path.join(projectDir, JEST_CONFIG_PATH),
+    JEST_SETUP_FILES_BEFORE,
+    JEST_SETUP_FILES_AFTER,
+  );
 
   await commit('Add environment variable management support.').catch(
     handleCommitError,

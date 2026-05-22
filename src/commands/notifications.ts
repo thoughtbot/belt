@@ -2,7 +2,7 @@ import { confirm, input } from '@inquirer/prompts';
 import ora from 'ora';
 import { globals } from '../constants';
 import addExpoConfig from '../util/addExpoConfig';
-import commit from '../util/commit';
+import commit, { handleCommitError } from '../util/commit';
 import copyTemplateDirectory from '../util/copyTemplateDirectory';
 import exec from '../util/exec';
 import injectHooks from '../util/injectHooks';
@@ -12,12 +12,6 @@ import readAppJson from '../util/readAppJson';
 type Options = {
   bundleId?: string;
   interactive?: boolean;
-};
-
-const handleCommitError = (error: { stdout: string }) => {
-  if (!error.stdout.includes('nothing to commit')) {
-    throw error;
-  }
 };
 
 export async function addNotifications(options: Options = {}) {
