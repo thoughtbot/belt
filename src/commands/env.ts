@@ -23,8 +23,9 @@ const handleCommitError = (error: { stdout: string }) => {
 
 const API_PATH = 'src/util/api/api.ts';
 const HARDCODED_API_URL = "'https://api.github.com/orgs/thoughtbot/repos'";
-// eslint-disable-next-line no-template-curly-in-string
-const REPLACED_API_URL = "`${process.env.EXPO_PUBLIC_API_BASE_URL ?? ''}/orgs/thoughtbot/repos`";
+const REPLACED_API_URL =
+  // eslint-disable-next-line no-template-curly-in-string
+  "`${process.env.EXPO_PUBLIC_API_BASE_URL ?? ''}/orgs/thoughtbot/repos`";
 
 const JEST_CONFIG_PATH = 'jest.config.js';
 const JEST_SETUP_FILES_BEFORE = '  setupFilesAfterEnv: [';
@@ -44,10 +45,24 @@ export async function addEnv(options: Options = {}) {
 
   await addDependency('dotenv', { dev: true });
 
-  await copyTemplate({ templateDir: 'environments', templateFile: 'env.example', destination: '.env.example' });
-  await copyTemplate({ templateDir: 'environments', templateFile: 'src/config/index.ts' });
-  await copyTemplate({ templateDir: 'environments', templateFile: 'jest.setup.env.js' });
-  await copyTemplate({ templateDir: 'environments', templateFile: 'env.test', destination: '.env.test' });
+  await copyTemplate({
+    templateDir: 'environments',
+    templateFile: 'env.example',
+    destination: '.env.example',
+  });
+  await copyTemplate({
+    templateDir: 'environments',
+    templateFile: 'src/config/index.ts',
+  });
+  await copyTemplate({
+    templateDir: 'environments',
+    templateFile: 'jest.setup.env.js',
+  });
+  await copyTemplate({
+    templateDir: 'environments',
+    templateFile: 'env.test',
+    destination: '.env.test',
+  });
 
   const envPath = path.join(projectDir, '.env');
   const envExists = await fs.pathExists(envPath);
@@ -96,7 +111,9 @@ export async function addEnv(options: Options = {}) {
   - .env.test: Environment variables for Jest (committed to git)
   - jest.setup.env.js: Loads .env.test before tests run
   - src/config/index.ts: Typed helper to access config values in your app${
-    patchedApi ? `\n  - ${API_PATH}: Updated to use EXPO_PUBLIC_API_BASE_URL` : ''
+    patchedApi
+      ? `\n  - ${API_PATH}: Updated to use EXPO_PUBLIC_API_BASE_URL`
+      : ''
   }${
     patchedJest
       ? `\n  - ${JEST_CONFIG_PATH}: Added setupFiles to load jest.setup.env.js`
