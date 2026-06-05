@@ -3,14 +3,13 @@ import buildAction from './util/buildAction';
 import printWelcome from './util/print/printWelcome';
 import packageJson from '../package.json';
 
-const typedPackageJson = packageJson;
-
 export default function runCli() {
   program
     .name('Belt')
     .description(
       'Perform React Native and Expo setup and redundant tasks without your pants falling down!',
     )
+    .version(packageJson.version)
     .showHelpAfterError();
 
   program
@@ -65,10 +64,6 @@ export default function runCli() {
     )
     .action(buildAction(import('./commands/notifications')));
 
-  program.version(
-    `The current version of Belt is: ${typedPackageJson.version}`,
-  );
-
-  printWelcome();
   program.parse();
+  printWelcome();
 }
