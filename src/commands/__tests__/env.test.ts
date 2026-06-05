@@ -1,6 +1,6 @@
 import { confirm } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
-import { Mock, afterEach, expect, test, vi } from 'vitest';
+import { Mock, afterEach, beforeEach, expect, test, vi } from 'vitest';
 import exec from '../../util/exec';
 import { addEnv } from '../env';
 
@@ -17,13 +17,16 @@ const baseFiles = {
   'yarn.lock': '',
 };
 
+beforeEach(() => {
+  (confirm as Mock).mockResolvedValueOnce(true);
+});
+
 afterEach(() => {
   vol.reset();
   vi.clearAllMocks();
 });
 
 test('copies all template files to correct destinations', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON(baseFiles, './');
 
   await addEnv();
@@ -36,7 +39,6 @@ test('copies all template files to correct destinations', async () => {
 });
 
 test('creates .env from .env.example when .env does not exist', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON(baseFiles, './');
 
   await addEnv();
@@ -47,7 +49,6 @@ test('creates .env from .env.example when .env does not exist', async () => {
 });
 
 test('does not overwrite .env when it already exists', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON({ ...baseFiles, '.env': 'EXISTING_VAR=value' }, './');
 
   await addEnv();
@@ -57,7 +58,6 @@ test('does not overwrite .env when it already exists', async () => {
 });
 
 test('adds .env to .gitignore', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON({ ...baseFiles, '.gitignore': 'node_modules\n' }, './');
 
   await addEnv();
@@ -67,7 +67,6 @@ test('adds .env to .gitignore', async () => {
 });
 
 test('installs dotenv as a dev dependency', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON(baseFiles, './');
 
   await addEnv();
@@ -76,7 +75,6 @@ test('installs dotenv as a dev dependency', async () => {
 });
 
 test('patches API file when it contains hardcoded URL', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON(
     {
       ...baseFiles,
@@ -95,14 +93,12 @@ test('patches API file when it contains hardcoded URL', async () => {
 });
 
 test('does not error when API file does not exist', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON(baseFiles, './');
 
   await expect(addEnv()).resolves.toBeUndefined();
 });
 
 test('patches Jest config when it contains setupFilesAfterEnv', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON(
     {
       ...baseFiles,
@@ -119,7 +115,6 @@ test('patches Jest config when it contains setupFilesAfterEnv', async () => {
 });
 
 test('does not error when Jest config does not exist', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
   vol.fromJSON(baseFiles, './');
 
   await expect(addEnv()).resolves.toBeUndefined();

@@ -1,4 +1,3 @@
-import { confirm } from '@inquirer/prompts';
 import fs from 'fs-extra';
 import ora from 'ora';
 import path from 'path';
@@ -6,94 +5,43 @@ import { globals } from '../constants';
 import addDependency from '../util/addDependency';
 import addToGitignore from '../util/addToGitignore';
 import commit, { handleCommitError } from '../util/commit';
+import confirmToProceed from '../util/confirmToProceed';
 import copyTemplate from '../util/copyTemplate';
 import getProjectDir from '../util/getProjectDir';
-import print from '../util/print';
-import writeFile from '../util/writeFile';
+import patchFile from '../util/patchFile';
 
 type Options = {
   interactive?: boolean;
 };
 
 const API_PATH = 'src/util/api/api.ts';
-const HARDCODED_API_URL = "'https://api.github.com/orgs/thoughtbot/repos'";
-const REPLACED_API_URL =
+const API_URL_SEARCH = "'https://api.github.com/orgs/thoughtbot/repos'";
+const API_URL_REPLACEMENT =
   // eslint-disable-next-line no-template-curly-in-string
   "`${process.env.EXPO_PUBLIC_API_BASE_URL ?? ''}/orgs/thoughtbot/repos`";
 
 const JEST_CONFIG_PATH = 'jest.config.js';
-const JEST_SETUP_FILES_BEFORE = '  setupFilesAfterEnv: [';
-const JEST_SETUP_FILES_AFTER =
+const JEST_SETUP_SEARCH = '  setupFilesAfterEnv: [';
+const JEST_SETUP_REPLACEMENT =
   "  setupFiles: ['./jest.setup.env.js'],\n  setupFilesAfterEnv: [";
 
-async function patchFile(
-  filePath: string,
-  search: string,
-  replacement: string,
-): Promise<boolean> {
-  if (!(await fs.pathExists(filePath))) return false;
-  const contents = (await fs.readFile(filePath)).toString();
-  const updated = contents.replace(search, replacement);
-  if (updated === contents) return false;
-  await writeFile(filePath, updated, { format: true });
-  return true;
-}
+const INTRO_MESSAGE = `Let's set up environment variable management!
 
-export async function addEnv(options: Options = {}) {
-  const { interactive = true } = options;
+  We will configure your Expo app to handle environment variables using the
+  built-in EXPO_PUBLIC_ mechanism. This includes:
 
-  globals.interactive = interactive;
+  - .env.example: Template showing your environment variables (committed)
+  - .env: Your local values (gitignored)
+  - .env.test: Environment variables for Jest tests (committed)
+  - jest.setup.env.js: Loads .env.test before each test run
+  - src/config/index.ts: Typed helper for safe config access
 
-  await printIntro();
+  Variables prefixed with EXPO_PUBLIC_ are automatically loaded by the Expo CLI
+  and inlined into the app bundle at build time. No extra packages needed.
+  `;
 
-  const spinner = ora().start('Setting up environment configuration');
-
-  const projectDir = await getProjectDir();
-
-  await addDependency('dotenv', { dev: true });
-
-  await copyTemplate({
-    templateDir: 'environments',
-    templateFile: 'env.example',
-    destination: '.env.example',
-  });
-  await copyTemplate({
-    templateDir: 'environments',
-    templateFile: 'src/config/index.ts',
-  });
-  await copyTemplate({
-    templateDir: 'environments',
-    templateFile: 'jest.setup.env.js',
-  });
-  await copyTemplate({
-    templateDir: 'environments',
-    templateFile: 'env.test',
-    destination: '.env.test',
-  });
-
-  const envPath = path.join(projectDir, '.env');
-  if (!(await fs.pathExists(envPath))) {
-    await fs.copy(path.join(projectDir, '.env.example'), envPath);
-  }
-
-  await addToGitignore('.env');
-
-  const patchedApi = await patchFile(
-    path.join(projectDir, API_PATH),
-    HARDCODED_API_URL,
-    REPLACED_API_URL,
-  );
-  const patchedJest = await patchFile(
-    path.join(projectDir, JEST_CONFIG_PATH),
-    JEST_SETUP_FILES_BEFORE,
-    JEST_SETUP_FILES_AFTER,
-  );
-
-  await commit('Add environment variable management support.').catch(
-    handleCommitError,
-  );
-
-  spinner.succeed(`Successfully set up environment variable management!
+function successMessage(patchedApi: boolean, patchedJest: boolean) {
+  return `Successfully set up environment variable management!
 
   What was added:
   - .env.example: Template of environment variables (committed to git)
@@ -119,38 +67,73 @@ export async function addEnv(options: Options = {}) {
 
   These values are visible in plain text in the compiled app.
   Never store secrets as EXPO_PUBLIC_ variables.
-  `);
+  `;
 }
 
-async function printIntro() {
-  print("Let's set up environment variable management!");
-  print(`
-  We will configure your Expo app to handle environment variables using the
-  built-in EXPO_PUBLIC_ mechanism. This includes:
+export async function addEnv(options: Options = {}) {
+  const { interactive = true } = options;
 
-  - .env.example: Template showing your environment variables (committed)
-  - .env: Your local values (gitignored)
-  - .env.test: Environment variables for Jest tests (committed)
-  - jest.setup.env.js: Loads .env.test before each test run
-  - src/config/index.ts: Typed helper for safe config access
+  globals.interactive = interactive;
 
-  Variables prefixed with EXPO_PUBLIC_ are automatically loaded by the Expo CLI
-  and inlined into the app bundle at build time. No extra packages needed.
-  `);
+  await confirmToProceed(INTRO_MESSAGE);
 
-  if (!globals.interactive) {
-    return;
+  const spinner = ora().start('Setting up environment configuration');
+
+  try {
+    const projectDir = await getProjectDir();
+
+    await addDependency('dotenv', { dev: true });
+
+    await copyTemplate({
+      templateDir: 'environments',
+      templateFile: 'env.example',
+      destination: '.env.example',
+    });
+    await copyTemplate({
+      templateDir: 'environments',
+      templateFile: 'src/config/index.ts',
+    });
+    await copyTemplate({
+      templateDir: 'environments',
+      templateFile: 'jest.setup.env.js',
+    });
+    await copyTemplate({
+      templateDir: 'environments',
+      templateFile: 'env.test',
+      destination: '.env.test',
+    });
+
+    const envPath = path.join(projectDir, '.env');
+    if (!(await fs.pathExists(envPath))) {
+      await fs.copy(path.join(projectDir, '.env.example'), envPath);
+    }
+
+    await addToGitignore('.env');
+
+    const patchedApi = await patchFile(
+      path.join(projectDir, API_PATH),
+      API_URL_SEARCH,
+      API_URL_REPLACEMENT,
+    );
+    const patchedJest = await patchFile(
+      path.join(projectDir, JEST_CONFIG_PATH),
+      JEST_SETUP_SEARCH,
+      JEST_SETUP_REPLACEMENT,
+    );
+
+    await commit('Add environment variable management support.').catch(
+      handleCommitError,
+    );
+
+    spinner.succeed(successMessage(patchedApi, patchedJest));
+  } catch (error) {
+    spinner.fail((error as Error).message);
+    throw error;
   }
-
-  const proceed = await confirm({ message: 'Ready to proceed?' });
-  if (!proceed) {
-    process.exit(0);
-  }
-
-  print('');
 }
 
 export default function addEnvAction(...args: unknown[]) {
+  // Commander passes ([<Options hash>, <Command>]) as args
   const options = (args[0] as unknown[])[0] as Options;
   return addEnv(options);
 }

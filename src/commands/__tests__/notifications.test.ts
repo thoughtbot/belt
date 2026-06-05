@@ -1,6 +1,6 @@
 import { confirm, input } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
-import { Mock, expect, test, vi } from 'vitest';
+import { Mock, afterEach, beforeEach, expect, test, vi } from 'vitest';
 import exec from '../../util/exec';
 import { addNotifications } from '../notifications';
 
@@ -12,21 +12,30 @@ vi.mock('@inquirer/prompts', () => ({
 }));
 vi.mock('../../util/exec');
 
+const baseFiles = {
+  'package.json': JSON.stringify({
+    scripts: {},
+    dependencies: {},
+    devDependencies: {},
+  }),
+  'yarn.lock': '',
+  'App.tsx': '// CODEGEN:BELT:HOOKS - do not remove',
+  'app.json': JSON.stringify({}),
+};
+
+beforeEach(() => {
+  (confirm as Mock).mockResolvedValueOnce(true);
+});
+
+afterEach(() => {
+  vol.reset();
+  vi.clearAllMocks();
+});
+
 test('install React Native Firebase and dependencies', async () => {
   (input as Mock).mockResolvedValueOnce('com.myapp');
   (input as Mock).mockResolvedValueOnce('com.myapp');
-  (confirm as Mock).mockResolvedValueOnce(true);
-  const json = {
-    'package.json': JSON.stringify({
-      scripts: {},
-      dependencies: {},
-      devDependencies: {},
-    }),
-    'yarn.lock': '',
-    'App.tsx': '// CODEGEN:BELT:HOOKS - do not remove',
-    'app.json': JSON.stringify({}),
-  };
-  vol.fromJSON(json, './');
+  vol.fromJSON(baseFiles, './');
 
   await addNotifications();
 
@@ -55,24 +64,20 @@ test('install React Native Firebase and dependencies', async () => {
 });
 
 test('add plugins to app.json expo config preserves existing ones', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
-  const json = {
-    'package.json': JSON.stringify({
-      scripts: {},
-      dependencies: {},
-      devDependencies: {},
-    }),
-    'yarn.lock': '',
-    'app.json': JSON.stringify({
-      expo: {
-        plugins: [
-          '@react-native-firebase/auth',
-          ['expo-build-properties', { config: 'test' }],
-        ],
-      },
-    }),
-  };
-  vol.fromJSON(json, './');
+  vol.fromJSON(
+    {
+      ...baseFiles,
+      'app.json': JSON.stringify({
+        expo: {
+          plugins: [
+            '@react-native-firebase/auth',
+            ['expo-build-properties', { config: 'test' }],
+          ],
+        },
+      }),
+    },
+    './',
+  );
 
   await addNotifications();
 
@@ -84,17 +89,7 @@ test('add plugins to app.json expo config preserves existing ones', async () => 
 });
 
 test('adds package name and bundle identifier from bundleId option', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
-  const json = {
-    'package.json': JSON.stringify({
-      scripts: {},
-      dependencies: {},
-      devDependencies: {},
-    }),
-    'yarn.lock': '',
-    'app.json': JSON.stringify({}),
-  };
-  vol.fromJSON(json, './');
+  vol.fromJSON(baseFiles, './');
 
   await addNotifications({ bundleId: 'com.myapp' });
 
@@ -104,26 +99,18 @@ test('adds package name and bundle identifier from bundleId option', async () =>
 });
 
 test('preserves existing package name and bundle identifier when bundleId is passed', async () => {
-  (confirm as Mock).mockResolvedValueOnce(true);
-  const json = {
-    'package.json': JSON.stringify({
-      scripts: {},
-      dependencies: {},
-      devDependencies: {},
-    }),
-    'yarn.lock': '',
-    'app.json': JSON.stringify({
-      expo: {
-        android: {
-          package: 'com.myexistingapp',
+  vol.fromJSON(
+    {
+      ...baseFiles,
+      'app.json': JSON.stringify({
+        expo: {
+          android: { package: 'com.myexistingapp' },
+          ios: { bundleIdentifier: 'com.myexistingapp' },
         },
-        ios: {
-          bundleIdentifier: 'com.myexistingapp',
-        },
-      },
-    }),
-  };
-  vol.fromJSON(json, './');
+      }),
+    },
+    './',
+  );
 
   await addNotifications({ bundleId: 'com.myapp' });
 
