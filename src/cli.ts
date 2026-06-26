@@ -1,6 +1,7 @@
 import { program } from 'commander';
 import buildAction from './util/buildAction';
 import printWelcome from './util/print/printWelcome';
+import packageJson from '../package.json';
 
 export default function runCli() {
   program
@@ -8,6 +9,7 @@ export default function runCli() {
     .description(
       'Perform React Native and Expo setup and redundant tasks without your pants falling down!',
     )
+    .version(packageJson.version)
     .showHelpAfterError();
 
   program
@@ -62,6 +64,6 @@ export default function runCli() {
     )
     .action(buildAction(import('./commands/notifications')));
 
-  printWelcome();
   program.parse();
+  printWelcome();
 }
