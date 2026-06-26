@@ -13,12 +13,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": ".",
     "jsx": "react-native",
     "noFallthroughCasesInSwitch": true,
+    "types": ["jest"],
     "paths": {
-      "src/*": ["src/*"],
-      "assets/*": ["assets/*"]
+      "src/*": ["./src/*"],
+      "assets/*": ["./assets/*"]
     }
   },
   "include": ["src/**/*", "*.js", ".*.js", "*.ts", "*.tsx", "__mocks__"],
