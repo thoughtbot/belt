@@ -47,9 +47,11 @@ export default function runCli() {
     .description('Install and configure Jest and Testing Library')
     .action(buildAction(import('./commands/testingLibrary')));
 
-  program
+  const add = program
     .command('add')
-    .description('Add a new feature to your project')
+    .description('Add a new feature to your project');
+
+  add
     .command('notifications')
     .description(
       'Install and configure React Native Firebase with Notifications',
@@ -64,6 +66,17 @@ export default function runCli() {
     )
     .action(buildAction(import('./commands/notifications')));
 
-  program.parse();
+  add
+    .command('env')
+    .description(
+      'Set up environment variable management using the built-in EXPO_PUBLIC_ mechanism',
+    )
+    .option(
+      '--no-interactive',
+      'Pass true to skip all prompts and use default values',
+    )
+    .action(buildAction(import('./commands/env')));
+
   printWelcome();
+  program.parse();
 }
