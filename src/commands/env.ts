@@ -2,7 +2,6 @@ import fs from 'fs-extra';
 import ora from 'ora';
 import path from 'path';
 import { globals } from '../constants';
-import addDependency from '../util/addDependency';
 import addToGitignore from '../util/addToGitignore';
 import commit, { handleCommitError } from '../util/commit';
 import confirmToProceed from '../util/confirmToProceed';
@@ -32,8 +31,7 @@ const INTRO_MESSAGE = `Let's set up environment variable management!
 
   - .env.example: Template showing your environment variables (committed)
   - .env: Your local values (gitignored)
-  - .env.test: Environment variables for Jest tests (committed)
-  - jest.setup.env.js: Loads .env.test before each test run
+  - jest.setup.env.js: Sets test environment variables before each test run
   - src/config/index.ts: Typed helper for safe config access
 
   Variables prefixed with EXPO_PUBLIC_ are automatically loaded by the Expo CLI
@@ -46,8 +44,7 @@ function successMessage(patchedApi: boolean, patchedJest: boolean) {
   What was added:
   - .env.example: Template of environment variables (committed to git)
   - .env: Your local environment variables (gitignored)
-  - .env.test: Environment variables for Jest (committed to git)
-  - jest.setup.env.js: Loads .env.test before tests run
+  - jest.setup.env.js: Sets test environment variables before tests run
   - src/config/index.ts: Typed helper to access config values in your app${
     patchedApi
       ? `\n  - ${API_PATH}: Updated to use EXPO_PUBLIC_API_BASE_URL`
@@ -82,8 +79,6 @@ export async function addEnv(options: Options = {}) {
   try {
     const projectDir = await getProjectDir();
 
-    await addDependency('dotenv', { dev: true });
-
     await copyTemplate({
       templateDir: 'environments',
       templateFile: 'env.example',
@@ -96,11 +91,6 @@ export async function addEnv(options: Options = {}) {
     await copyTemplate({
       templateDir: 'environments',
       templateFile: 'jest.setup.env.js',
-    });
-    await copyTemplate({
-      templateDir: 'environments',
-      templateFile: 'env.test',
-      destination: '.env.test',
     });
 
     const envPath = path.join(projectDir, '.env');

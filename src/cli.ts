@@ -69,7 +69,7 @@ export default function runCli() {
   add
     .command('env')
     .description(
-      'Set up environment variable management with expo-constants and dotenv',
+      'Set up environment variable management using the built-in EXPO_PUBLIC_ mechanism',
     )
     .option(
       '--no-interactive',

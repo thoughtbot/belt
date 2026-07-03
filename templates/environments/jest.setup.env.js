@@ -1,2 +1,1 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-require('dotenv').config({ path: '.env.test' });
+process.env.EXPO_PUBLIC_API_BASE_URL = 'https://api.github.com';

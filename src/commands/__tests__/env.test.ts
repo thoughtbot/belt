@@ -1,7 +1,6 @@
 import { confirm } from '@inquirer/prompts';
 import { fs, vol } from 'memfs';
 import { Mock, afterEach, beforeEach, expect, test, vi } from 'vitest';
-import exec from '../../util/exec';
 import { addEnv } from '../env';
 
 vi.mock('../../util/print', () => ({ default: vi.fn() }));
@@ -33,9 +32,18 @@ test('copies all template files to correct destinations', async () => {
 
   expect(fs.existsSync('.env.example')).toBe(true);
   expect(fs.existsSync('.env')).toBe(true);
-  expect(fs.existsSync('.env.test')).toBe(true);
   expect(fs.existsSync('jest.setup.env.js')).toBe(true);
   expect(fs.existsSync('src/config/index.ts')).toBe(true);
+});
+
+test('sets test environment variables directly, without dotenv', async () => {
+  vol.fromJSON(baseFiles, './');
+
+  await addEnv();
+
+  const jestSetupEnv = fs.readFileSync('jest.setup.env.js', 'utf8');
+  expect(jestSetupEnv).toMatch('process.env.EXPO_PUBLIC_API_BASE_URL');
+  expect(jestSetupEnv).not.toMatch('dotenv');
 });
 
 test('creates .env from .env.example when .env does not exist', async () => {
@@ -64,14 +72,6 @@ test('adds .env to .gitignore', async () => {
 
   const gitignore = fs.readFileSync('.gitignore', 'utf8');
   expect(gitignore).toMatch('.env');
-});
-
-test('installs dotenv as a dev dependency', async () => {
-  vol.fromJSON(baseFiles, './');
-
-  await addEnv();
-
-  expect(exec).toHaveBeenCalledWith('yarn add --dev dotenv');
 });
 
 test('patches API file when it contains hardcoded URL', async () => {
