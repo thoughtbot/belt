@@ -46,17 +46,17 @@ The agent copies the reference store and typed hooks verbatim, wires the provide
 
 Full rationale for each lives in `docs/adr/`:
 
-| # | Decision |
-| --- | --- |
-| [0001](adr/0001-belt-emits-feature-skills-agents-execute.md) | Belt emits skills; it never invokes an agent or calls an LLM itself |
-| [0002](adr/0002-new-features-only-ship-as-feature-skills.md) | Only new features use this model — existing features aren't migrated |
-| [0003](adr/0003-feature-skills-bundle-reference-files-plus-prose.md) | Skills bundle byte-exact reference files for invariant code, prose only for the genuinely adaptive parts |
-| [0004](adr/0004-separate-agent-namespace-for-skill-features.md) | Lives under `belt agent add`, not `belt add` — the two commands make different promises |
-| [0005](adr/0005-feature-skills-are-persistent-and-idempotent.md) | Skills stay committed in the target repo and must be idempotent — re-running repairs, not re-scaffolds |
-| [0006](adr/0006-skill-frontmatter-carries-version-metadata.md) | Frontmatter is stamped with Belt version, skill version, and Expo SDK range from skill #1 |
-| [0007](adr/0007-skills-verify-but-do-not-commit.md) | Skills verify (lint/typecheck/test) but never commit — unlike `add env`/`add notifications` |
-| [0008](adr/0008-skills-are-qad-by-manual-agent-runs.md) | QA'd via a manual agent run per release, not CI, until that becomes the bottleneck |
-| [0009](adr/0009-variants-are-chosen-at-emit-time.md) | Variants (e.g. Zustand vs. Redux) are a curated menu, chosen in Belt's prompt at emit time |
+| #                                                                        | Decision                                                                                                      |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| [0001](adr/0001-belt-emits-feature-skills-agents-execute.md)             | Belt emits skills; it never invokes an agent or calls an LLM itself                                           |
+| [0002](adr/0002-new-features-only-ship-as-feature-skills.md)             | Only new features use this model — existing features aren't migrated                                          |
+| [0003](adr/0003-feature-skills-bundle-reference-files-plus-prose.md)     | Skills bundle byte-exact reference files for invariant code, prose only for the genuinely adaptive parts      |
+| [0004](adr/0004-separate-agent-namespace-for-skill-features.md)          | Lives under `belt agent add`, not `belt add` — the two commands make different promises                       |
+| [0005](adr/0005-feature-skills-are-persistent-and-idempotent.md)         | Skills stay committed in the target repo and must be idempotent — re-running repairs, not re-scaffolds        |
+| [0006](adr/0006-skill-frontmatter-carries-version-metadata.md)           | Frontmatter is stamped with Belt version, skill version, and Expo SDK range from skill #1                     |
+| [0007](adr/0007-skills-verify-but-do-not-commit.md)                      | Skills verify (lint/typecheck/test) but never commit — unlike `add env`/`add notifications`                   |
+| [0008](adr/0008-skills-are-qad-by-manual-agent-runs.md)                  | QA'd via a manual agent run per release, not CI, until that becomes the bottleneck                            |
+| [0009](adr/0009-variants-are-chosen-at-emit-time.md)                     | Variants (e.g. Zustand vs. Redux) are a curated menu, chosen in Belt's prompt at emit time                    |
 | [0010](adr/0010-skill-md-frontmatter-stamped-via-gray-matter-not-eta.md) | `SKILL.md` is plain markdown; frontmatter is stamped programmatically via `gray-matter`, not `eta` templating |
 
 ## Build order
