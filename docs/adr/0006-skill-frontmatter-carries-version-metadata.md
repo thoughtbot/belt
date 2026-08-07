@@ -1,0 +1,3 @@
+# Feature skill frontmatter carries version metadata; re-add is the refresh path
+
+Every emitted SKILL.md is stamped with the Belt version that emitted it, the skill's own version, and the Expo SDK range it was written for. Refreshing a stale skill is just re-running `belt agent add <feature>`, which overwrites the installed copy (confirming when versions differ); the idempotent skill (ADR-0005) then reconciles the actual wiring on next invocation. No dedicated `belt agent update` command ships in v1 — but the metadata is mandatory from the first skill, because retrofitting frontmatter into skills already in the wild is not possible, while adding an update command later is easy.
