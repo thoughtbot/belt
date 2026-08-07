@@ -1,0 +1,3 @@
+# Feature skills verify but do not commit
+
+Every feature skill ends with a mandatory verification block — run the target repo's lint, typecheck, and test suite, and fix failures before declaring the feature scaffolded — but does NOT instruct the agent to commit. This deliberately breaks parity with the deterministic features (`add env`, `add notifications` auto-commit): agent-applied changes are less deterministic than template output, so they stay in the working tree for human review before landing in history. Do not "fix" skill prose to add a commit step for consistency with the older commands — the asymmetry is intentional.

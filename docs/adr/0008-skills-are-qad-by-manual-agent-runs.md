@@ -1,0 +1,3 @@
+# Feature skills are QA'd by manual agent runs, not CI
+
+Each feature skill ships with a QA script (formalizing the manual sync workflow already described in `CONTRIBUTING.md`): create a fresh boilerplate app, run `belt agent add <feature>`, execute the skill with a real coding agent, confirm the verification block passes, review the diff, and run the skill a second time to prove idempotency (ADR-0005). There is no automated agent E2E in CI for now — headless agent runs would cost API tokens, add flake, and require agent auth in CI before the authoring process has stabilized. Revisit once there are enough skills that manual QA per release becomes the bottleneck.
