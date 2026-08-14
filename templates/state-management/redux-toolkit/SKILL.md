@@ -1,7 +1,7 @@
 ---
 name: belt-add-state-management
 description: Wire Redux Toolkit state management into this app — a store, a counter slice, typed hooks, a root-level Provider, and a demo Counter component you place wherever it fits.
-version: 1.0.0
+version: 1.1.0
 expoSdkRange: '>=56.0.0'
 variant: redux-toolkit
 ---
@@ -49,7 +49,25 @@ If this repo's `src/` layout doesn't match this shape (e.g. no top-level `src/`)
 
 ## Step 4: Wire the Provider into the root component
 
-This is mandatory, not optional — without it, nothing under the root can reach the store. Find this app's actual root component, wherever it lives (`App.tsx`, `app/_layout.tsx` under Expo Router, or wherever the tree is actually assembled), and wrap its existing content in `<Provider store={store}>` from `react-redux`, importing `store` from `src/store/store`. Don't replace or restructure whatever's already there — wrap it.
+Mandatory — without it, nothing under the root can reach the store.
+
+The root component (`App.tsx`, or `app/_layout.tsx` under Expo Router) has a `providers` array (see `src/components/Providers.tsx`). Blend in — don't wrap the root separately or add a second array:
+
+```ts
+import { Provider as ReduxProvider } from 'react-redux';
+import store from 'src/store/store';
+
+const providers: Provider[] = [
+  // ... existing providers ...
+  (children) => <ReduxProvider store={store}>{children}</ReduxProvider>,
+  // CODEGEN:BELT:PROVIDERS - do not remove
+];
+```
+
+- Above the `CODEGEN:BELT:PROVIDERS` marker, not below.
+- Alias to `ReduxProvider` — `react-redux`'s `Provider` clashes with the `Provider` type already imported here.
+
+No `providers` array (app predates this pattern)? Wrap the root's existing content directly in `<Provider store={store}>` instead, and flag it to the person you're working with.
 
 ## Step 5: Decide where to render the demo Counter
 
