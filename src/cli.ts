@@ -64,6 +64,18 @@ export default function runCli() {
     )
     .action(buildAction(import('./commands/notifications')));
 
+  program
+    .command('agent')
+    .description('Add features via agent-executed feature skills (ADR-0001)')
+    .command('add')
+    .description('Emit a feature skill for your coding agent to execute')
+    .argument('<feature>', 'The feature to add (e.g. state-management)')
+    .option(
+      '--no-interactive',
+      'Pass true to skip all prompts and use default values',
+    )
+    .action(buildAction(import('./commands/addFeatureSkill')));
+
   program.parse();
   printWelcome();
 }

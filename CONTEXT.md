@@ -12,6 +12,10 @@ _Avoid_: module, addon, generator
 A versioned, thoughtbot-authored agent skill (`SKILL.md` plus supporting files) that Belt emits into a target repo under `.claude/skills/`. It contains the detailed instructions a coding agent follows to scaffold one feature. Belt emits it; Belt never executes it.
 _Avoid_: playbook, recipe, instruction markdown, prompt
 
+**Skill source**:
+The pre-emission form of a feature skill, authored by thoughtbot and living in the Belt repo at `templates/<feature>/` (ADR-0011). Belt copies and stamps it to produce the feature skill in the target repo — the two are the same content at different points in the pipeline, but only the emitted copy is a feature skill.
+_Avoid_: skill (ambiguous between source and emitted forms), feature skill (reserve for the emitted, target-repo-side artifact)
+
 **Variant**:
 One of a small, thoughtbot-curated set of library choices within a single feature (e.g. Zustand vs Redux Toolkit for state management). The user picks a variant in Belt's prompt at emit time; the emitted feature skill contains only that variant.
 _Avoid_: option, flavor
