@@ -1,4 +1,4 @@
-import { confirm } from '@inquirer/prompts';
+import { confirm, select } from '@inquirer/prompts';
 import matter from 'gray-matter';
 import fs from 'fs-extra';
 import path from 'path';
@@ -16,6 +16,12 @@ type Options = {
 type SkillMetadata = {
   version?: string;
   expoSdkRange?: string;
+  variant?: string;
+};
+
+type VariantsManifest = {
+  default: string;
+  variants: { name: string; label: string }[];
 };
 
 /**
@@ -23,22 +29,31 @@ type SkillMetadata = {
  * (ADR-0004). Given a feature's skill source at templates/<feature>/
  * (ADR-0011), copies its reference/ directory verbatim and stamps SKILL.md's
  * frontmatter with Belt's version, then hands off to the user's coding
- * agent.
+ * agent. Features offering a variant choice (ADR-0009, ADR-0016) declare it
+ * via templates/<feature>/variants.json and nest each variant's source
+ * under templates/<feature>/<variant>/; features without one keep today's
+ * flat templates/<feature>/ layout.
  */
 export async function addFeatureSkill(feature: string, options: Options = {}) {
   const { interactive = true } = options;
   globals.interactive = interactive;
 
+  // relative to templates/ — either "<feature>" or "<feature>/<variant>"
+  const featureSourcePath = await resolveFeatureSourcePath(
+    feature,
+    interactive,
+  );
+
   const sourceSkillPath = path.join(
     PACKAGE_ROOT,
     'templates',
-    feature,
+    featureSourcePath,
     'SKILL.md',
   );
 
   if (!(await fs.exists(sourceSkillPath))) {
     throw new Error(
-      `Unknown feature "${feature}" — no skill found at templates/${feature}/SKILL.md.`,
+      `Unknown feature "${feature}" — no skill found at templates/${featureSourcePath}/SKILL.md.`,
     );
   }
 
@@ -63,15 +78,11 @@ export async function addFeatureSkill(feature: string, options: Options = {}) {
 
     if (shouldConfirm) {
       const proceed = await confirm({
-        message: `belt-add-${feature} is already installed (v${
-          installedMetadata.version ?? 'unknown'
-        }, targeting Expo ${
-          installedMetadata.expoSdkRange ?? 'unknown'
-        }) and differs from the version being emitted (v${
-          incomingMetadata.version ?? 'unknown'
-        }, targeting Expo ${
-          incomingMetadata.expoSdkRange ?? 'unknown'
-        }). Overwrite it?`,
+        message: `belt-add-${feature} is already installed (${describeSkillMetadata(
+          installedMetadata,
+        )}) and differs from the version being emitted (${describeSkillMetadata(
+          incomingMetadata,
+        )}). Overwrite it?`,
       });
 
       if (!proceed) {
@@ -86,7 +97,7 @@ export async function addFeatureSkill(feature: string, options: Options = {}) {
   );
 
   await copyTemplateDirectory({
-    templateDir: path.join(feature, 'reference'),
+    templateDir: path.join(featureSourcePath, 'reference'),
     destinationDir: path.join(destinationDir, 'reference'),
   });
 
@@ -94,8 +105,57 @@ export async function addFeatureSkill(feature: string, options: Options = {}) {
 }
 
 /**
+ * A feature with a variants.json manifest (ADR-0016) prompts for one of its
+ * curated variants (ADR-0009) and resolves to "<feature>/<variant>"; a
+ * feature without one resolves to "<feature>" directly, unchanged from
+ * before variants existed. Returned path is relative to templates/.
+ */
+async function resolveFeatureSourcePath(
+  feature: string,
+  interactive: boolean,
+): Promise<string> {
+  const variantsManifestPath = path.join(
+    PACKAGE_ROOT,
+    'templates',
+    feature,
+    'variants.json',
+  );
+
+  if (!(await fs.exists(variantsManifestPath))) {
+    return feature;
+  }
+
+  const manifest = JSON.parse(
+    (await fs.readFile(variantsManifestPath)).toString(),
+  ) as VariantsManifest;
+
+  const chosenVariant = interactive
+    ? await select({
+        message: 'Which library?',
+        // This @inquirer/prompts version's select() has no `default` option
+        // — the first choice is what's pre-highlighted, so the thoughtbot
+        // default variant is sorted to the front instead.
+        choices: [...manifest.variants]
+          .sort(
+            (a, b) =>
+              Number(b.name === manifest.default) -
+              Number(a.name === manifest.default),
+          )
+          .map(({ name, label }) => ({
+            name: label,
+            value: name,
+          })),
+      })
+    : manifest.default;
+
+  return path.join(feature, chosenVariant);
+}
+
+/**
  * Only the feature-content-relevant fields are compared — a bare Belt
- * version bump re-stamps silently (ADR-0013).
+ * version bump re-stamps silently (ADR-0013). `variant` is included so
+ * switching variants on re-run always confirms, even if version and
+ * expoSdkRange happen to match between the two variants (ADR-0017).
  */
 function skillContentDiffers(
   installed: SkillMetadata,
@@ -103,8 +163,16 @@ function skillContentDiffers(
 ) {
   return (
     installed.version !== incoming.version ||
-    installed.expoSdkRange !== incoming.expoSdkRange
+    installed.expoSdkRange !== incoming.expoSdkRange ||
+    installed.variant !== incoming.variant
   );
+}
+
+function describeSkillMetadata(metadata: SkillMetadata) {
+  const variant = metadata.variant ? `${metadata.variant}, ` : '';
+  return `${variant}v${metadata.version ?? 'unknown'}, targeting Expo ${
+    metadata.expoSdkRange ?? 'unknown'
+  }`;
 }
 
 function printHandoff(feature: string) {
