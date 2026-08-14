@@ -1,8 +1,9 @@
 ---
 name: belt-add-state-management
 description: Wire Zustand state management into this app — a store, typed selector hooks, and a demo Counter component you place wherever it fits.
-version: 1.0.0
+version: 1.1.0
 expoSdkRange: '>=56.0.0'
+variant: zustand
 ---
 
 # Add state management (Zustand)
@@ -13,7 +14,14 @@ Zustand needs no context Provider — a store created with `create()` is just a 
 
 ## Step 1: Check whether this is already installed
 
-Before doing anything else, check:
+First, check whether a **different** state-management library is already wired up:
+
+- Is `@reduxjs/toolkit` or `react-redux` listed in `package.json` dependencies?
+- Does `src/store/store.ts` already exist?
+
+If either is present, **stop**. Tell the person you're working with that this app already has a different state-management library (Redux Toolkit) wired up. Don't install Zustand alongside it, and don't remove or migrate the existing one — that's outside this skill's scope.
+
+Otherwise, check whether Zustand itself is already installed:
 
 - Is `zustand` listed in `package.json` dependencies?
 - Does `src/store/counterStore.ts` already exist?

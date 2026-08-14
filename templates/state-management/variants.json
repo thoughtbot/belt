@@ -1,0 +1,7 @@
+{
+  "default": "zustand",
+  "variants": [
+    { "name": "zustand", "label": "Zustand" },
+    { "name": "redux-toolkit", "label": "Redux Toolkit" }
+  ]
+}
